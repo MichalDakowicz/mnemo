@@ -1,0 +1,45 @@
+# Logs
+*.log
+npm-debug.log*
+
+node_modules
+dist
+*.local
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+
+.env
+.env.local
+.firebase
+.firebaserc
+
+# Expo
+.expo/
+web-build/
+expo-env.d.ts
+.kotlin/
+*.orig.*
+.metro-health-check*
+*.tsbuildinfo
+/ios
+/android
+
+# Release signing key + its passwords (reused from Radar). Never committed.
+credentials/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Service account keys are admin credentials; client google-services.json is not.
+*service-account*.json
+*serviceAccount*.json
+*-adminsdk-*.json
+
+# Supabase CLI scratch state — which project this checkout is linked to is per-machine.
+supabase/.temp/
