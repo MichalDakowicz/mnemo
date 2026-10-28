@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Mnemo discover</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..800&amp;family=Geist+Mono:wght@400..600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0a0a0b}
+a{color:#ece9e4}a:hover{color:#ffffff}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;padding:0}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #f3f1ec;outline-offset:3px}
+.grain{position:fixed;inset:0;pointer-events:none;z-index:95;opacity:.09;background-image:url(/_blob/618baeb7c0b2e2caf3f353de0710caa9)}
+.glass{background:#1a1a1c8c;border:1px solid #ffffff14;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 10px 30px #0006}
+.dock{display:flex;align-items:center;gap:2px;padding:4px;border-radius:999px}
+.dock-item{display:flex;align-items:center;gap:8px;height:40px;padding:0 16px;border-radius:999px;font-size:13.5px;font-weight:500;color:#b9b6b0;text-decoration:none;transition:background .15s,color .15s}
+.dock-item:hover{background:#ece9e414;color:#f4f1ec}
+.dock-item[aria-current=page]{background:#ece9e41f;color:#f4f1ec}
+.brand{display:flex;align-items:center;gap:12px;height:48px;text-decoration:none;color:#ece9e4}
+.brand-mark{transition:transform .35s cubic-bezier(.2,.75,.15,1)}
+.brand:hover .brand-mark{transform:rotate(-6deg) scale(1.04)}
+.pill{height:44px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:0 20px;font-size:14px;font-weight:500;border:1px solid #ece9e433;white-space:nowrap;color:#ece9e4;text-decoration:none;transition:background .15s,transform .15s}
+.pill:hover{background:#ece9e414;color:#ece9e4}
+.pill:active{transform:scale(.97)}
+.pill.primary{background:#f3f1ec;color:#0a0a0b;border-color:#f3f1ec;font-weight:600}
+.pill.primary:hover{background:#ffffff;color:#0a0a0b}
+.chip{height:34px;padding:0 14px;border-radius:999px;border:1px solid #ece9e429;font-size:13px;color:#bebab3;display:inline-flex;align-items:center;gap:8px}
+.chip:hover{background:#ece9e40d}
+.chip[aria-pressed=true]{background:#f3f1ec;color:#0a0a0b;border-color:#f3f1ec}
+.seg{display:flex;gap:2px;padding:4px;border-radius:999px}
+.seg button{height:40px;padding:0 18px;border-radius:999px;font-size:13.5px;font-weight:500;color:#b9b6b0}
+.seg button[aria-pressed=true]{background:#ece9e41f;color:#f4f1ec}
+.text-button{color:#a9a59d;font-size:13px;padding:6px 8px;border-radius:8px;text-decoration:none}
+.text-button:hover{color:#ece9e4;background:#ffffff0a}
+.art{background:radial-gradient(ellipse 80% 55% at 30% 22%,hsl(var(--h) 70% 72% / .45),#0000 70%),radial-gradient(ellipse 70% 45% at 85% 95%,hsl(calc(var(--h) + 40) 60% 18% / .7),#0000 70%),linear-gradient(170deg,hsl(var(--h) 42% 38%),hsl(calc(var(--h) + 25) 38% 13%))}
+.art.v1{background:radial-gradient(circle at 50% 38%,hsl(var(--h) 80% 78% / .9) 0 9%,#0000 10%),linear-gradient(180deg,hsl(var(--h) 55% 58%),hsl(calc(var(--h) - 20) 55% 22%) 62%,hsl(calc(var(--h) - 30) 45% 8%))}
+.art.v2{background:linear-gradient(180deg,hsl(var(--h) 38% 46%) 0 33.3%,hsl(calc(var(--h) + 50) 32% 30%) 33.3% 66.6%,hsl(calc(var(--h) + 100) 36% 16%) 66.6%)}
+.art.v3{background:linear-gradient(116deg,#0000 0 36%,hsl(var(--h) 80% 80% / .25) 44%,#0000 56%),repeating-linear-gradient(90deg,#0000 0 46px,#0003 46px 48px),linear-gradient(180deg,hsl(var(--h) 22% 30%),hsl(var(--h) 20% 8%))}
+.cover-title{position:absolute;left:12px;right:12px;bottom:16px;font-size:20px;line-height:1.08;font-weight:700;letter-spacing:-.04em;color:#fff;overflow-wrap:anywhere;text-shadow:0 2px 14px #0005;text-align:left}
+.v1 .cover-title,.v2 .cover-title{text-align:center;text-transform:uppercase;font-weight:500;letter-spacing:.26em;font-size:12px;line-height:1.5}
+.v2 .cover-title{bottom:auto;top:calc(50% - 10px)}
+.v3 .cover-title{text-transform:uppercase;letter-spacing:.02em;font-size:22px;font-weight:600}
+.showcase{position:relative;height:780px;margin:0 -56px 30px;padding:0 56px}
+.show-meta{position:absolute;left:56px;top:70px;width:300px;z-index:20}
+.meta-list{margin:0;border-top:1px solid #ece9e433}
+.meta-list div{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:7px 0}
+.meta-list div:first-child{padding-top:12px}
+.meta-list dt{font-size:13px;color:#8f8c87;flex:none}
+.meta-list dd{margin:0;font-size:15px;text-align:right;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.reel{position:absolute;left:calc(50% - 50vw);width:100vw;top:-40px;height:760px;z-index:1;touch-action:pan-y;user-select:none;cursor:grab;outline:none}
+.reel:focus-visible{outline:2px solid #ece9e473;outline-offset:-12px;border-radius:24px}
+.reel-glow{position:absolute;left:var(--cx);top:50%;width:1600px;height:1700px;z-index:0;pointer-events:none}
+.reel-glow span{position:absolute;inset:0;filter:blur(56px);opacity:0;transition:opacity 1s ease}
+.reel-glow span.on{opacity:.36}
+.reel-poster{position:absolute;left:var(--cx);top:50%;width:340px;height:510px;border-radius:6px;overflow:hidden;box-shadow:0 50px 90px #0009,0 0 0 1px #ffffff0f;transition:transform .45s cubic-bezier(.2,.75,.15,1),filter .45s,opacity .45s}
+.reel-poster:after{content:'';position:absolute;inset:0;background:linear-gradient(115deg,#ffffff24,#0000 32%);pointer-events:none}
+.reel-poster .cover-title{font-size:44px;left:22px;right:22px;bottom:30px}
+.reel-poster.v1 .cover-title,.reel-poster.v2 .cover-title{font-size:17px}
+.reel-ratings{position:absolute;left:var(--cx);top:722px;transform:translateX(-50%);z-index:14;display:flex;flex-direction:column;align-items:center;gap:6px}
+.reel-count{position:absolute;right:56px;top:690px;z-index:14;margin:0;font-size:12px;color:#8f8c87;font-family:'Geist Mono',ui-monospace,monospace}
+.card{position:relative;display:block;min-width:0;flex:none}
+.row .card{width:168px}
+.card>a{display:block;text-decoration:none;color:#ece9e4}
+.cover{position:relative;display:block;aspect-ratio:2/3;border-radius:6px;overflow:hidden;box-shadow:0 14px 30px #0007,0 0 0 1px #ffffff0d;transition:transform .45s cubic-bezier(.2,.75,.15,1),box-shadow .45s}
+.cover:after{content:'';position:absolute;inset:0;background:linear-gradient(115deg,#ffffff1c,#0000 34%);pointer-events:none}
+.card:hover .cover,.card>a:focus-visible .cover{transform:translateY(-6px) rotate(-1deg) scale(1.03);box-shadow:0 30px 50px #0009,0 0 0 1px #ece9e459}
+.add{position:absolute;top:8px;right:8px;z-index:3;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#0a0a0bb3;border:1px solid #ffffff2e;color:#ece9e4;backdrop-filter:blur(8px);transition:transform .45s cubic-bezier(.2,.75,.15,1)}
+.card:hover .add{transform:translateY(-6px)}
+.add[aria-pressed=true]{background:#f3f1ec;color:#0a0a0b;border-color:#f3f1ec}
+.row{display:flex;gap:22px;overflow-x:auto;padding:8px 2px 14px;scrollbar-width:none}
+.row::-webkit-scrollbar{display:none}
+.search-field{flex:1 1 360px;max-width:640px;display:flex;align-items:center;gap:14px;height:56px;padding:0 12px 0 20px;border-radius:999px;background:#1a1a1cb3;border:1px solid #ece9e438;box-shadow:0 20px 50px #0007;color:#8f8c87}
+.search-field:focus-within{border-color:#ece9e473}
+.search-field input{flex:1;min-width:0;height:100%;border:0;background:none;color:#f4f1ec;font:inherit;font-size:18px;font-weight:500;letter-spacing:-.02em;outline:none}
+.search-field input::placeholder{color:#8f8c87}
+kbd{font-size:11px;color:#8f8c87;padding:3px 7px;border:1px solid #ece9e42e;border-radius:6px;font-family:inherit}
+.person{display:flex;align-items:center;gap:12px;padding:10px 14px 10px 10px;border-radius:999px;border:1px solid #ece9e41f;text-decoration:none;color:#ece9e4}
+.person:hover{background:#ece9e40d;color:#ece9e4}
+.icon-button{width:36px;height:36px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex:none;color:#ece9e4}
+.icon-button:hover:not(:disabled){background:#ffffff12}
+.icon-button:disabled{opacity:.3;cursor:default}
+.pill.small{height:34px;padding:0 14px;font-size:13px}
+.cal-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:16px;padding-top:18px;border-top:1px solid #ece9e424}
+.cal-month{min-width:118px;text-align:center;font-size:14px;font-weight:500}
+.cal-week,.cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.cal-week{margin-bottom:6px;font-size:11px;color:#8f8c87}
+.cal-week span{padding-left:8px}
+.day{position:relative;height:84px;border-radius:10px;border:1px solid #ece9e40f;background:#ece9e405;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;padding:8px;text-align:left;transition:background .15s,border-color .15s}
+.day:hover:not(:disabled){background:#ece9e40f}
+.day[aria-pressed=true]{border-color:#ece9e480;background:#ece9e414}
+.day:disabled{cursor:default;background:transparent}
+.day[data-past=true]{opacity:.4}
+.day-n{font-size:12px;line-height:1;color:#bebab3;font-family:'Geist Mono',ui-monospace,monospace}
+.day[data-today=true] .day-n{background:#f3f1ec;color:#0a0a0b;border-radius:999px;padding:3px 6px;margin:-3px 0 0 -4px}
+.day-thumbs{display:flex;align-items:flex-end}
+.thumb{width:20px;height:30px;border-radius:3px;margin-right:-6px;box-shadow:0 4px 10px #0008,0 0 0 1px #0a0a0b}
+.day-more{margin-left:12px;font-size:11px;color:#a9a59d}
+.day-warn{position:absolute;top:9px;right:9px;width:6px;height:6px;border-radius:50%;background:#e3a58b}
+.cal-item{display:flex;align-items:center;gap:14px;padding:10px 0;border-top:1px solid #ece9e40f}
+.cal-item>a{flex:1;min-width:0;display:flex;align-items:center;gap:14px;text-decoration:none;color:#ece9e4}
+.cal-item>a:hover{color:#ffffff}
+@media (max-width:640px){.day{height:54px;padding:6px}.thumb{width:12px;height:18px;margin-right:-4px}.day-more{display:none}.cal-week span{padding-left:4px}}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.help{position:fixed;right:24px;bottom:24px;z-index:87;width:44px;height:44px;border-radius:50%;color:#ece9e4;font-size:17px;font-weight:600}
+@media (max-width:1100px){.page{padding-left:28px!important;padding-right:28px!important}.showcase{margin:0 -28px 30px;padding:0 28px}.show-meta{left:28px;width:260px}.reel-count{right:28px}}
+@media (max-width:980px){.dock-label{display:none}.dock-item{padding:0 13px}}
+@media (max-width:820px){
+.page{padding:88px 16px 48px!important}
+.showcase{height:auto;margin:0 0 30px;padding:0;display:flex;flex-direction:column}
+.reel{position:relative;left:auto;width:auto;top:0;height:420px;margin:0 -16px;order:1}
+.reel-ratings{position:relative;left:auto;top:0;transform:none;order:2;margin:4px 0 18px}
+.show-meta{position:relative;left:0;top:0;width:auto;order:3}
+.reel-count{display:none}
+.brand-name{display:none}
+.search-field input{font-size:16px}kbd{display:none}.row .card{width:132px}
+}
+@media (prefers-reduced-motion:reduce){.reel-poster,.reel-glow span,.cover,.add,.brand-mark{transition:none}}
+</style>
+</helmet>
+<div style="position: relative; min-height: 100vh; overflow-x: clip; background: #0a0a0b; color: #ece9e4; font-family: Geist, 'Segoe UI', system-ui, sans-serif; font-size: 14px">
+
+  <div style="position: fixed; top: 18px; left: 28px; right: 28px; z-index: 80; display: flex; align-items: center; justify-content: space-between; gap: 16px; pointer-events: none">
+    <nav class="dock glass" aria-label="Sections" style="pointer-events: auto">
+      <a class="dock-item" href="Main.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="7" height="16" rx="1.5"></rect><rect x="14" y="4" width="7" height="16" rx="1.5"></rect></svg><span class="dock-label">Library</span></a>
+      <a class="dock-item" href="Discover.dc.html" aria-current="page"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M15.5 8.5l-2 5-5 2 2-5z"></path></svg><span class="dock-label">Discover</span></a>
+      <a class="dock-item" href="Stats.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V11M12 20V5M19 20v-6"></path></svg><span class="dock-label">Stats</span></a>
+      <a class="dock-item" href="Friends.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8.5" r="3.5"></circle><path d="M2.5 20a6.5 6.5 0 0 1 13 0"></path><path d="M16 5.2a3.5 3.5 0 0 1 0 6.6M18 14.5a6.5 6.5 0 0 1 3.5 5.5"></path></svg><span class="dock-label">Friends</span></a>
+      <a class="dock-item" href="Profile.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="10" r="3"></circle><path d="M6.5 18.5a6.5 6.5 0 0 1 11 0"></path></svg><span class="dock-label">Profile</span></a>
+      <a class="dock-item" href="#search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="M20 20l-4-4"></path></svg><span class="dock-label">Search</span></a>
+    </nav>
+    <a class="brand" href="Main.dc.html" style="pointer-events: auto">
+      <span class="brand-name" style="font-weight: 600; font-size: 22px; letter-spacing: -0.035em">Mnemo</span>
+      <svg class="brand-mark" width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><rect x="9" y="6" width="20" height="28" rx="3" fill="none" stroke="#f3f1ec" stroke-width="2.6"></rect><rect x="14" y="10" width="20" height="28" rx="3" fill="#f3f1ec"></rect><path d="M19.5 24.5l3 3 6-7" fill="none" stroke="#0a0a0b" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    </a>
+  </div>
+
+  <main class="page" style="max-width: 1720px; margin: 0 auto; padding: 98px 56px 64px; box-sizing: border-box">
+
+    <section class="showcase" aria-label="{{kicker}}" style="--cx: {{cx}}px">
+      <div class="reel" tabindex="0" role="region" aria-roledescription="carousel" aria-label="Trending titles. Scroll sideways, drag, or use the arrow keys." onWheel="{{onWheel}}" onKeyDown="{{onKey}}" onPointerDown="{{onDown}}" onPointerMove="{{onMove}}" onPointerUp="{{onUp}}" onPointerLeave="{{onUp}}">
+        <div class="reel-glow" aria-hidden="true" style="transform: translate(-50%, -50%) scale({{k}})">
+          <span class="{{glowA.cls}}" style="background: {{glowA.bg}}"></span>
+          <span class="{{glowB.cls}}" style="background: {{glowB.bg}}"></span>
+        </div>
+        <sc-for list="{{posters}}" as="p" hint-placeholder-count="9">
+          <button class="reel-poster art {{p.v}}" tabindex="-1" onClick="{{p.pick}}" aria-label="{{p.label}}" style="--h: {{p.h}}; transform: {{p.tf}}; z-index: {{p.z}}; opacity: {{p.op}}; filter: {{p.fx}}; visibility: {{p.vis}}; pointer-events: {{p.pe}}">
+            <span class="cover-title">{{p.t}}</span>
+          </button>
+        </sc-for>
+      </div>
+
+      <div class="show-meta">
+        <p style="margin: 0 0 12px; font-size: 13px; font-weight: 500; color: #8f8c87">{{kicker}}</p>
+        <h1 style="margin: 0 0 24px; font-size: {{titleSize}}px; font-weight: 600; line-height: 1; letter-spacing: -0.045em; color: #f2efea; overflow-wrap: break-word">{{cur.t}}</h1>
+        <dl class="meta-list">
+          <div><dt>{{cur.byLabel}}</dt><dd>{{cur.dir}}</dd></div>
+          <div><dt>Year</dt><dd>{{cur.y}}</dd></div>
+          <div><dt>Genre</dt><dd>{{cur.g}}</dd></div>
+        </dl>
+        <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px">
+          <button class="pill primary" onClick="{{cur.toggle}}" aria-pressed="{{cur.added}}">
+            <sc-if value="{{cur.added}}" hint-placeholder-val="{{ false }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></sc-if>
+            <sc-if value="{{cur.notAdded}}" hint-placeholder-val="{{ true }}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></sc-if>
+            {{cur.addLabel}}
+          </button>
+          <a class="pill" href="Detail.dc.html">Details</a>
+        </div>
+        <p style="display: flex; align-items: center; gap: 8px; margin: 22px 0 0; font-size: 13px; color: #8f8c87">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M3 12h18"></path></svg>
+          Scroll sideways or drag to browse
+        </p>
+      </div>
+
+      <div class="reel-ratings">
+        <strong style="font-size: 22px; font-weight: 500; letter-spacing: -0.02em; line-height: 1">{{cur.tmdb}}</strong>
+        <img src="/_blob/204eeb403127d38b78de66b400f945d3" alt="TMDB rating" style="display: block; height: 10px; width: auto; opacity: .9">
+      </div>
+      <p class="reel-count">{{counter}}</p>
+    </section>
+
+    <div id="search" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 14px; position: relative; z-index: 5">
+      <label class="search-field">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="M20 20l-4-4"></path></svg>
+        <span class="sr">Search films, shows, people and genres</span>
+        <input type="text" placeholder="Films, shows, people, genres" value="{{q}}" onChange="{{onSearch}}">
+        <kbd>Ctrl K</kbd>
+      </label>
+      <div class="seg glass" role="group" aria-label="Type">
+        <sc-for list="{{kinds}}" as="k" hint-placeholder-count="2">
+          <button onClick="{{k.pick}}" aria-pressed="{{k.sel}}">{{k.label}}</button>
+        </sc-for>
+      </div>
+    </div>
+    <p style="margin: 0 0 40px 22px; font-size: 13px; color: #8f8c87; position: relative; z-index: 5">{{summary}}</p>
+
+    <sc-if value="{{searching}}" hint-placeholder-val="{{ false }}">
+      <section style="margin-bottom: 44px; position: relative; z-index: 5">
+        <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 22px" role="group" aria-label="Result type">
+          <sc-for list="{{resultTypes}}" as="r" hint-placeholder-count="4">
+            <button class="chip" onClick="{{r.pick}}" aria-pressed="{{r.sel}}">{{r.label}}</button>
+          </sc-for>
+        </div>
+        <sc-if value="{{hasPeople}}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 28px">
+            <sc-for list="{{people}}" as="p" hint-placeholder-count="2">
+              <a class="person" href="Person.dc.html">
+                <span class="art" style="--h: {{p.h}}; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; color: #fff">{{p.initial}}</span>
+                <span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; font-weight: 600">{{p.name}}</span><span style="font-size: 12px; color: #8f8c87">{{p.role}}</span></span>
+              </a>
+            </sc-for>
+          </div>
+        </sc-if>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(158px, 1fr)); gap: 30px 22px">
+          <sc-for list="{{results}}" as="it" hint-placeholder-count="6">
+            <div class="card">
+              <a href="Detail.dc.html" aria-label="{{it.t}}">
+                <span class="cover art {{it.v}}" style="--h: {{it.h}}"><span class="cover-title">{{it.t}}</span></span>
+                <span style="display: block; margin-top: 12px; font-size: 13.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{it.t}}</span>
+                <span style="display: block; margin-top: 3px; font-size: 12px; color: #8f8c87">{{it.meta}}</span>
+              </a>
+              <button class="add" onClick="{{it.toggle}}" aria-pressed="{{it.added}}" aria-label="{{it.addLabel}}">
+                <sc-if value="{{it.added}}" hint-placeholder-val="{{ false }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></sc-if>
+                <sc-if value="{{it.notAdded}}" hint-placeholder-val="{{ true }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></sc-if>
+              </button>
+            </div>
+          </sc-for>
+        </div>
+        <sc-if value="{{noResults}}" hint-placeholder-val="{{ false }}">
+          <div style="text-align: center; padding: 60px 20px; color: #a9a59d">
+            <h2 style="margin: 0; font-size: 15px; font-weight: 600; color: #ece9e4">No matches on TMDB</h2>
+            <p style="margin: 8px 0 0; font-size: 13px">Try the original title, or search for a person.</p>
+          </div>
+        </sc-if>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{browsing}}" hint-placeholder-val="{{ true }}">
+      <section aria-label="Release and leaving calendars" style="position: relative; z-index: 5; margin-bottom: 56px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 560px), 1fr)); gap: 40px 56px">
+        <sc-for list="{{calendars}}" as="c" hint-placeholder-count="2">
+          <div style="min-width: 0">
+            <div class="cal-head">
+              <div>
+                <h2 style="margin: 0; font-size: 20px; font-weight: 600; letter-spacing: -0.035em">{{c.title}}</h2>
+                <p style="margin: 4px 0 0; font-size: 13px; color: #8f8c87">{{c.sub}}</p>
+              </div>
+              <div style="display: flex; align-items: center; gap: 4px; flex-wrap: wrap">
+                <button class="chip" onClick="{{c.toggleMine}}" aria-pressed="{{c.mine}}" style="margin-right: 8px">On my watchlist</button>
+                <button class="icon-button" onClick="{{c.prev}}" disabled="{{c.prevOff}}" aria-label="Previous month"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg></button>
+                <span class="cal-month" aria-live="polite">{{c.monthLabel}}</span>
+                <button class="icon-button" onClick="{{c.next}}" disabled="{{c.nextOff}}" aria-label="Next month"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg></button>
+              </div>
+            </div>
+            <div class="cal-week" aria-hidden="true"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
+            <div class="cal-grid">
+              <sc-for list="{{c.cells}}" as="d" hint-placeholder-count="35">
+                <sc-if value="{{d.real}}" hint-placeholder-val="{{ true }}">
+                  <button class="day" onClick="{{d.pick}}" aria-pressed="{{d.sel}}" aria-label="{{d.aria}}" data-past="{{d.past}}" data-today="{{d.today}}" disabled="{{d.none}}">
+                    <span class="day-n">{{d.n}}</span>
+                    <span class="day-thumbs">
+                      <sc-for list="{{d.thumbs}}" as="t" hint-placeholder-count="0"><span class="thumb art {{t.v}}" style="--h: {{t.h}}"></span></sc-for>
+                      <sc-if value="{{d.hasMore}}" hint-placeholder-val="{{ false }}"><span class="day-more">{{d.more}}</span></sc-if>
+                    </span>
+                    <sc-if value="{{d.warn}}" hint-placeholder-val="{{ false }}"><span class="day-warn"></span></sc-if>
+                  </button>
+                </sc-if>
+                <sc-if value="{{d.blank}}" hint-placeholder-val="{{ false }}"><span></span></sc-if>
+              </sc-for>
+            </div>
+            <div style="margin-top: 18px">
+              <p style="margin: 0 0 6px; font-size: 13px; color: #8f8c87">{{c.dayLabel}}</p>
+              <sc-for list="{{c.items}}" as="it" hint-placeholder-count="2">
+                <div class="cal-item">
+                  <a href="Detail.dc.html">
+                    <span class="art {{it.v}}" aria-hidden="true" style="--h: {{it.h}}; width: 40px; aspect-ratio: 2 / 3; border-radius: 4px; flex: none; box-shadow: 0 8px 18px #0008"></span>
+                    <span style="min-width: 0; display: flex; flex-direction: column; gap: 3px">
+                      <span style="font-size: 14px; font-weight: 600">{{it.t}}</span>
+                      <span style="font-size: 12px; color: #8f8c87">{{it.meta}}</span>
+                      <sc-if value="{{it.hasNote}}" hint-placeholder-val="{{ false }}"><span style="font-size: 12px; color: #e3a58b">{{it.note}}</span></sc-if>
+                    </span>
+                  </a>
+                  <button class="pill small" onClick="{{it.toggle}}" aria-pressed="{{it.added}}">{{it.addLabel}}</button>
+                </div>
+              </sc-for>
+              <sc-if value="{{c.empty}}" hint-placeholder-val="{{ false }}"><p style="margin: 0; padding: 10px 0; border-top: 1px solid #ece9e40f; font-size: 13px; color: #a9a59d">{{c.emptyText}}</p></sc-if>
+            </div>
+          </div>
+        </sc-for>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{browsing}}" hint-placeholder-val="{{ true }}">
+      <sc-for list="{{rows}}" as="r" hint-placeholder-count="3">
+        <section style="margin-bottom: 40px; position: relative; z-index: 5">
+          <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 10px">
+            <h2 style="margin: 0; font-size: 20px; font-weight: 600; letter-spacing: -0.035em">{{r.title}}</h2>
+            <a class="text-button" href="Discover.dc.html">{{r.more}}</a>
+          </div>
+          <div class="row">
+            <sc-for list="{{r.items}}" as="it" hint-placeholder-count="8">
+              <div class="card">
+                <a href="Detail.dc.html" aria-label="{{it.t}}">
+                  <span class="cover art {{it.v}}" style="--h: {{it.h}}"><span class="cover-title">{{it.t}}</span></span>
+                  <span style="display: block; margin-top: 12px; font-size: 13.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{it.t}}</span>
+                  <span style="display: block; margin-top: 3px; font-size: 12px; color: #8f8c87">{{it.meta}}</span>
+                </a>
+                <button class="add" onClick="{{it.toggle}}" aria-pressed="{{it.added}}" aria-label="{{it.addLabel}}">
+                  <sc-if value="{{it.added}}" hint-placeholder-val="{{ false }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></sc-if>
+                  <sc-if value="{{it.notAdded}}" hint-placeholder-val="{{ true }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></sc-if>
+                </button>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+      </sc-for>
+    </sc-if>
+  </main>
+  <button class="help glass" aria-label="About and sync status">?</button>
+  <div class="grain" aria-hidden="true"></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":3300}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.SPOTS = ['39% 35%', '50% 33%', '61% 35%', '38% 50%', '62% 50%', '39% 65%', '50% 67%', '61% 65%'];
+    this.REACH = [0];
+    for (let i = 1; i <= 64; i++) { const t = i / 4; this.REACH.push(this.REACH[i - 1] + 340 * 0.8 * 0.25 * (this.scale(t - 0.25) + this.scale(t)) / 2); }
+    const w = typeof window !== 'undefined' ? window.innerWidth : 1440;
+    this.state = {
+      kind: 'movie', q: '', type: 'all', pos: 0, W: w || 1440,
+      added: { 'Paper Lanterns': true, 'Nine Bridges': true, 'Lumen': true },
+      glow: [this.glowFor(this.featured('movie')[0][0]), ''], glowOn: 0,
+      month: { release: 0, leaving: 0 }, sel: { release: null, leaving: null }, mine: { release: false, leaving: false }
+    };
+    this.drag = null; this.moved = false; this.acc = 0; this.lastStep = 0;
+    this.onResize = () => this.setState({ W: window.innerWidth });
+  }
+  componentDidMount() { window.addEventListener('resize', this.onResize); this.onResize(); }
+  componentWillUnmount() { window.removeEventListener('resize', this.onResize); }
+  scale(a) { return 1 / (1 + 0.15 * a + 0.022 * a * a); }
+  reachAt(a) { const i = Math.min(63.999, a * 4), lo = Math.floor(i); return this.REACH[lo] + (this.REACH[lo + 1] - this.REACH[lo]) * (i - lo); }
+  hue(t) { let h = 0; for (let i = 0; i < t.length; i++) h = (h * 31 + t.charCodeAt(i)) % 360; return h; }
+  variant(t) { return ['', 'v1', 'v2', 'v3'][(t.length + t.charCodeAt(0)) % 4]; }
+  mod(a, n) { return ((a % n) + n) % n; }
+  glowFor(title) {
+    const h = this.hue(title);
+    return this.SPOTS.map((s, i) => 'radial-gradient(circle 320px at ' + s + ', hsl(' + ((h + i * 12) % 360) + ' 55% ' + (i < 3 ? 52 : 38) + '%), transparent)').join(', ');
+  }
+  featured(kind) {
+    return kind === 'movie' ? [
+      ['Lumen', 2026, 'Sci-Fi · Drama', 'Aiko Mori', '8.2'], ['The Ninth Winter', 2025, 'Thriller', 'Mila Petrova', '7.9'], ['Harbour Lights', 2026, 'Drama', 'Tomas Reyes', '7.6'],
+      ['Copper Sky', 2026, 'Sci-Fi', 'Jun Park', '7.2'], ['Field of Ash', 2024, 'War · History', 'Oren Hale', '8.0'], ['Small Hours', 2025, 'Comedy', 'Clara Weiss', '6.9'],
+      ['Grey Meridian', 2022, 'Mystery', 'Ines Varga', '7.4'], ['Kestrel', 2021, 'Adventure', 'Sam Okafor', '7.1'], ['The Glass Hour', 2024, 'Fantasy', 'Nadia Hollis', '7.7'],
+      ['Slow Orbit', 2025, 'Sci-Fi', 'Eva Strand', '7.5'], ['Wintering', 2023, 'Drama', 'Ravi Menon', '7.8'], ['Riverbed', 2018, 'Crime', 'Hana Lind', '6.8']
+    ] : [
+      ['Kessa Point', 2024, 'Mystery · Drama', 'Ines Varga', '8.4'], ['The Undertow', 2025, 'Crime', 'Sam Okafor', '8.0'], ['House of Moths', 2026, 'Horror', 'Leo Brandt', '7.3'],
+      ['Long Division', 2023, 'Drama', 'Clara Weiss', '7.9'], ['Second Light', 2022, 'Sci-Fi', 'Jun Park', '7.6'], ['The Archivists', 2021, 'Fantasy', 'Oren Hale', '8.7'],
+      ['Blue Hour', 2025, 'Romance', 'Hana Lind', '7.1'], ['Ground Truth', 2024, 'Thriller', 'Tomas Reyes', '7.8'], ['Foxglove', 2026, 'Mystery', 'Nadia Hollis', '7.4'],
+      ['Ironwood', 2019, 'Western', 'Marco Bellini', '7.0'], ['The Signal Keepers', 2023, 'Sci-Fi', 'Eva Strand', '8.1'], ['Parallel Lines', 2020, 'Drama', 'Ravi Menon', '7.2']
+    ];
+  }
+  pool() {
+    return {
+      movie: [['Harbour Lights', 2026, 'Drama'], ['The Ninth Winter', 2025, 'Thriller'], ['Paper Lanterns', 2019, 'Animation'], ['Copper Sky', 2026, 'Sci-Fi'], ['Nine Bridges', 2023, 'Romance'], ['Field of Ash', 2024, 'War'], ['Small Hours', 2025, 'Comedy'], ['Grey Meridian', 2022, 'Mystery'], ['Kestrel', 2021, 'Adventure'], ['After the Rain', 2020, 'Drama'], ['Lumen', 2026, 'Sci-Fi'], ['Riverbed', 2018, 'Crime'], ['The Glass Hour', 2024, 'Fantasy'], ['Marigold Lane', 2017, 'Comedy'], ['Slow Orbit', 2025, 'Sci-Fi'], ['Wintering', 2023, 'Drama']],
+      show: [['The Undertow', 2025, 'Crime'], ['Kessa Point', 2024, 'Mystery'], ['House of Moths', 2026, 'Horror'], ['Long Division', 2023, 'Drama'], ['Second Light', 2022, 'Sci-Fi'], ['The Archivists', 2021, 'Fantasy'], ['Blue Hour', 2025, 'Romance'], ['Ground Truth', 2024, 'Thriller'], ['Parallel Lines', 2020, 'Drama'], ['Foxglove', 2026, 'Mystery'], ['Ironwood', 2019, 'Western'], ['The Signal Keepers', 2023, 'Sci-Fi']]
+    };
+  }
+  events() {
+    const svc = '[Service]';
+    return {
+      release: {
+        movie: [['2026-10-30', 'Copper Sky', 'Film · in cinemas'], ['2026-11-06', 'Lumen', 'Film · in cinemas'], ['2026-11-06', 'Small Hours', 'Film · on ' + svc], ['2026-11-06', 'Kestrel', 'Film · on ' + svc],
+          ['2026-11-06', 'Saltmarsh', 'Film · in cinemas'], ['2026-11-13', 'Harbour Lights', 'Film · in cinemas'], ['2026-11-14', 'Hollow Moon', 'Film · in cinemas'], ['2026-11-20', 'The Ninth Winter', 'Film · on ' + svc],
+          ['2026-11-27', 'Field of Ash', 'Film · in cinemas'], ['2026-12-04', 'Slow Orbit', 'Film · on ' + svc], ['2026-12-11', 'The Glass Hour', 'Film · in cinemas'], ['2026-12-18', 'Wintering', 'Film · on ' + svc]],
+        show: [['2026-10-29', 'House of Moths', 'Series premiere · ' + svc], ['2026-11-03', 'Kessa Point', 'Season 2 premiere · ' + svc], ['2026-11-10', 'Foxglove', 'Series premiere · ' + svc],
+          ['2026-11-17', 'The Undertow', 'Season 2 premiere · ' + svc], ['2026-12-02', 'Northbound', 'Season 2 premiere · ' + svc], ['2026-12-09', 'Second Light', 'Season 3 premiere · ' + svc]]
+      },
+      leaving: {
+        movie: [['2026-10-31', 'Riverbed', 'Leaves ' + svc], ['2026-10-31', 'Marigold Lane', 'Leaves ' + svc], ['2026-11-01', 'Kestrel', 'Leaves ' + svc], ['2026-11-01', 'Grey Meridian', 'Leaves ' + svc],
+          ['2026-11-15', 'Paper Lanterns', 'Leaves ' + svc], ['2026-11-30', 'After the Rain', 'Leaves ' + svc], ['2026-11-30', 'Wintering', 'Leaves ' + svc], ['2026-12-31', 'Nine Bridges', 'Leaves ' + svc]],
+        show: [['2026-10-31', 'Ironwood', 'Leaves ' + svc], ['2026-11-01', 'Parallel Lines', 'Leaves ' + svc], ['2026-11-18', 'The Archivists', 'Leaves ' + svc],
+          ['2026-12-01', 'Blue Hour', 'Leaves ' + svc], ['2026-12-01', 'Long Division', 'Leaves ' + svc]]
+      }
+    };
+  }
+  setFor(key, which, value) { this.setState((s) => { const o = Object.assign({}, s[key]); o[which] = value; return { [key]: o }; }); }
+  shift(which, d) {
+    this.setState((s) => {
+      const m = Object.assign({}, s.month), sl = Object.assign({}, s.sel);
+      m[which] = Math.max(0, Math.min(2, m[which] + d)); sl[which] = null;
+      return { month: m, sel: sl };
+    });
+  }
+  // One month grid: today is 28 Oct 2026, months run Oct to Dec, and the first upcoming day with titles opens by default.
+  calendar(which) {
+    const S = this.state, TODAY = '2026-10-28';
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const all = this.events()[which][S.kind];
+    const ev = S.mine[which] ? all.filter((e) => S.added[e[1]]) : all;
+    const first = new Date(Date.UTC(2026, 9 + S.month[which], 1));
+    const year = first.getUTCFullYear(), mon = first.getUTCMonth();
+    const days = new Date(Date.UTC(year, mon + 1, 0)).getUTCDate();
+    const prefix = year + '-' + String(mon + 1).padStart(2, '0');
+    const key = (d) => prefix + '-' + String(d).padStart(2, '0');
+    const inMonth = ev.filter((e) => e[0].slice(0, 7) === prefix);
+    const upcoming = inMonth.filter((e) => e[0] >= TODAY);
+    const chosen = S.sel[which];
+    const sel = chosen && chosen.slice(0, 7) === prefix && inMonth.some((e) => e[0] === chosen) ? chosen : (upcoming[0] || inMonth[0] || [null])[0];
+    const cells = [];
+    for (let i = 0; i < (first.getUTCDay() + 6) % 7; i++) cells.push({ real: false, blank: true });
+    for (let d = 1; d <= days; d++) {
+      const k = key(d), list = ev.filter((e) => e[0] === k);
+      cells.push({
+        real: true, blank: false, n: d, sel: k === sel, past: k < TODAY, today: k === TODAY, none: list.length === 0,
+        thumbs: list.slice(0, 3).map((e) => ({ h: this.hue(e[1]), v: this.variant(e[1]) })),
+        hasMore: list.length > 3, more: '+' + (list.length - 3),
+        warn: which === 'leaving' && list.some((e) => S.added[e[1]]),
+        aria: d + ' ' + months[mon] + (list.length ? ', ' + list.length + (list.length === 1 ? ' title' : ' titles') : ''),
+        pick: () => this.setFor('sel', which, k)
+      });
+    }
+    while (cells.length % 7) cells.push({ real: false, blank: true });
+    const items = sel ? ev.filter((e) => e[0] === sel).map((e) => {
+      const on = !!S.added[e[1]], left = Math.round((Date.parse(e[0]) - Date.parse(TODAY)) / 864e5);
+      const leaving = which === 'leaving';
+      return {
+        t: e[1], h: this.hue(e[1]), v: this.variant(e[1]), added: on, addLabel: on ? 'On watchlist' : '+ Watchlist', toggle: () => this.toggleAdd(e[1]),
+        meta: leaving ? e[2] + ' · ' + (left <= 0 ? 'last day' : left + (left === 1 ? ' day left' : ' days left')) : e[2],
+        hasNote: leaving && on, note: 'On your watchlist, so watch it before it goes'
+      };
+    }) : [];
+    const sd = sel ? new Date(Date.parse(sel)) : null;
+    return {
+      title: which === 'release' ? 'Out soon' : 'Leaving soon',
+      sub: which === 'release' ? (S.kind === 'movie' ? 'Cinema and streaming releases' : 'Series and season premieres') : 'Last days on services in [country]',
+      monthLabel: months[mon] + ' ' + year,
+      prev: () => this.shift(which, -1), next: () => this.shift(which, 1), prevOff: S.month[which] === 0, nextOff: S.month[which] === 2,
+      mine: S.mine[which], toggleMine: () => this.setState((s) => { const m = Object.assign({}, s.mine), sl = Object.assign({}, s.sel); m[which] = !m[which]; sl[which] = null; return { mine: m, sel: sl }; }),
+      cells, items,
+      dayLabel: sd ? weekdays[sd.getUTCDay()] + ', ' + sd.getUTCDate() + ' ' + months[sd.getUTCMonth()] : months[mon],
+      empty: items.length === 0,
+      emptyText: S.mine[which] ? 'Nothing from your watchlist this month.' : 'Nothing this month.'
+    };
+  }
+  // Move the reel; the glow cross-fades to the new centre poster.
+  go(pos) {
+    const list = this.featured(this.state.kind), n = list.length;
+    if (this.mod(pos, n) === this.mod(this.state.pos, n)) { this.setState({ pos }); return; }
+    const next = 1 - this.state.glowOn, glow = this.state.glow.slice();
+    glow[next] = this.glowFor(list[this.mod(pos, n)][0]);
+    this.setState({ pos, glow, glowOn: next });
+  }
+  toggleAdd(t) { this.setState((s) => { const a = Object.assign({}, s.added); if (a[t]) delete a[t]; else a[t] = true; return { added: a }; }); }
+  frame() {
+    const W = this.state.W, small = W < 820, start = small ? 0 : (W <= 1100 ? 300 : 400);
+    const aw = Math.min(W, 1720), al = (W - aw) / 2;
+    const k = Math.max(0.62, Math.min(1.1, (aw - start) / 1040)) * 1.08;
+    const cx = small ? W / 2 : al + start + (aw - start) / 2;
+    return { W, k, cx, sL: Math.max(1, (cx - 60) / (this.reachAt(6) * k)), sR: Math.max(1, (W - cx - 60) / (this.reachAt(6) * k)) };
+  }
+  renderVals() {
+    const S = this.state, f = this.frame();
+    const list = this.featured(S.kind), n = list.length;
+    const slots = n * Math.ceil(18 / n), half = slots / 2;
+    const centre = this.mod(S.pos, n);
+    const posters = [];
+    for (let slot = 0; slot < slots; slot++) {
+      const off = this.mod(slot - S.pos + half, slots) - half, a = Math.abs(off), dir = Math.sign(off);
+      const stretch = 1 + ((dir < 0 ? f.sL : f.sR) - 1) * Math.min(1, a / 4);
+      const x = dir * this.reachAt(a) * f.k * stretch, y = (dir < 0 ? 46 : -26) * a * Math.max(0, 1 - a / 14) * f.k;
+      const edge = Math.min(f.cx + x, f.W - f.cx - x);
+      const o = Math.max(0, Math.min(1, (edge - 10) / (f.W * 0.14))) * Math.max(0, Math.min(1, (half - a) / 0.6));
+      const b = 1 / (1 + 0.55 * a), item = list[slot % n];
+      posters.push({
+        t: item[0], h: this.hue(item[0]), v: this.variant(item[0]), label: 'Show ' + item[0],
+        tf: 'translate(-50%, -50%) translate(' + x.toFixed(1) + 'px, ' + y.toFixed(1) + 'px) rotate(' + (-2 + dir * Math.min(15, 4.6 * a)).toFixed(2) + 'deg) scale(' + (this.scale(a) * f.k).toFixed(3) + ')',
+        z: 100 - Math.round(a * 10), op: o.toFixed(3), fx: 'brightness(' + b.toFixed(3) + ') saturate(' + Math.min(1, 0.55 + 0.45 * b).toFixed(3) + ')',
+        vis: o < 0.01 ? 'hidden' : 'visible', pe: o < 0.5 ? 'none' : 'auto',
+        pick: () => {
+          if (this.moved) return;
+          const d = this.mod(slot - this.mod(S.pos, slots) + Math.floor(slots / 2), slots) - Math.floor(slots / 2);
+          if (d) this.go(S.pos + d);
+        }
+      });
+    }
+    const c = list[centre], added = !!S.added[c[0]];
+    const step = 340 * 0.8 * f.k;
+    const kindWord = S.kind === 'movie' ? 'Film' : 'Series';
+    const card = (p, k) => {
+      const on = !!S.added[p[0]];
+      return {
+        t: p[0], h: this.hue(p[0]), v: this.variant(p[0]), meta: p[1] + ' · ' + p[2] + ' · ' + (k === 'show' ? 'Series' : 'Film'),
+        added: on, notAdded: !on, addLabel: (on ? 'Remove from watchlist: ' : 'Add to watchlist: ') + p[0], toggle: () => this.toggleAdd(p[0])
+      };
+    };
+    const P = this.pool(), pl = P[S.kind];
+    const pick = (ids) => ids.map((i) => card(pl[i % pl.length], S.kind));
+    const fav = S.kind === 'movie' ? 'Last Train to Varna' : 'The Cartographers';
+    const q = S.q.trim().toLowerCase(), searching = q.length > 0;
+    const everything = P.movie.map((p) => card(p, 'movie')).concat(P.show.map((p) => card(p, 'show')));
+    const people = [
+      { name: 'Ines Varga', role: 'Director · 4 titles', initial: 'I', h: 30 },
+      { name: 'Oren Hale', role: 'Creator · 3 titles', initial: 'O', h: 160 },
+      { name: 'Anna Kowal', role: 'Actor · 12 titles', initial: 'A', h: 280 }
+    ].filter((p) => p.name.toLowerCase().indexOf(q) >= 0);
+    let results = everything.filter((x) => (x.t + ' ' + x.meta).toLowerCase().indexOf(q) >= 0);
+    if (S.type === 'movie') results = results.filter((x) => x.meta.indexOf('Film') >= 0);
+    if (S.type === 'show') results = results.filter((x) => x.meta.indexOf('Series') >= 0);
+    if (S.type === 'people') results = [];
+    const showPeople = (S.type === 'all' || S.type === 'people') && people.length > 0;
+    return {
+      cx: f.cx.toFixed(1), k: f.k.toFixed(3), posters,
+      glowA: { bg: S.glow[0], cls: S.glowOn === 0 ? 'on' : '' }, glowB: { bg: S.glow[1], cls: S.glowOn === 1 ? 'on' : '' },
+      kicker: 'Trending this week · ' + (S.kind === 'movie' ? 'films' : 'shows'),
+      titleSize: c[0].length > 22 ? 34 : (c[0].length > 12 ? 44 : (c[0].length > 7 ? 56 : 72)),
+      cur: {
+        t: c[0], y: c[1], g: c[2], dir: c[3], tmdb: c[4], byLabel: S.kind === 'movie' ? 'Directed by' : 'Created by',
+        added, notAdded: !added, addLabel: added ? 'On your watchlist' : 'Add to watchlist', toggle: () => this.toggleAdd(c[0])
+      },
+      counter: (centre + 1) + ' / ' + n,
+      onWheel: (e) => {
+        const d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : (e.shiftKey ? e.deltaY : 0);
+        if (!d) return;
+        this.acc += d;
+        const now = Date.now();
+        if (Math.abs(this.acc) > 40 && now - this.lastStep > 110) { this.go(this.state.pos + Math.sign(this.acc)); this.acc = 0; this.lastStep = now; }
+      },
+      onKey: (e) => {
+        if (e.key === 'ArrowRight') { e.preventDefault(); this.go(this.state.pos + 1); }
+        if (e.key === 'ArrowLeft') { e.preventDefault(); this.go(this.state.pos - 1); }
+      },
+      onDown: (e) => { this.drag = { x: e.clientX, pos: this.state.pos }; this.moved = false; },
+      onMove: (e) => {
+        if (!this.drag) return;
+        const dx = e.clientX - this.drag.x;
+        if (Math.abs(dx) > 6) this.moved = true;
+        const target = this.drag.pos - Math.round(dx / step);
+        if (target !== this.state.pos) this.go(target);
+      },
+      onUp: () => { this.drag = null; setTimeout(() => { this.moved = false; }, 0); },
+      kinds: [['movie', 'Films'], ['show', 'Shows']].map((x) => ({ label: x[1], sel: S.kind === x[0], pick: () => this.setState({ kind: x[0], pos: 0, glow: [this.glowFor(this.featured(x[0])[0][0]), ''], glowOn: 0 }) })),
+      q: S.q, onSearch: (e) => this.setState({ q: e.target.value }),
+      summary: searching ? results.length + ' titles · ' + (showPeople ? people.length : 0) + ' people on TMDB' : 'Search TMDB, then add anything straight to your watchlist',
+      searching, browsing: !searching,
+      calendars: [this.calendar('release'), this.calendar('leaving')],
+      rows: [
+        { title: 'Because you gave ' + fav + ' five stars', more: 'See all', items: pick([7, 2, 11, 4, 8, 13, 15, 1]) },
+        { title: 'Your genres · Drama, Mystery, Sci-Fi', more: 'See all', items: pick([10, 14, 7, 0, 15, 3, 9, 11]) },
+        { title: 'Top rated ' + (kindWord === 'Film' ? 'films' : 'shows'), more: 'See all', items: pick([5, 1, 12, 9, 6, 2, 13, 4]) },
+        { title: 'Discover Western', more: 'Explore genre', items: pick([10, 6, 2, 13, 5, 8, 12]) }
+      ],
+      resultTypes: [['all', 'All'], ['movie', 'Films'], ['show', 'Shows'], ['people', 'People']].map((r) => ({ label: r[1], sel: S.type === r[0], pick: () => this.setState({ type: r[0] }) })),
+      results, people, hasPeople: showPeople, noResults: searching && results.length === 0 && !showPeople
+    };
+  }
+}
+</script>
+</body>
+</html>

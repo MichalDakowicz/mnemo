@@ -1,0 +1,108 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "Detail.dc.html": {
+      "expand": "fill",
+      "h": 2900,
+      "is_interactive": true,
+      "title": "Title page",
+      "w": 1440,
+      "x": 1520,
+      "y": 0
+    },
+    "Discover.dc.html": {
+      "expand": "fill",
+      "h": 3300,
+      "is_interactive": true,
+      "title": "Discover",
+      "w": 1440,
+      "x": 3040,
+      "y": 0
+    },
+    "Friends.dc.html": {
+      "expand": "fill",
+      "h": 1400,
+      "is_interactive": true,
+      "title": "Friends",
+      "w": 1440,
+      "x": 6080,
+      "y": 0
+    },
+    "Main.dc.html": {
+      "expand": "fill",
+      "h": 2100,
+      "is_interactive": true,
+      "title": "Library",
+      "w": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "Person.dc.html": {
+      "expand": "fill",
+      "h": 2200,
+      "is_interactive": true,
+      "title": "Person",
+      "w": 1440,
+      "x": 1520,
+      "y": 3020
+    },
+    "Settings.dc.html": {
+      "expand": "fill",
+      "h": 2000,
+      "is_interactive": true,
+      "title": "Settings",
+      "w": 1440,
+      "x": 7600,
+      "y": 0
+    },
+    "Stats.dc.html": {
+      "expand": "fill",
+      "h": 1900,
+      "is_interactive": true,
+      "title": "Stats",
+      "w": 1440,
+      "x": 4560,
+      "y": 0
+    },
+    "Profile.dc.html": {
+      "expand": "fill",
+      "h": 1900,
+      "is_interactive": true,
+      "title": "Profile",
+      "w": 1440,
+      "x": 9120,
+      "y": 0
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-10-27T12:00:00Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "view": "canvas"
+  },
+  "notes": {
+    "title": {
+      "kind": "title1",
+      "maxW": 7520,
+      "text": "Mnemo · web and desktop",
+      "w": 240,
+      "x": 0,
+      "y": -320
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "Detail.dc.html",
+    "Discover.dc.html",
+    "Stats.dc.html",
+    "Friends.dc.html",
+    "Profile.dc.html",
+    "Settings.dc.html",
+    "Person.dc.html"
+  ],
+  "pages": [],
+  "title": "Mnemo Web"
+}

@@ -1,0 +1,6 @@
+/* Poster + caption card used by Stats (hall of fame) and Profile (favourites, recent). From the .card/.cover rules in the artboards. */
+.title-card { display: block; color: var(--text); min-width: 0; }
+.title-card .poster { box-shadow: 0 14px 30px #0007, 0 0 0 1px #ffffff0d; }
+a.title-card:hover .poster, a.title-card:focus-visible .poster { transform: translateY(-6px) rotate(-1deg) scale(1.03); box-shadow: 0 30px 50px #0009, 0 0 0 1px #ece9e459; }
+.title-card .t { display: block; margin-top: 10px; font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.title-card .m { display: block; margin-top: 2px; font-size: 12px; color: var(--dim); }

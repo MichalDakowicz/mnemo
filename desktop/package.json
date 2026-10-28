@@ -1,0 +1,22 @@
+{
+  "name": "mnemo-desktop",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Mnemo desktop: the web export in an Electron window",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder"
+  },
+  "build": {
+    "appId": "com.michaldakowicz.mnemo.desktop",
+    "productName": "Mnemo",
+    "files": ["main.js", "preload.js", { "from": "../dist", "to": "dist" }],
+    "win": { "target": "nsis" },
+    "directories": { "output": "release" }
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8"
+  }
+}

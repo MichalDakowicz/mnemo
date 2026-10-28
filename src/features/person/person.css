@@ -1,0 +1,70 @@
+/* Person page, lifted from .design/project/Person.dc.html. Area classes are prefixed pe-. */
+.pe-back { position: fixed; top: 76px; left: 28px; z-index: 70; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #b9b6b0; }
+.pe-back:hover { color: var(--text-bright); background: #2a2a2dcc; }
+.pe-hero { position: relative; display: flex; flex-wrap: wrap; align-items: flex-end; gap: 40px 64px; margin-bottom: 64px; }
+.pe-glow { position: absolute; left: 150px; top: 50%; width: 1100px; height: 1200px; transform: translate(-50%, -50%); pointer-events: none; filter: blur(56px); opacity: .36; z-index: 0; max-width: 100vw; }
+.pe-portrait { position: relative; width: 300px; aspect-ratio: 2/3; border-radius: 6px; overflow: hidden; flex: none; transform: rotate(-2deg); box-shadow: 0 50px 90px #0009, 0 0 0 1px #ffffff0f; z-index: 1; }
+.pe-portrait::after { content: ''; position: absolute; inset: 0; background: linear-gradient(115deg, #ffffff24, #0000 32%), linear-gradient(180deg, #0000 60%, #0007); }
+.pe-portrait img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pe-portrait svg { position: absolute; left: 50%; bottom: 0; width: 80%; height: auto; transform: translateX(-50%); opacity: .3; }
+.pe-info { position: relative; z-index: 1; flex: 1 1 420px; min-width: 0; max-width: 720px; }
+.pe-kicker { margin: 0 0 12px; font-size: 13px; font-weight: 500; color: var(--dim); }
+.pe-name { margin: 0; font-size: 72px; font-weight: 600; line-height: .98; letter-spacing: -.045em; color: #f2efea; overflow-wrap: anywhere; }
+.pe-srcs { margin: 16px 0 0; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.pe-src { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px; border-radius: 999px; border: 1px solid #ece9e429; font-size: 12px; color: var(--soft); transition: background .15s, color .15s; }
+.pe-src:hover { background: #ece9e40d; color: var(--text); }
+.pe-src strong { font-weight: 700; color: var(--text); }
+.pe-born { margin: 18px 0 0; font-size: 14px; color: var(--dim); display: flex; flex-wrap: wrap; gap: 6px 10px; }
+.pe-bio { margin: 18px 0 0; max-width: 600px; font-size: 15px; line-height: 1.6; color: var(--soft); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; white-space: pre-line; }
+.pe-bio.open { -webkit-line-clamp: 40; }
+.pe-more { margin: 6px 0 0 -8px; }
+.pe-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 28px; border-top: 1px solid #ece9e424; padding-top: 18px; max-width: 560px; }
+.pe-stats > div { padding: 0 20px; border-left: 1px solid #ece9e424; }
+.pe-stats > div:first-child { padding-left: 0; border-left: 0; }
+.pe-stats p { margin: 0 0 8px; font-size: 13px; color: var(--dim); }
+.pe-stats strong { font-size: 26px; font-weight: 600; letter-spacing: -.03em; }
+.pe-stats small { font-size: 13px; color: var(--dim); }
+
+.pe-section { margin-bottom: 52px; }
+.pe-section h2 { margin: 0; font-size: 20px; font-weight: 600; letter-spacing: -.035em; }
+.pe-sec-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 10px; }
+.pe-sec-head span { font-size: 13px; color: var(--dim); }
+.pe-row { display: flex; gap: 22px; overflow-x: auto; padding: 8px 2px 14px; scrollbar-width: none; }
+.pe-row::-webkit-scrollbar { display: none; }
+.pe-row .pe-card { flex: none; width: 188px; }
+.pe-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 26px; padding-top: 18px; border-top: 1px solid #ece9e424; }
+.pe-bar .grp { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.pe-bar .lead { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+.pe-bar .sort { margin-left: 10px; }
+.chip small { margin-left: 8px; font-size: 11px; opacity: .7; font-family: var(--mono); }
+.pe-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(158px, 1fr)); gap: 30px 22px; }
+
+.pe-card { position: relative; display: block; min-width: 0; }
+.pe-card > a { display: block; }
+.pe-cover { position: relative; display: block; aspect-ratio: 2/3; border-radius: 6px; overflow: hidden; background: var(--panel); box-shadow: 0 14px 30px #0007, 0 0 0 1px #ffffff0d; transition: transform .45s var(--ease), box-shadow .45s var(--ease); }
+.pe-cover::after { content: ''; position: absolute; inset: 0; background: linear-gradient(115deg, #ffffff1c, #0000 34%); pointer-events: none; }
+.pe-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pe-card:hover .pe-cover, .pe-card > a:focus-visible .pe-cover { transform: translateY(-6px) rotate(-1deg) scale(1.03); box-shadow: 0 30px 50px #0009, 0 0 0 1px #ece9e459; }
+.pe-kind { position: absolute; top: 10px; left: 10px; z-index: 1; font-size: 9px; font-weight: 600; letter-spacing: .09em; padding: 4px 7px; border-radius: 5px; background: #0006; color: #fff; }
+.pe-badge { position: absolute; top: 8px; right: 8px; width: 22px; height: 22px; border-radius: 50%; background: #0a0a0b99; display: flex; align-items: center; justify-content: center; z-index: 1; color: var(--text); }
+.pe-badge.good { color: var(--good); }
+.pe-add { position: absolute; top: 8px; right: 8px; z-index: 3; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #0a0a0bb3; border: 1px solid #ffffff2e; color: var(--text); backdrop-filter: blur(8px); transition: transform .45s var(--ease); }
+.pe-card:hover .pe-add { transform: translateY(-6px); }
+.pe-add:hover:not(:disabled) { background: var(--primary); color: var(--on-primary); }
+.pe-card .n, .pe-card .r, .pe-card .m { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pe-card .n { margin-top: 12px; font-size: 13.5px; font-weight: 600; }
+.pe-card .r { margin-top: 3px; font-size: 12px; color: var(--soft); }
+.pe-card .m { margin-top: 2px; font-size: 12px; color: var(--dim); }
+.pe-empty { margin: 0; padding: 48px 0; text-align: center; font-size: 13px; color: var(--muted); }
+.pe-more-row { display: flex; justify-content: center; margin-top: 32px; }
+.pe-state { padding: 160px 16px; text-align: center; color: var(--dim); font-size: 14px; }
+.pe-state .pill { margin-top: 16px; }
+
+@media (max-width: 1100px) { .pe-hero { gap: 32px; } }
+@media (max-width: 640px) {
+  .pe-portrait { width: 200px; }
+  .pe-name { font-size: 48px; }
+  .pe-row .pe-card { width: 140px; }
+  .pe-back { left: 12px; }
+}
+@media (prefers-reduced-motion: reduce) { .pe-cover, .pe-add { transition: none; } }

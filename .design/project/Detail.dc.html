@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Mnemo title page</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..800&amp;family=Geist+Mono:wght@400..600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0a0a0b}
+a{color:#ece9e4}a:hover{color:#ffffff}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;padding:0}
+button:focus-visible,a:focus-visible,textarea:focus-visible{outline:2px solid #f3f1ec;outline-offset:3px}
+.glass{background:#1a1a1c8c;border:1px solid #ffffff14;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 10px 30px #0006}
+.dock{display:flex;align-items:center;gap:2px;padding:4px;border-radius:999px}
+.dock-item{display:flex;align-items:center;gap:8px;height:40px;padding:0 16px;border-radius:999px;font-size:13.5px;font-weight:500;color:#b9b6b0;text-decoration:none;transition:background .15s,color .15s}
+.dock-item:hover{background:#ece9e414;color:#f4f1ec}
+.dock-item[aria-current=page]{background:#ece9e41f;color:#f4f1ec}
+.back{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#b9b6b0;text-decoration:none;flex:none}
+.back:hover{color:#f4f1ec;background:#2a2a2dcc}
+.brand{display:flex;align-items:center;gap:12px;height:48px;text-decoration:none;color:#ece9e4}
+.pill{height:44px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:0 20px;font-size:14px;font-weight:500;border:1px solid #ece9e433;white-space:nowrap;color:#ece9e4;text-decoration:none;transition:background .15s,transform .15s}
+.pill:hover{background:#ece9e414;color:#ece9e4}
+.pill:active{transform:scale(.97)}
+.pill.primary{background:#f3f1ec;color:#0a0a0b;border-color:#f3f1ec;font-weight:600}
+.pill.primary:hover{background:#ffffff}
+.chip{height:34px;padding:0 14px;border-radius:999px;border:1px solid #ece9e429;font-size:13px;color:#bebab3;display:inline-flex;align-items:center;gap:8px}
+.chip:hover{background:#ece9e40d}
+.chip[aria-pressed=true]{background:#f3f1ec;color:#0a0a0b;border-color:#f3f1ec}
+.chip:disabled{opacity:.45;cursor:default}
+.chip small{font-size:11px;opacity:.7;font-family:'Geist Mono',ui-monospace,monospace}
+.text-button{color:#a9a59d;font-size:13px;padding:6px 8px;border-radius:8px;display:inline-flex;align-items:center;gap:8px;text-decoration:none}
+.text-button:hover{color:#ece9e4;background:#ffffff0a}
+.art{background:radial-gradient(ellipse 80% 55% at 30% 22%,hsl(var(--h) 70% 72% / .45),#0000 70%),radial-gradient(ellipse 70% 45% at 85% 95%,hsl(calc(var(--h) + 40) 60% 18% / .7),#0000 70%),linear-gradient(170deg,hsl(var(--h) 42% 38%),hsl(calc(var(--h) + 25) 38% 13%))}
+.art.v1{background:radial-gradient(circle at 50% 38%,hsl(var(--h) 80% 78% / .9) 0 9%,#0000 10%),linear-gradient(180deg,hsl(var(--h) 55% 58%),hsl(calc(var(--h) - 20) 55% 22%) 62%,hsl(calc(var(--h) - 30) 45% 8%))}
+.art.v3{background:linear-gradient(116deg,#0000 0 36%,hsl(var(--h) 80% 80% / .25) 44%,#0000 56%),repeating-linear-gradient(90deg,#0000 0 46px,#0003 46px 48px),linear-gradient(180deg,hsl(var(--h) 22% 30%),hsl(var(--h) 20% 8%))}
+.panel{flex:1 1 420px;min-width:0;padding:22px 24px;border-radius:14px;background:#ece9e409;border:1px solid #ece9e414;box-sizing:border-box}
+.panel.wide{flex:999 1 100%}
+.src{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px;border-radius:999px;border:1px solid #ece9e429;font-size:12px;color:#bebab3;text-decoration:none;transition:background .15s,color .15s}
+.src:hover{background:#ece9e40d;color:#ece9e4}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:22px 24px}
+.facts p{margin:0 0 6px;font-size:11px;color:#8f8c87}
+.facts strong{display:block;font-size:14px;font-weight:500}
+.facts small{display:block;margin-top:3px;font-size:12px;color:#8f8c87}
+.cast{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:24px 18px}
+.person{display:block;min-width:0;text-decoration:none;color:#ece9e4}
+.person:hover{color:#ece9e4}
+.photo{position:relative;display:block;aspect-ratio:2/3;border-radius:6px;overflow:hidden;box-shadow:0 14px 30px #0007,0 0 0 1px #ffffff0d;transition:transform .45s cubic-bezier(.2,.75,.15,1),box-shadow .45s}
+.photo:after{content:'';position:absolute;inset:0;background:linear-gradient(115deg,#ffffff1c,#0000 34%),linear-gradient(180deg,#0000 55%,#0008)}
+.person:hover .photo,.person:focus-visible .photo{transform:translateY(-6px) rotate(-1deg) scale(1.03);box-shadow:0 30px 50px #0009,0 0 0 1px #ece9e459}
+.photo svg{position:absolute;left:50%;bottom:0;width:78%;height:auto;transform:translateX(-50%);opacity:.32}
+@media (prefers-reduced-motion:reduce){.photo{transition:none}}
+.last-row{flex:999 1 100%;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:20px}
+@media (max-width:900px){.last-row{grid-template-columns:minmax(0,1fr)}}
+.panel h3{margin:0;font-size:13px;font-weight:600;letter-spacing:-.01em}
+.ep{display:flex;gap:14px;padding:8px;border-radius:12px;min-width:0}
+.ep:hover{background:#ece9e40a}
+.ep-thumb{position:relative;flex:none;width:132px;height:74px;border-radius:8px;overflow:hidden}
+.ep-check{position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#0a0a0b99;border:1px solid #ffffff2e;color:#ece9e4}
+.ep-check[aria-pressed=true]{background:#f3f1ec;color:#0a0a0b;border-color:#f3f1ec}
+.rate-toggle{display:block;text-align:left;border-radius:10px;padding:6px 8px;margin:-6px -8px;transition:background .15s}
+.rate-toggle:hover{background:#ece9e40d}
+.rate-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:4px}
+.rate-label{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#8f8c87}
+.rate-val{font-size:13px;font-weight:600;font-family:'Geist Mono',ui-monospace,monospace}
+.precise{position:relative;display:block;height:32px;margin:0 10px}
+.p-track{position:absolute;left:0;right:0;top:12px;height:8px;border-radius:999px;background:#ffffff1f;overflow:hidden}
+.p-fill{display:block;height:100%;border-radius:999px;background:#f3f1ec}
+.p-knob{position:absolute;top:6px;width:20px;height:20px;margin-left:-10px;box-sizing:border-box;border-radius:50%;background:#ffffff;border:2px solid #0a0a0b;box-shadow:0 0 0 1px #f3f1ec,0 2px 8px #0008;pointer-events:none}
+.precise input{position:absolute;top:0;bottom:0;left:-10px;width:calc(100% + 20px);margin:0;opacity:0;cursor:pointer}
+.precise:focus-within .p-knob{outline:2px solid #f3f1ec;outline-offset:3px}
+.ticks{display:flex;gap:4px}
+.tick{flex:1;min-width:0;height:32px;display:flex;align-items:center}
+.tick span{display:block;width:100%;height:6px;border-radius:999px;transition:background .15s}
+.tick:hover span{box-shadow:0 0 0 1px #ece9e466}
+.bar{height:4px;border-radius:4px;background:#ffffff1a;overflow:hidden}
+.bar span{display:block;height:100%;background:#f3f1ec;border-radius:4px}
+.menu{position:absolute;top:52px;left:0;z-index:30;min-width:220px;padding:6px;border-radius:16px;display:flex;flex-direction:column;gap:2px}
+.menu button{display:flex;align-items:center;justify-content:space-between;gap:12px;height:40px;padding:0 14px;border-radius:10px;font-size:13.5px;color:#d6d2ca;text-align:left}
+.menu button:hover{background:#ece9e414}
+.menu button[aria-checked=true]{color:#ffffff;background:#ece9e41f}
+textarea{width:100%;box-sizing:border-box;min-height:84px;resize:vertical;border-radius:12px;border:1px solid #ece9e429;background:#ffffff06;color:#ece9e4;font:inherit;font-size:13.5px;line-height:1.55;padding:12px 14px;outline:none}
+textarea::placeholder{color:#8f8c87}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.help{position:fixed;right:24px;bottom:24px;z-index:87;width:44px;height:44px;border-radius:50%;color:#ece9e4;font-size:17px;font-weight:600}
+.grain{position:fixed;inset:0;pointer-events:none;z-index:95;opacity:.09;background-image:url(/_blob/618baeb7c0b2e2caf3f353de0710caa9)}
+@media (max-width:980px){.dock-label{display:none}.dock-item{padding:0 13px}.hero{width:100%!important;height:440px!important}.head{margin-left:0!important;padding-top:300px;min-height:0!important}}
+@media (max-width:640px){.body{padding:84px 16px 40px!important}.head h1{font-size:44px!important}.brand-name{display:none}.ratings{grid-template-columns:1fr!important;gap:16px}.ratings>div{border-left:0!important;padding-left:0!important}}
+</style>
+</helmet>
+<div style="position: relative; min-height: 100vh; overflow-x: clip; background: #0a0a0b; color: #ece9e4; font-family: Geist, 'Segoe UI', system-ui, sans-serif; font-size: 14px">
+
+  <div style="position: fixed; top: 18px; left: 28px; right: 28px; z-index: 80; display: flex; align-items: center; justify-content: space-between; gap: 16px; pointer-events: none">
+    <div style="display: flex; align-items: center; gap: 10px; pointer-events: auto">
+      <a class="back glass" href="Main.dc.html" aria-label="Back to library"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg></a>
+      <nav class="dock glass" aria-label="Sections">
+        <a class="dock-item" href="Main.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="7" height="16" rx="1.5"></rect><rect x="14" y="4" width="7" height="16" rx="1.5"></rect></svg><span class="dock-label">Library</span></a>
+        <a class="dock-item" href="Discover.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M15.5 8.5l-2 5-5 2 2-5z"></path></svg><span class="dock-label">Discover</span></a>
+        <a class="dock-item" href="Stats.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V11M12 20V5M19 20v-6"></path></svg><span class="dock-label">Stats</span></a>
+        <a class="dock-item" href="Friends.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8.5" r="3.5"></circle><path d="M2.5 20a6.5 6.5 0 0 1 13 0"></path><path d="M16 5.2a3.5 3.5 0 0 1 0 6.6M18 14.5a6.5 6.5 0 0 1 3.5 5.5"></path></svg><span class="dock-label">Friends</span></a>
+      <a class="dock-item" href="Profile.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="10" r="3"></circle><path d="M6.5 18.5a6.5 6.5 0 0 1 11 0"></path></svg><span class="dock-label">Profile</span></a>
+        <a class="dock-item" href="Discover.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="M20 20l-4-4"></path></svg><span class="dock-label">Search</span></a>
+      </nav>
+    </div>
+    <a class="brand" href="Main.dc.html" style="pointer-events: auto">
+      <span class="brand-name" style="font-weight: 600; font-size: 22px; letter-spacing: -0.035em">Mnemo</span>
+      <svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><rect x="9" y="6" width="20" height="28" rx="3" fill="none" stroke="#f3f1ec" stroke-width="2.6"></rect><rect x="14" y="10" width="20" height="28" rx="3" fill="#f3f1ec"></rect><path d="M19.5 24.5l3 3 6-7" fill="none" stroke="#0a0a0b" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    </a>
+  </div>
+
+  <div class="hero art v3" aria-hidden="true" style="--h: 32; position: absolute; left: 0; top: 0; width: 62%; height: 680px; overflow: hidden">
+    <span style="position: absolute; left: 56px; top: 200px; font-size: 120px; font-weight: 600; letter-spacing: -0.04em; text-transform: uppercase; color: #ffffff; opacity: .16; line-height: 1">Northbound</span>
+    <span style="position: absolute; right: 22%; top: 96px; font-size: 13px; color: #ffffff73">[TMDB backdrop]</span>
+    <span style="position: absolute; inset: 0; background: linear-gradient(90deg, #0a0a0b00 46%, #0a0a0bb3 78%, #0a0a0b), linear-gradient(180deg, #0a0a0b59, #0a0a0b00 22%, #0a0a0b00 62%, #0a0a0b)"></span>
+  </div>
+
+  <main class="body" style="position: relative; z-index: 2; padding: 84px 56px 40px; max-width: 1720px; margin: 0 auto; box-sizing: border-box">
+    <div class="head" style="margin-left: 56%; max-width: 600px; min-height: 560px">
+      <h1 style="margin: 0; font-size: 64px; line-height: .98; font-weight: 700; letter-spacing: -0.045em; color: #efe7dc">Northbound</h1>
+      <p style="margin: 16px 0 0; display: flex; flex-wrap: wrap; align-items: center; gap: 6px">
+        <a class="src" href="https://www.themoviedb.org/" target="_blank" rel="noopener">Matched on <img src="/_blob/204eeb403127d38b78de66b400f945d3" alt="TMDB" style="display: block; height: 9px; width: auto"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 16L16 8M9 8h7v7"></path></svg></a>
+        <a class="src" href="https://www.imdb.com/" target="_blank" rel="noopener">On <strong style="font-weight: 700; color: #ece9e4; letter-spacing: -0.01em">IMDb</strong><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 16L16 8M9 8h7v7"></path></svg></a>
+        <a class="text-button" href="Discover.dc.html" style="margin-left: 14px; font-size: 12px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="M20 20l-4-4"></path></svg>Wrong title? Fix match</a>
+      </p>
+      <p style="margin: 18px 0 0; font-size: 14px; color: #8f8c87">Created by <a href="Person.dc.html" style="color: #ece9e4; font-weight: 600; text-decoration: none">Ines Varga</a></p>
+      <p style="margin: 12px 0 0; font-size: 14px; color: #8f8c87; display: flex; flex-wrap: wrap; gap: 6px 10px"><span>2025</span><span>·</span><span>Drama · Mystery</span><span>·</span><span>2 seasons · 18 episodes</span><span>·</span><span>Series</span></p>
+      <p style="margin: 20px 0 0; max-width: 500px; font-size: 15px; line-height: 1.6; color: #bebab3">A radio operator at an Arctic relay station picks up a signal from a ship that sank forty years ago, and the crew that came to find it starts to disappear one by one.</p>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; position: relative">
+        <button class="pill primary" onClick="{{markNext}}">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+          {{nextLabel}}
+        </button>
+        <div style="position: relative">
+          <button class="pill" onClick="{{toggleMenu}}" aria-expanded="{{menuOpen}}" aria-haspopup="menu">
+            <span style="width: 7px; height: 7px; border-radius: 50%; background: {{statusDot}}"></span>
+            {{statusLabel}}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
+          </button>
+          <sc-if value="{{menuOpen}}" hint-placeholder-val="{{ false }}">
+            <div class="menu glass" role="menu" aria-label="Watch status" style="background: #1c1c1ff2">
+              <sc-for list="{{statuses}}" as="s" hint-placeholder-count="4">
+                <button role="menuitemradio" aria-checked="{{s.sel}}" onClick="{{s.pick}}">{{s.label}}<span style="font-size: 12px; color: #8f8c87">{{s.hint}}</span></button>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+
+      <div class="ratings" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 36px; border-top: 1px solid #ece9e424; padding-top: 18px; max-width: 560px">
+        <div style="padding-right: 20px">
+          <p style="margin: 0 0 8px; font-size: 11px; font-weight: 600; letter-spacing: .14em; color: #8f8c87">TMDB</p>
+          <strong style="font-size: 26px; font-weight: 600; letter-spacing: -0.03em">8.1</strong><small style="font-size: 13px; color: #8f8c87">/10 · 2,140 votes</small>
+        </div>
+        <div style="padding: 0 20px; border-left: 1px solid #ece9e424">
+          <button class="rate-toggle" onClick="{{toggleReview}}" aria-expanded="{{reviewOpen}}" aria-controls="review">
+            <span style="display: block; margin-bottom: 8px; font-size: 13px; color: #8f8c87">Your rating</span>
+            <span style="display: flex; align-items: center; gap: 6px">
+              <strong style="font-size: 26px; font-weight: 600; letter-spacing: -0.03em">{{mineValue}}</strong><small style="font-size: 13px; color: #8f8c87">{{mineSuffix}}</small>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#a9a59d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="margin-left: 2px; transform: rotate({{chev}}deg); transition: transform .35s cubic-bezier(.2,.75,.15,1)"><path d="M6 9l6 6 6-6"></path></svg>
+            </span>
+          </button>
+        </div>
+        <div style="padding-left: 20px; border-left: 1px solid #ece9e424">
+          <p style="margin: 0 0 8px; font-size: 13px; color: #8f8c87">Friends</p>
+          <strong style="font-size: 26px; font-weight: 600; letter-spacing: -0.03em">4.3</strong><small style="font-size: 13px; color: #8f8c87"> · 6 rated</small>
+        </div>
+      </div>
+      <sc-if value="{{reviewOpen}}" hint-placeholder-val="{{ false }}">
+        <div id="review" style="max-width: 560px; margin-top: 18px; padding-top: 18px; border-top: 1px solid #ece9e424; display: flex; flex-direction: column; gap: 22px">
+          <div>
+            <div class="rate-row">
+              <span class="rate-label">Overall</span>
+              <span style="display: flex; align-items: center; gap: 8px">
+                <button class="text-button" onClick="{{autoOverall}}" style="font-size: 12px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2.5"></rect><path d="M8.5 7h7M8.5 12h.01M12 12h.01M15.5 12h.01M8.5 16h.01M12 16h.01M15.5 16h.01"></path></svg>Auto-calc from seasons</button>
+                <span class="rate-val">{{overall.shown}}</span>
+              </span>
+            </div>
+            <label class="precise"><span class="sr">{{overall.label}}</span><span class="p-track"><span class="p-fill" style="width: {{overall.pct}}%"></span></span><span class="p-knob" style="left: {{overall.pct}}%"></span><input type="range" min="0" max="5" step="0.1" value="{{overall.val}}" onChange="{{overall.set}}"></label>
+          </div>
+
+          <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px">
+            <div style="display: flex; flex-wrap: wrap; gap: 6px" role="group" aria-label="Rate by season">
+              <sc-for list="{{rateSeasons}}" as="se" hint-placeholder-count="2">
+                <button class="chip" onClick="{{se.pick}}" aria-pressed="{{se.sel}}" disabled="{{se.off}}">{{se.label}} <small>{{se.count}}</small></button>
+              </sc-for>
+            </div>
+            <button class="text-button" onClick="{{autoSeason}}" style="font-size: 12px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2.5"></rect><path d="M8.5 7h7M8.5 12h.01M12 12h.01M15.5 12h.01M8.5 16h.01M12 16h.01M15.5 16h.01"></path></svg>Auto-calc season</button>
+          </div>
+
+          <div>
+            <div class="rate-row"><span class="rate-label">{{seasonOverall.title}}</span><span class="rate-val">{{seasonOverall.shown}}</span></div>
+            <label class="precise"><span class="sr">{{seasonOverall.label}}</span><span class="p-track"><span class="p-fill" style="width: {{seasonOverall.pct}}%"></span></span><span class="p-knob" style="left: {{seasonOverall.pct}}%"></span><input type="range" min="0" max="5" step="0.1" value="{{seasonOverall.val}}" onChange="{{seasonOverall.set}}"></label>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px 28px">
+            <sc-for list="{{cats}}" as="c" hint-placeholder-count="4">
+              <div>
+                <div class="rate-row"><span class="rate-label">{{c.label}}</span><span class="rate-val">{{c.shown}}</span></div>
+                <div class="ticks" role="group" aria-label="{{c.label}}">
+                  <sc-for list="{{c.ticks}}" as="t" hint-placeholder-count="10">
+                    <button class="tick" onClick="{{t.pick}}" aria-pressed="{{t.on}}" aria-label="{{t.aria}}"><span style="background: {{t.bg}}"></span></button>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-top: 36px">
+      <section class="panel wide" aria-label="Episodes">
+        <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 6px">
+          <h3>Episodes</h3>
+          <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px">
+            <sc-for list="{{seasons}}" as="se" hint-placeholder-count="2">
+              <button class="chip" onClick="{{se.pick}}" aria-pressed="{{se.sel}}" disabled="{{se.off}}">{{se.label}} <small>{{se.count}}</small></button>
+            </sc-for>
+            <button class="text-button" onClick="{{markSeason}}">{{seasonAction}}</button>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 14px; margin: 0 2px 14px">
+          <p style="margin: 0; font-size: 12px; color: #8f8c87; white-space: nowrap">{{seasonSummary}}</p>
+          <div class="bar" style="flex: 1; max-width: 320px"><span style="width: {{seasonPct}}%"></span></div>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr)); gap: 4px 12px">
+          <sc-for list="{{episodes}}" as="e" hint-placeholder-count="10">
+            <div class="ep">
+              <span class="ep-thumb art {{e.v}}" style="--h: {{e.h}}">
+                <span style="position: absolute; left: 6px; bottom: 6px; font-size: 10px; font-weight: 600; letter-spacing: .06em; padding: 3px 6px; border-radius: 5px; background: #0009; color: #fff">{{e.code}}</span>
+                <button class="ep-check" onClick="{{e.toggle}}" aria-pressed="{{e.done}}" aria-label="{{e.aria}}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></button>
+              </span>
+              <span style="display: flex; flex-direction: column; gap: 3px; min-width: 0">
+                <span style="font-size: 13.5px; font-weight: 600; color: {{e.titleColor}}">{{e.title}}</span>
+                <span style="font-size: 12px; color: #8f8c87">{{e.meta}}</span>
+                <span style="font-size: 12px; line-height: 1.45; color: #a9a59d; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden">{{e.desc}}</span>
+              </span>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <section class="panel wide" aria-label="Details">
+        <h3 style="margin-bottom: 18px">Details</h3>
+        <div class="facts">
+          <div><p>Created by</p><strong>Ines Varga</strong><small>Writer, showrunner</small></div>
+          <div><p>Starring</p><strong>Anna Kowal, Theo Brandt</strong><small>Lise Dahl, Omar Said</small></div>
+          <div><p>Network</p><strong>[Network]</strong><small>Original series</small></div>
+          <div><p>Status</p><strong>Returning series</strong><small>Season 2 on 2 Dec</small></div>
+          <div><p>First aired</p><strong>14 Sep 2025</strong><small>Weekly, Sundays</small></div>
+          <div><p>Episodes</p><strong>18 in 2 seasons</strong><small>46 to 57 min each</small></div>
+          <div><p>Language</p><strong>English, Norwegian</strong><small>Norway, United Kingdom</small></div>
+          <div><p>In your library</p><strong>Added 3 Oct 2026</strong><small>Started 5 Oct</small></div>
+        </div>
+      </section>
+
+      <section class="panel wide" aria-labelledby="h-cast">
+        <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 18px">
+          <h3 id="h-cast">Cast</h3>
+          <a class="text-button" href="Discover.dc.html">Full cast and crew</a>
+        </div>
+        <div class="cast">
+          <sc-for list="{{cast}}" as="p" hint-placeholder-count="8">
+            <a class="person" href="Person.dc.html">
+              <span class="photo art" style="--h: {{p.h}}">
+                <svg viewBox="0 0 100 110" fill="#ffffff" aria-hidden="true"><circle cx="50" cy="34" r="22"></circle><path d="M6 110c2-30 20-46 44-46s42 16 44 46z"></path></svg>
+              </span>
+              <span style="display: block; margin-top: 12px; font-size: 13.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{p.name}}</span>
+              <span style="display: block; margin-top: 3px; font-size: 12px; color: #bebab3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{p.role}}</span>
+              <span style="display: block; margin-top: 2px; font-size: 11.5px; color: #8f8c87; font-family: 'Geist Mono', ui-monospace, monospace">{{p.eps}}</span>
+            </a>
+          </sc-for>
+        </div>
+      </section>
+
+      <div class="last-row">
+      <section class="panel" aria-label="Your notes">
+        <label style="display: block">
+          <span style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 12px">
+            <span style="font-size: 13px; font-weight: 600; letter-spacing: -0.01em">Your notes</span>
+            <span style="font-size: 12px; color: #8f8c87">Only you see these</span>
+          </span>
+          <textarea placeholder="What stayed with you? Scenes, lines, who you watched it with…" style="min-height: 240px; font-size: 15px; line-height: 1.65; padding: 16px 18px"></textarea>
+        </label>
+      </section>
+
+      <section class="panel" aria-label="Friends who watched">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px">
+          <h3>Friends</h3>
+          <a class="text-button" href="Friends.dc.html">See all</a>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 0 16px">
+          <sc-for list="{{friends}}" as="f" hint-placeholder-count="3">
+            <a href="Friends.dc.html" style="display: flex; align-items: center; gap: 12px; padding: 10px 8px; border-radius: 10px; text-decoration: none; color: #ece9e4">
+              <span class="art" style="--h: {{f.h}}; width: 34px; height: 34px; border-radius: 50%; flex: none; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: #fff">{{f.initial}}</span>
+              <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13.5px; font-weight: 600">{{f.name}}</span><span style="font-size: 12px; color: #8f8c87">{{f.meta}}</span></span>
+              <span style="font-size: 13px; font-family: 'Geist Mono', ui-monospace, monospace">{{f.rating}}</span>
+            </a>
+          </sc-for>
+        </div>
+      </section>
+      </div>
+
+      <section class="panel wide" aria-labelledby="h-production">
+        <h3 id="h-production" style="margin-bottom: 18px">Production</h3>
+        <div class="facts">
+          <div><p>Production companies</p><strong>[Production company]</strong><small>[Production company]</small></div>
+          <div><p>Network</p><strong>[Network]</strong><small>Norway, United Kingdom</small></div>
+          <div><p>Executive producers</p><strong>Ines Varga, Paul Okoye</strong><small>Hanne Rask</small></div>
+          <div><p>Writers</p><strong>Ines Varga, Hanne Rask</strong><small>4 more</small></div>
+          <div><p>Directors</p><strong>Ines Varga, Jun Park</strong><small>Season 1</small></div>
+          <div><p>Music</p><strong>Ola Sund</strong></div>
+          <div><p>Cinematography</p><strong>Petra Lind</strong></div>
+          <div><p>Filmed in</p><strong>Svalbard, Tromsø</strong><small>Norway</small></div>
+        </div>
+      </section>
+    </div>
+  </main>
+  <button class="help glass" aria-label="About and sync status">?</button>
+  <div class="grain" aria-hidden="true"></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"openReview":{"editor":"boolean","default":false},"$preview":{"width":1440,"height":2900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = {
+      season: 1, watched: { 1: [1, 2, 3, 4] }, status: 'watching', menuOpen: false,
+      reviewOpen: !!props.openReview, overall: 4.3, rateSeason: 1,
+      ratings: { 1: { overall: 4.5, story: 4.5, acting: 4, ending: 0, enjoyment: 5 }, 2: { overall: 0, story: 0, acting: 0, ending: 0, enjoyment: 0 } }
+    };
+  }
+  componentDidUpdate(prev) {
+    if (prev.openReview !== this.props.openReview) this.setState({ reviewOpen: !!this.props.openReview });
+  }
+  eps() {
+    return [
+      ['Pilot', 'A signal no one should be able to send reaches the relay station at Kessa Point.'],
+      ['Whiteout', 'The crew loses contact with the mainland as the first storm of winter closes in.'],
+      ['The Long Thaw', 'Mira finds a logbook that names every member of the current crew.'],
+      ['Signal Fire', 'A rescue team arrives, one person short of the number that set out.'],
+      ['Ice Road', 'Jonas tries to reach the old weather station on foot.'],
+      ['Crossing', 'The ship’s last transmission is decoded, and it is addressed to Mira.'],
+      ['Low Light', 'Power fails across the station for nineteen hours.'],
+      ['The Pass', 'Two of the crew go north to find where the signal starts.'],
+      ['Snowblind', 'What the rescue team brought back with them begins to show.'],
+      ['Northbound', 'The relay goes silent, and the ship comes in.']
+    ];
+  }
+  renderVals() {
+    const S = this.state;
+    const done = S.watched[S.season] || [];
+    const list = S.season === 1 ? this.eps() : [];
+    const toggleEp = (n) => () => this.setState((s) => {
+      const w = Object.assign({}, s.watched);
+      const cur = (w[s.season] || []).slice();
+      const i = cur.indexOf(n);
+      if (i >= 0) cur.splice(i, 1); else cur.push(n);
+      w[s.season] = cur;
+      const st = cur.length === 10 ? 'watched' : (cur.length ? 'watching' : s.status);
+      return { watched: w, status: st };
+    });
+    const episodes = list.map((p, i) => {
+      const n = i + 1, isDone = done.indexOf(n) >= 0;
+      return {
+        code: 'S1 E' + n, title: n + '. ' + p[0], desc: p[1], h: 32 + i * 9, v: i % 3 === 1 ? 'v1' : (i % 3 === 2 ? 'v3' : ''),
+        meta: (46 + (n * 7) % 12) + 'm' + (isDone ? ' · Watched ' + (4 + n) + ' Oct' : ''),
+        done: isDone, aria: (isDone ? 'Mark unwatched: ' : 'Mark watched: ') + p[0],
+        titleColor: isDone ? '#a9a59d' : '#ece9e4', toggle: toggleEp(n)
+      };
+    });
+    const firstOpen = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].find((n) => done.indexOf(n) < 0);
+    const statusDefs = [['watchlist', 'Watchlist', 'Not started'], ['watching', 'Watching', 'In progress'], ['watched', 'Completed', 'All episodes'], ['dropped', 'Dropped', 'Stopped watching']];
+    const statusMap = {}; statusDefs.forEach((d) => { statusMap[d[0]] = d[1]; });
+    // Ratings follow Radar: a 0.1-step drag slider for overall scores, 10 tap segments (0.5 steps) per category,
+    // tapping the current segment clears it, and Auto-calc averages whatever has been rated.
+    const CATS = [['story', 'Story'], ['acting', 'Acting'], ['ending', 'Ending'], ['enjoyment', 'Enjoyment']];
+    const avg = (xs) => { const ys = xs.filter((x) => x > 0); return ys.length ? Math.round(ys.reduce((a, b) => a + b, 0) / ys.length * 10) / 10 : 0; };
+    const setSeason = (n, key, v) => this.setState((s) => { const r = Object.assign({}, s.ratings); r[n] = Object.assign({}, r[n]); r[n][key] = v; return { ratings: r }; });
+    const precise = (value, label, set) => ({ val: value, pct: (value / 5 * 100).toFixed(1), shown: value.toFixed(1) + ' / 5', label, set: (e) => set(Number(e.target.value)) });
+    const sr = S.ratings[S.rateSeason];
+    return {
+      nextLabel: firstOpen ? 'Mark E' + firstOpen + ' watched' : 'Season complete',
+      markNext: () => { if (firstOpen) toggleEp(firstOpen)(); },
+      menuOpen: S.menuOpen, toggleMenu: () => this.setState((s) => ({ menuOpen: !s.menuOpen })),
+      statusLabel: statusMap[S.status],
+      statusDot: S.status === 'watched' ? '#9fd6b0' : (S.status === 'dropped' ? '#e3a58b' : '#ece9e4'),
+      statuses: statusDefs.map((d) => ({ label: d[1], hint: d[2], sel: S.status === d[0], pick: () => this.setState({ status: d[0], menuOpen: false }) })),
+      reviewOpen: S.reviewOpen, toggleReview: () => this.setState((s) => ({ reviewOpen: !s.reviewOpen })), chev: S.reviewOpen ? 180 : 0,
+      mineValue: S.overall > 0 ? S.overall.toFixed(1) : 'Rate', mineSuffix: S.overall > 0 ? '/5' : '',
+      overall: precise(S.overall, 'Overall rating for Northbound', (v) => this.setState({ overall: v })),
+      autoOverall: () => this.setState((s) => ({ overall: avg(Object.keys(s.ratings).map((k) => s.ratings[k].overall)) })),
+      rateSeasons: [1, 2].map((n) => ({
+        label: 'Season ' + n, sel: S.rateSeason === n, off: n === 2, pick: () => this.setState({ rateSeason: n }),
+        count: S.ratings[n].overall > 0 ? S.ratings[n].overall.toFixed(1) : (n === 2 ? 'Dec 2' : '—')
+      })),
+      seasonOverall: Object.assign(precise(sr.overall, 'Season ' + S.rateSeason + ' overall rating', (v) => setSeason(S.rateSeason, 'overall', v)), { title: 'Season ' + S.rateSeason + ' overall' }),
+      autoSeason: () => setSeason(S.rateSeason, 'overall', avg(CATS.map((c) => S.ratings[S.rateSeason][c[0]]))),
+      cats: CATS.map((c) => ({
+        label: c[1], shown: sr[c[0]].toFixed(1) + ' / 5',
+        ticks: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => {
+          const v = i / 2, on = sr[c[0]] >= v;
+          return { on, bg: on ? '#f3f1ec' : '#ffffff1f', aria: c[1] + ' ' + v.toFixed(1) + ' of 5', pick: () => setSeason(S.rateSeason, c[0], sr[c[0]] === v ? 0 : v) };
+        })
+      })),
+      seasons: [
+        { label: 'Season 1', count: (S.watched[1] || []).length + '/10', sel: S.season === 1, off: false, pick: () => this.setState({ season: 1 }) },
+        { label: 'Season 2', count: 'Dec 2', sel: S.season === 2, off: true, pick: () => {} }
+      ],
+      seasonSummary: 'Season 1 · 10 episodes · ' + done.length + ' watched',
+      seasonPct: Math.round(done.length / 10 * 100),
+      seasonAction: done.length === 10 ? 'Clear season' : 'Mark season watched',
+      markSeason: () => this.setState((s) => {
+        const w = Object.assign({}, s.watched);
+        const full = (w[1] || []).length === 10;
+        w[1] = full ? [] : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        return { watched: w, status: full ? 'watchlist' : 'watched' };
+      }),
+      episodes,
+      friends: [
+        { name: '[Friend name]', initial: 'A', h: 200, meta: 'Finished · 12 Oct', rating: '★ 4.5' },
+        { name: '[Friend name]', initial: 'K', h: 120, meta: 'Watching · E7', rating: '—' },
+        { name: '[Friend name]', initial: 'M', h: 330, meta: 'Finished · 28 Sep', rating: '★ 4.0' },
+        { name: '[Friend name]', initial: 'T', h: 40, meta: 'On watchlist', rating: '—' }
+      ],
+      cast: [
+        ['Anna Kowal', 'Mira Holt', '10 episodes'], ['Theo Brandt', 'Jonas Eide', '10 episodes'], ['Lise Dahl', 'Captain Ruth Avery', '9 episodes'],
+        ['Omar Said', 'Dr. Kamil Nadeem', '8 episodes'], ['Freya Lund', 'Sigrid Vale', '7 episodes'], ['Marcus Hale', 'Elliot Crane', '6 episodes'],
+        ['Ida Berg', 'Young Mira', '3 episodes'], ['Tomasz Wren', 'The Radio Voice (voice)', '10 episodes']
+      ].map((c, i) => ({ name: c[0], role: c[1], eps: c[2], h: (20 + i * 47) % 360 }))
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,9 +1,13 @@
 # Mnemo — working agreement
 
-React Native / Expo (SDK 57) app: Radar's films & TV tracker rebuilt in Matro's look. Expo
-Router and NativeWind for now; Supabase, TanStack Query and Zustand + MMKV arrive as Radar's
-features are ported. Source lives in `src/`; routes in `src/app/`. Android target only in
-practice — the user tests on a physical device over ADB.
+Web and desktop app: Radar's films & TV tracker rebuilt in Matro's look. Vite + React 19 + TypeScript,
+react-router, TanStack Query, Zustand, Supabase, plain CSS (tokens in `src/styles/global.css`).
+Desktop is the same build inside Electron (`desktop/`). **Mobile is not here**: it comes later as a
+separate React Native app. The old Expo scaffold is kept at git tag `expo-scaffold`. Source in
+`src/`, screens in `src/pages/`, hosting is Firebase project `log-mnemo`.
+
+It reads and writes **Radar's live Supabase project unchanged** (no schema changes, ever, from here)
+so Radar and Mnemo both keep working on the same data.
 
 The cross-cutting brief is `../CLAUDE.md` (what Matro's design is, what must not break in the
 shared Supabase project) and `../DETACH-PLAN.md`. Read them before auth, `supabase/`,
@@ -75,37 +79,19 @@ the same commit).
 
 ## 6. Tests
 
-- `npm test` (Jest + `jest-expo`, roots `src/`). Run it before every commit that touches logic.
+- `npm test` (Vitest). Run it before every commit that touches logic.
 - New pure logic in `src/lib/` or a feature hook gets a co-located `*.test.ts`. Port Radar's
   test alongside any `lib/` function you port.
 - Test the pure function, not the render.
 - Also clean before committing: `npm run lint` and `npx tsc --noEmit`.
 
-## 7. Phone and web
+## 7. Web and desktop
 
-Package `com.michaldakowicz.mnemo` installs **beside** Radar, not over it.
-
-Not wired yet, in order of need:
-
-- **Release signing.** Reuse Radar's key (`../radar/credentials/`, gitignored) by porting
-  `plugins/withUploadSigning.js`. Until then release APKs are debug-signed.
-- **Icons and splash art.** None yet; Expo defaults are used.
-- **Firebase hosting site.** None yet, so there is no `deploy:web`. `npm run build:web` still
-  checks the web bundle.
-
-Once signing is in, the loop is Radar's §7 with the new names:
-
-```sh
-npx expo run:android --device                       # debug, Metro attached
-npx expo prebuild -p android                        # when native config / deps change
-cd android; ./gradlew assembleRelease               # then rename to mnemo-v<version>.apk
-adb install -r app/build/outputs/apk/release/mnemo-v<version>.apk
-adb shell monkey -p com.michaldakowicz.mnemo -c android.intent.category.LAUNCHER 1
-adb shell pidof com.michaldakowicz.mnemo            # empty = it died
-```
-
-Only test on the phone when Brief's `brief_orient` says it is allowed. Report the actual
-result — a failed build or install is not shipped.
+- `npm run dev` for the dev server, `npm run build:web` for `dist/`.
+- `npm run deploy:web` builds and runs `firebase deploy --only hosting` (project `log-mnemo`, `.firebaserc`).
+- `npm run desktop` builds, then opens the Electron window (`desktop/main.js` serves `dist/` from an `app://` scheme).
+- `cd desktop && npm run dist` makes the Windows installer.
+- Secrets live in `.env` (gitignored): `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_TMDB_ACCESS_TOKEN`.
 
 ## Commands
 

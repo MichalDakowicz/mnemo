@@ -1,0 +1,10 @@
+.signin { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+.signin-card { width: 100%; max-width: 400px; padding: 32px; border-radius: 20px; display: flex; flex-direction: column; gap: 14px; }
+.signin-brand { display: flex; align-items: center; gap: 12px; }
+.signin-brand h1 { margin: 0; font-size: 28px; font-weight: 600; letter-spacing: -.04em; }
+.signin-card p { margin: 0; font-size: 14px; line-height: 1.5; color: var(--muted); }
+.signin-btn { height: 44px; }
+.signin-or { font-size: 12px; color: var(--dim); text-align: center; }
+.signin-input { height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid #ece9e429; background: #1a1a1cb3; font-size: 14px; }
+.signin-input:focus { outline: none; border-color: #ece9e473; }
+.signin-card .signin-error { color: var(--warn); font-size: 13px; }

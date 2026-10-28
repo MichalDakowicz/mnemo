@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Mnemo friends</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..800&amp;family=Geist+Mono:wght@400..600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0a0a0b}
+a{color:#ece9e4}a:hover{color:#ffffff}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;padding:0}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #f3f1ec;outline-offset:3px}
+.glass{background:#1a1a1c8c;border:1px solid #ffffff14;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 10px 30px #0006}
+.dock{display:flex;align-items:center;gap:2px;padding:4px;border-radius:999px}
+.dock-item{display:flex;align-items:center;gap:8px;height:40px;padding:0 16px;border-radius:999px;font-size:13.5px;font-weight:500;color:#b9b6b0;text-decoration:none;transition:background .15s,color .15s}
+.dock-item:hover{background:#ece9e414;color:#f4f1ec}
+.dock-item[aria-current=page]{background:#ece9e41f;color:#f4f1ec}
+.brand{display:flex;align-items:center;gap:12px;height:48px;text-decoration:none;color:#ece9e4}
+.pill{height:36px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:0 14px;font-size:13px;font-weight:500;border:1px solid #ece9e433;white-space:nowrap;color:#ece9e4;text-decoration:none}
+.pill:hover{background:#ece9e414;color:#ece9e4}
+.pill.primary{background:#f3f1ec;color:#0a0a0b;border-color:#f3f1ec;font-weight:600}
+.pill.primary:hover{background:#ffffff;color:#0a0a0b}
+.chip{height:34px;padding:0 14px;border-radius:999px;border:1px solid #ece9e429;font-size:13px;color:#bebab3;display:inline-flex;align-items:center}
+.chip:hover{background:#ece9e40d}
+.chip[aria-pressed=true]{background:#f3f1ec;color:#0a0a0b;border-color:#f3f1ec}
+.text-button{color:#a9a59d;font-size:13px;padding:6px 8px;border-radius:8px;text-decoration:none}
+.text-button:hover{color:#ece9e4;background:#ffffff0a}
+.panel{flex:1 1 380px;min-width:0;padding:22px 24px;border-radius:14px;background:#ece9e409;border:1px solid #ece9e414;box-sizing:border-box}
+.panel h2{margin:0;font-size:13px;font-weight:600;letter-spacing:-.01em}
+.head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.art{background:radial-gradient(ellipse 80% 55% at 30% 22%,hsl(var(--h) 70% 72% / .45),#0000 70%),radial-gradient(ellipse 70% 45% at 85% 95%,hsl(calc(var(--h) + 40) 60% 18% / .7),#0000 70%),linear-gradient(170deg,hsl(var(--h) 42% 38%),hsl(calc(var(--h) + 25) 38% 13%))}
+.avatar{border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font-weight:600;color:#fff}
+.friend{display:flex;flex-direction:column;gap:14px;padding:18px;border-radius:14px;border:1px solid #ece9e41f;text-decoration:none;color:#ece9e4;transition:transform .35s cubic-bezier(.2,.75,.15,1),border-color .2s}
+.friend:hover{transform:translateY(-3px);border-color:#ece9e433;color:#ece9e4}
+.mini{width:34px;aspect-ratio:2/3;border-radius:4px;box-shadow:0 6px 14px #0007}
+.search-small{display:flex;align-items:center;gap:10px;height:40px;padding:0 16px;border-radius:999px;background:#1a1a1cb3;border:1px solid #ece9e429;color:#8f8c87;flex:0 1 300px;min-width:200px}
+.search-small:focus-within{border-color:#ece9e473}
+.search-small input{flex:1;min-width:0;border:0;outline:none;background:transparent;color:#ece9e4;font:inherit;font-size:13.5px}
+.search-small input::placeholder{color:#8f8c87}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.help{position:fixed;right:24px;bottom:24px;z-index:87;width:44px;height:44px;border-radius:50%;color:#ece9e4;font-size:17px;font-weight:600}
+.grain{position:fixed;inset:0;pointer-events:none;z-index:95;opacity:.09;background-image:url(/_blob/618baeb7c0b2e2caf3f353de0710caa9)}
+@media (max-width:980px){.dock-label{display:none}.dock-item{padding:0 13px}}
+@media (max-width:640px){.page{padding:88px 16px 48px!important}.brand-name{display:none}}
+@media (prefers-reduced-motion:reduce){.friend{transition:none}}
+</style>
+</helmet>
+<div style="position: relative; min-height: 100vh; overflow-x: clip; background: #0a0a0b; color: #ece9e4; font-family: Geist, 'Segoe UI', system-ui, sans-serif; font-size: 14px">
+
+  <div style="position: fixed; top: 18px; left: 28px; right: 28px; z-index: 80; display: flex; align-items: center; justify-content: space-between; gap: 16px; pointer-events: none">
+    <nav class="dock glass" aria-label="Sections" style="pointer-events: auto">
+      <a class="dock-item" href="Main.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="7" height="16" rx="1.5"></rect><rect x="14" y="4" width="7" height="16" rx="1.5"></rect></svg><span class="dock-label">Library</span></a>
+      <a class="dock-item" href="Discover.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M15.5 8.5l-2 5-5 2 2-5z"></path></svg><span class="dock-label">Discover</span></a>
+      <a class="dock-item" href="Stats.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V11M12 20V5M19 20v-6"></path></svg><span class="dock-label">Stats</span></a>
+      <a class="dock-item" href="Friends.dc.html" aria-current="page"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8.5" r="3.5"></circle><path d="M2.5 20a6.5 6.5 0 0 1 13 0"></path><path d="M16 5.2a3.5 3.5 0 0 1 0 6.6M18 14.5a6.5 6.5 0 0 1 3.5 5.5"></path></svg><span class="dock-label">Friends</span></a>
+      <a class="dock-item" href="Profile.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="10" r="3"></circle><path d="M6.5 18.5a6.5 6.5 0 0 1 11 0"></path></svg><span class="dock-label">Profile</span></a>
+      <a class="dock-item" href="Discover.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="M20 20l-4-4"></path></svg><span class="dock-label">Search</span></a>
+    </nav>
+    <a class="brand" href="Main.dc.html" style="pointer-events: auto">
+      <span class="brand-name" style="font-weight: 600; font-size: 22px; letter-spacing: -0.035em">Mnemo</span>
+      <svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><rect x="9" y="6" width="20" height="28" rx="3" fill="none" stroke="#f3f1ec" stroke-width="2.6"></rect><rect x="14" y="10" width="20" height="28" rx="3" fill="#f3f1ec"></rect><path d="M19.5 24.5l3 3 6-7" fill="none" stroke="#0a0a0b" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    </a>
+  </div>
+
+  <main class="page" style="max-width: 1720px; margin: 0 auto; padding: 98px 56px 64px; box-sizing: border-box">
+    <div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px; margin-bottom: 32px">
+      <div>
+        <h1 style="margin: 0; font-size: 44px; font-weight: 600; letter-spacing: -0.04em; line-height: 1">Friends</h1>
+        <p style="margin: 8px 0 0; font-size: 14px; color: #8f8c87">{{sub}}</p>
+      </div>
+      <label class="search-small">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="M20 20l-4-4"></path></svg>
+        <span class="sr">Find people by username</span>
+        <input type="text" placeholder="Find people by username">
+      </label>
+    </div>
+
+    <sc-if value="{{hasRequests}}" hint-placeholder-val="{{ true }}">
+      <section aria-label="Friend requests" style="margin-bottom: 36px">
+        <div class="head"><h2 style="margin: 0; font-size: 20px; font-weight: 600; letter-spacing: -0.035em">Requests</h2><span style="font-size: 13px; color: #8f8c87">{{reqCount}}</span></div>
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <sc-for list="{{requests}}" as="r" hint-placeholder-count="2">
+            <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 14px 16px; border-radius: 14px; border: 1px solid #ece9e41f">
+              <span class="avatar art" style="--h: {{r.h}}; width: 44px; height: 44px; font-size: 16px">{{r.initial}}</span>
+              <span style="flex: 1 1 200px; display: flex; flex-direction: column; gap: 2px; min-width: 0"><span style="font-size: 14px; font-weight: 600">{{r.name}}</span><span style="font-size: 12px; color: #8f8c87">{{r.meta}}</span></span>
+              <span style="display: flex; gap: 8px"><button class="pill primary" onClick="{{r.accept}}">Accept</button><button class="pill" onClick="{{r.decline}}">Decline</button></span>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+    </sc-if>
+
+    <section aria-label="Your friends" style="margin-bottom: 40px">
+      <div class="head"><h2 style="margin: 0; font-size: 20px; font-weight: 600; letter-spacing: -0.035em">Your friends</h2><span style="font-size: 13px; color: #8f8c87">Sorted by recent activity</span></div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 16px">
+        <sc-for list="{{friends}}" as="f" hint-placeholder-count="4">
+          <a class="friend" href="Main.dc.html">
+            <span style="display: flex; align-items: center; gap: 12px">
+              <span class="avatar art" style="--h: {{f.h}}; width: 48px; height: 48px; font-size: 18px">{{f.initial}}</span>
+              <span style="display: flex; flex-direction: column; gap: 2px; min-width: 0"><span style="font-size: 15px; font-weight: 600">{{f.name}}</span><span style="font-size: 12px; color: #8f8c87; font-family: 'Geist Mono', ui-monospace, monospace">{{f.handle}}</span></span>
+            </span>
+            <span style="display: flex; align-items: center; gap: 6px">
+              <sc-for list="{{f.minis}}" as="m" hint-placeholder-count="4">
+                <span class="mini art" style="--h: {{m}}"></span>
+              </sc-for>
+              <span style="margin-left: 6px; font-size: 12px; color: #a9a59d">{{f.common}}</span>
+            </span>
+            <span style="display: flex; justify-content: space-between; gap: 12px; font-size: 12px; color: #8f8c87"><span>{{f.stat}}</span><span>Open shelf →</span></span>
+          </a>
+        </sc-for>
+      </div>
+    </section>
+
+    <div style="display: flex; flex-wrap: wrap; align-items: flex-start; gap: 40px">
+      <section aria-label="Activity" style="flex: 999 1 560px; min-width: 0">
+        <div class="head"><h2 style="margin: 0; font-size: 20px; font-weight: 600; letter-spacing: -0.035em">Activity</h2><span style="font-size: 13px; color: #8f8c87">Last 7 days</span></div>
+        <ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column">
+          <sc-for list="{{activity}}" as="a" hint-placeholder-count="5">
+            <li style="display: flex; align-items: center; gap: 14px; padding: 11px 0; border-top: 1px solid #ece9e40f">
+              <span class="avatar art" style="--h: {{a.h}}; width: 30px; height: 30px; font-size: 12px">{{a.initial}}</span>
+              <span style="flex: 1; min-width: 0; font-size: 13.5px; color: #bebab3"><strong style="color: #ece9e4; font-weight: 600">{{a.who}}</strong> {{a.verb}} <a href="Detail.dc.html" style="color: #ece9e4; font-weight: 600; text-decoration: none">{{a.what}}</a></span>
+              <span style="font-size: 13px; font-family: 'Geist Mono', ui-monospace, monospace">{{a.rating}}</span>
+              <span style="width: 64px; text-align: right; font-size: 12px; color: #8f8c87">{{a.when}}</span>
+            </li>
+          </sc-for>
+        </ol>
+      </section>
+
+      <section class="panel" aria-label="Your shelf">
+        <div class="head"><h2>Your shelf</h2><a class="text-button" href="Main.dc.html">Preview</a></div>
+        <p style="margin: 0 0 16px; font-size: 13px; line-height: 1.6; color: #a9a59d">Your library, ratings and stats as a read-only page. Choose who can open it.</p>
+        <div style="display: flex; flex-wrap: wrap; gap: 6px" role="group" aria-label="Who can see your shelf">
+          <sc-for list="{{vis}}" as="v" hint-placeholder-count="3">
+            <button class="chip" onClick="{{v.pick}}" aria-pressed="{{v.sel}}">{{v.label}}</button>
+          </sc-for>
+        </div>
+        <p style="margin: 12px 0 0; font-size: 12px; color: #8f8c87">{{visNote}}</p>
+        <div style="display: flex; align-items: center; gap: 10px; margin-top: 18px; padding-top: 16px; border-top: 1px solid #ece9e414">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8f8c87" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"></path></svg>
+          <span style="flex: 1; min-width: 0; font-size: 12px; color: #a8a49e; font-family: 'Geist Mono', ui-monospace, monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">[hosting domain]/u/[username]</span>
+          <button class="pill" onClick="{{copy}}">{{copyLabel}}</button>
+        </div>
+      </section>
+    </div>
+  </main>
+  <button class="help glass" aria-label="About and sync status">?</button>
+  <div class="grain" aria-hidden="true"></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1400}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { requests: ['kuba', 'zosia'], accepted: [], vis: 'friends', copied: false };
+  }
+  people() {
+    return {
+      ola: { name: 'Ola', h: 200, common: 23, stat: '412 watched · avg ★ 3.8' },
+      marta: { name: 'Marta', h: 330, common: 17, stat: '268 watched · avg ★ 4.1' },
+      tomek: { name: 'Tomek', h: 120, common: 11, stat: '190 watched · avg ★ 3.4' },
+      ewa: { name: 'Ewa', h: 40, common: 8, stat: '96 watched · avg ★ 4.0' },
+      kuba: { name: 'Kuba', h: 260, common: 6, stat: '58 watched · avg ★ 3.6' },
+      zosia: { name: 'Zosia', h: 160, common: 3, stat: '31 watched · avg ★ 4.4' }
+    };
+  }
+  renderVals() {
+    const S = this.state;
+    const P = this.people();
+    const friendIds = ['ola', 'marta', 'tomek', 'ewa'].concat(S.accepted);
+    const card = (id) => {
+      const p = P[id];
+      return {
+        name: p.name, initial: p.name[0], h: p.h, handle: '@' + id, stat: p.stat, common: p.common + ' in common',
+        minis: [p.h + 20, p.h + 90, p.h + 160, p.h + 230]
+      };
+    };
+    const drop = (id) => (s) => ({ requests: s.requests.filter((x) => x !== id) });
+    const visDefs = [['public', 'Anyone with the link'], ['friends', 'Friends'], ['private', 'Only me']];
+    const visNotes = { public: 'Anyone with the link sees your library and stats.', friends: 'Friends see your library and stats. Notes stay private.', private: 'Nobody else sees your shelf. Friends still see your activity.' };
+    return {
+      sub: friendIds.length + ' friends · ' + S.requests.length + ' waiting',
+      hasRequests: S.requests.length > 0, reqCount: S.requests.length + ' waiting',
+      requests: S.requests.map((id) => ({
+        name: P[id].name, initial: P[id].name[0], h: P[id].h, meta: '@' + id + ' · ' + P[id].common + ' titles in common',
+        accept: () => this.setState((s) => Object.assign(drop(id)(s), { accepted: s.accepted.concat([id]) })),
+        decline: () => this.setState(drop(id))
+      })),
+      friends: friendIds.map(card),
+      activity: [
+        ['ola', 'finished', 'Northbound', '★ 4.5', '2 h ago'],
+        ['marta', 'added', 'Paper Lanterns', '', 'Today'],
+        ['tomek', 'watched', 'Last Train to Varna', '★ 3.0', 'Yesterday'],
+        ['ola', 'gave five stars to', 'The Cartographers', '★ 5.0', 'Mon'],
+        ['ewa', 'started', 'Low Tide', '', 'Sun']
+      ].map((a) => ({ who: P[a[0]].name, initial: P[a[0]].name[0], h: P[a[0]].h, verb: a[1], what: a[2], rating: a[3], when: a[4] })),
+      vis: visDefs.map((v) => ({ label: v[1], sel: S.vis === v[0], pick: () => this.setState({ vis: v[0] }) })),
+      visNote: visNotes[S.vis],
+      copyLabel: S.copied ? 'Copied' : 'Copy link',
+      copy: () => { this.setState({ copied: true }); setTimeout(() => this.setState({ copied: false }), 1600); }
+    };
+  }
+}
+</script>
+</body>
+</html>

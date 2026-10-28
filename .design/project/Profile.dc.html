@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Mnemo profile</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..800&amp;family=Geist+Mono:wght@400..600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0a0a0b}
+a{color:#ece9e4}a:hover{color:#ffffff}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;padding:0}
+button:disabled{cursor:default;opacity:.4}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #f3f1ec;outline-offset:3px}
+.grain{position:fixed;inset:0;pointer-events:none;z-index:95;opacity:.09;background-image:url(/_blob/618baeb7c0b2e2caf3f353de0710caa9)}
+.glass{background:#1a1a1c8c;border:1px solid #ffffff14;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 10px 30px #0006}
+.dock{display:flex;align-items:center;gap:2px;padding:4px;border-radius:999px}
+.dock-item{display:flex;align-items:center;gap:8px;height:40px;padding:0 16px;border-radius:999px;font-size:13.5px;font-weight:500;color:#b9b6b0;text-decoration:none;transition:background .15s,color .15s}
+.dock-item:hover{background:#ece9e414;color:#f4f1ec}
+.dock-item[aria-current=page]{background:#ece9e41f;color:#f4f1ec}
+.brand{display:flex;align-items:center;gap:12px;height:48px;text-decoration:none;color:#ece9e4}
+.pill{height:40px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:0 16px;font-size:13px;font-weight:500;border:1px solid #ece9e433;white-space:nowrap;color:#ece9e4;text-decoration:none;transition:background .15s,transform .15s}
+.pill:hover{background:#ece9e414;color:#ece9e4}
+.pill:active{transform:scale(.97)}
+.pill.primary{background:#f3f1ec;color:#0a0a0b;border-color:#f3f1ec;font-weight:600}
+.pill.primary:hover{background:#ffffff;color:#0a0a0b}
+.pill.small{height:32px;padding:0 12px;font-size:12.5px}
+.pill small{font-size:11px;opacity:.65;font-family:'Geist Mono',ui-monospace,monospace}
+.text-button{color:#a9a59d;font-size:13px;padding:6px 8px;border-radius:8px;display:inline-flex;align-items:center;gap:6px;text-decoration:none}
+.text-button:hover{color:#ece9e4;background:#ffffff0a}
+.art{background:radial-gradient(ellipse 80% 55% at 30% 22%,hsl(var(--h) 70% 72% / .45),#0000 70%),radial-gradient(ellipse 70% 45% at 85% 95%,hsl(calc(var(--h) + 40) 60% 18% / .7),#0000 70%),linear-gradient(170deg,hsl(var(--h) 42% 38%),hsl(calc(var(--h) + 25) 38% 13%))}
+.art.v1{background:radial-gradient(circle at 50% 38%,hsl(var(--h) 80% 78% / .9) 0 9%,#0000 10%),linear-gradient(180deg,hsl(var(--h) 55% 58%),hsl(calc(var(--h) - 20) 55% 22%) 62%,hsl(calc(var(--h) - 30) 45% 8%))}
+.art.v2{background:linear-gradient(180deg,hsl(var(--h) 38% 46%) 0 33.3%,hsl(calc(var(--h) + 50) 32% 30%) 33.3% 66.6%,hsl(calc(var(--h) + 100) 36% 16%) 66.6%)}
+.art.v3{background:linear-gradient(116deg,#0000 0 36%,hsl(var(--h) 80% 80% / .25) 44%,#0000 56%),repeating-linear-gradient(90deg,#0000 0 46px,#0003 46px 48px),linear-gradient(180deg,hsl(var(--h) 22% 30%),hsl(var(--h) 20% 8%))}
+.cover-title{position:absolute;left:10px;right:10px;bottom:12px;font-size:17px;line-height:1.08;font-weight:700;letter-spacing:-.04em;color:#fff;overflow-wrap:anywhere;text-shadow:0 2px 14px #0005}
+.v1 .cover-title,.v2 .cover-title{text-align:center;text-transform:uppercase;font-weight:500;letter-spacing:.24em;font-size:10.5px;line-height:1.5}
+.v2 .cover-title{bottom:auto;top:calc(50% - 10px)}
+.v3 .cover-title{text-transform:uppercase;letter-spacing:.02em;font-size:18px;font-weight:600}
+.card{display:block;text-decoration:none;color:#ece9e4;min-width:0}
+.card:hover{color:#ece9e4}
+.cover{position:relative;display:block;aspect-ratio:2/3;border-radius:6px;overflow:hidden;box-shadow:0 14px 30px #0007,0 0 0 1px #ffffff0d;transition:transform .45s cubic-bezier(.2,.75,.15,1),box-shadow .45s}
+.cover:after{content:'';position:absolute;inset:0;background:linear-gradient(115deg,#ffffff1c,#0000 34%);pointer-events:none}
+.card:hover .cover,.card:focus-visible .cover{transform:translateY(-6px) rotate(-1deg) scale(1.03);box-shadow:0 30px 50px #0009,0 0 0 1px #ece9e459}
+.slot{position:relative;display:block;aspect-ratio:2/3;border-radius:6px;border:1px dashed #ece9e433;color:#8f8c87;font-size:12.5px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;width:100%;box-sizing:border-box}
+.slot:hover{border-color:#ece9e466;color:#ece9e4}
+.rank{position:absolute;left:8px;top:8px;z-index:2;min-width:22px;height:22px;padding:0 6px;box-sizing:border-box;border-radius:999px;background:#0a0a0bb3;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;font-family:'Geist Mono',ui-monospace,monospace}
+.unpin{position:absolute;right:8px;top:8px;z-index:2;width:26px;height:26px;border-radius:50%;background:#0a0a0bcc;display:flex;align-items:center;justify-content:center}
+.unpin:hover{background:#f3f1ec;color:#0a0a0b}
+.pickable{position:relative;display:block;width:100%;text-align:left}
+.pickable .cover{box-shadow:0 8px 18px #0006,0 0 0 1px #ffffff0d}
+.pickable[aria-pressed=true] .cover{box-shadow:0 0 0 2px #f3f1ec}
+.pickable:not(:disabled):hover .cover{transform:translateY(-3px)}
+.h2{margin:0;font-size:20px;font-weight:600;letter-spacing:-.035em}
+.sect-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.note{font-size:13px;color:#8f8c87}
+.input{height:40px;border-radius:10px;border:1px solid #ece9e429;background:#ece9e40a;color:#ece9e4;font:inherit;font-size:14px;padding:0 12px;outline:none;box-sizing:border-box;width:100%}
+.input:focus{border-color:#ece9e473}
+.row{display:flex;align-items:center;gap:14px;padding:12px 0;border-top:1px solid #ece9e414;text-decoration:none;color:#ece9e4}
+.row:hover{color:#ece9e4}
+.row:hover .row-title{text-decoration:underline;text-underline-offset:3px}
+.strip{display:flex;gap:18px;overflow-x:auto;padding:6px 2px 14px;scrollbar-width:none}
+.strip::-webkit-scrollbar{display:none}
+.help{position:fixed;right:24px;bottom:24px;z-index:87;width:44px;height:44px;border-radius:50%;color:#ece9e4;font-size:17px;font-weight:600}
+@media (max-width:1100px){.page{padding-left:28px!important;padding-right:28px!important}}
+@media (max-width:980px){.dock-label{display:none}.dock-item{padding:0 13px}}
+@media (max-width:640px){.page{padding:88px 16px 48px!important}.brand-name{display:none}.who{font-size:34px!important}}
+@media (prefers-reduced-motion:reduce){.cover,.pill{transition:none}}
+</style>
+</helmet>
+<div style="position: relative; min-height: 100vh; overflow-x: clip; background: #0a0a0b; color: #ece9e4; font-family: Geist, 'Segoe UI', system-ui, sans-serif; font-size: 14px">
+
+  <div style="position: fixed; top: 18px; left: 28px; right: 28px; z-index: 80; display: flex; align-items: center; justify-content: space-between; gap: 16px; pointer-events: none">
+    <nav class="dock glass" aria-label="Sections" style="pointer-events: auto">
+      <a class="dock-item" href="Main.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="7" height="16" rx="1.5"></rect><rect x="14" y="4" width="7" height="16" rx="1.5"></rect></svg><span class="dock-label">Library</span></a>
+      <a class="dock-item" href="Discover.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M15.5 8.5l-2 5-5 2 2-5z"></path></svg><span class="dock-label">Discover</span></a>
+      <a class="dock-item" href="Stats.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V11M12 20V5M19 20v-6"></path></svg><span class="dock-label">Stats</span></a>
+      <a class="dock-item" href="Friends.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8.5" r="3.5"></circle><path d="M2.5 20a6.5 6.5 0 0 1 13 0"></path><path d="M16 5.2a3.5 3.5 0 0 1 0 6.6M18 14.5a6.5 6.5 0 0 1 3.5 5.5"></path></svg><span class="dock-label">Friends</span></a>
+      <a class="dock-item" href="Profile.dc.html" aria-current="page"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="10" r="3"></circle><path d="M6.5 18.5a6.5 6.5 0 0 1 11 0"></path></svg><span class="dock-label">Profile</span></a>
+      <a class="dock-item" href="Discover.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="M20 20l-4-4"></path></svg><span class="dock-label">Search</span></a>
+    </nav>
+    <a class="brand" href="Main.dc.html" style="pointer-events: auto">
+      <span class="brand-name" style="font-weight: 600; font-size: 22px; letter-spacing: -0.035em">Mnemo</span>
+      <svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><rect x="9" y="6" width="20" height="28" rx="3" fill="none" stroke="#f3f1ec" stroke-width="2.6"></rect><rect x="14" y="10" width="20" height="28" rx="3" fill="#f3f1ec"></rect><path d="M19.5 24.5l3 3 6-7" fill="none" stroke="#0a0a0b" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    </a>
+  </div>
+
+  <header style="position: relative; overflow: hidden">
+    <div class="art {{backdrop.v}}" aria-hidden="true" style="--h: {{backdrop.h}}; position: absolute; inset: -80px; filter: blur(60px) saturate(1.1); opacity: .55"></div>
+    <div aria-hidden="true" style="position: absolute; inset: 0; background: linear-gradient(180deg, #0a0a0b73 0%, #0a0a0beb 72%, #0a0a0b 100%)"></div>
+    <div class="page" style="position: relative; max-width: 1720px; margin: 0 auto; padding: 128px 56px 40px; box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 28px 40px">
+      <div style="display: flex; align-items: flex-end; gap: 24px; min-width: 0; flex: 1 1 420px">
+        <span class="art" aria-hidden="true" style="--h: {{me.h}}; width: 112px; height: 112px; border-radius: 50%; flex: none; display: flex; align-items: center; justify-content: center; font-size: 44px; font-weight: 600; color: #fff; box-shadow: 0 0 0 4px #0a0a0b, 0 20px 40px #0008">{{me.initial}}</span>
+        <div style="min-width: 0; padding-bottom: 6px">
+          <h1 class="who" style="margin: 0; font-size: 44px; font-weight: 600; letter-spacing: -0.04em; line-height: 1; overflow-wrap: anywhere">{{me.name}}</h1>
+          <p style="margin: 10px 0 0; font-size: 13px; color: #a9a59d; font-family: 'Geist Mono', ui-monospace, monospace">@{{me.user}}</p>
+        </div>
+      </div>
+      <div style="display: flex; gap: 40px; padding-bottom: 6px">
+        <sc-for list="{{stats}}" as="s" hint-placeholder-count="3">
+          <div><div style="font-size: 30px; font-weight: 600; letter-spacing: -0.04em; line-height: 1">{{s.value}}</div><div style="margin-top: 6px; font-size: 12px; color: #8f8c87">{{s.label}}</div></div>
+        </sc-for>
+      </div>
+      <div style="flex: 1 1 100%; display: flex; flex-wrap: wrap; gap: 8px">
+        <button class="pill primary" onClick="{{toggleEdit}}" aria-expanded="{{editOpen}}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path></svg>Edit profile</button>
+        <button class="pill" onClick="{{share}}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5.5" r="2.5"></circle><circle cx="6" cy="12" r="2.5"></circle><circle cx="18" cy="18.5" r="2.5"></circle><path d="M8.3 10.8l7.4-4M8.3 13.2l7.4 4"></path></svg>{{shareLabel}}</button>
+        <a class="pill" href="Settings.dc.html"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"></path></svg>Settings</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="page" style="max-width: 1720px; margin: 0 auto; padding: 8px 56px 72px; box-sizing: border-box">
+
+    <sc-if value="{{editOpen}}" hint-placeholder-val="{{ false }}">
+      <section aria-label="Edit profile" style="display: flex; flex-wrap: wrap; align-items: flex-end; gap: 20px 28px; padding: 24px 0 28px; margin-bottom: 36px; border-bottom: 1px solid #ece9e424">
+        <div style="display: flex; align-items: center; gap: 14px">
+          <span class="art" aria-hidden="true" style="--h: {{me.h}}; width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 600; color: #fff">{{draftInitial}}</span>
+          <div style="display: flex; flex-direction: column; gap: 4px; align-items: flex-start">
+            <button class="pill small">Upload photo</button>
+            <span style="font-size: 11.5px; color: #8f8c87">Square crop, saved at 256 px</span>
+          </div>
+        </div>
+        <label style="flex: 1 1 220px; display: flex; flex-direction: column; gap: 7px"><span style="font-size: 12px; color: #8f8c87">Display name</span><input class="input" type="text" value="{{draft.name}}" onChange="{{onName}}"></label>
+        <label style="flex: 1 1 220px; display: flex; flex-direction: column; gap: 7px"><span style="font-size: 12px; color: #8f8c87">Username</span><input class="input" type="text" value="{{draft.user}}" onChange="{{onUser}}" style="font-family: 'Geist Mono', ui-monospace, monospace; font-size: 13px"></label>
+        <div style="display: flex; gap: 8px"><button class="pill primary" onClick="{{save}}">Save</button><button class="pill" onClick="{{toggleEdit}}">Cancel</button></div>
+      </section>
+    </sc-if>
+
+    <div style="display: flex; flex-wrap: wrap; align-items: flex-start; gap: 52px 64px">
+
+      <div style="flex: 999 1 640px; min-width: 0; display: flex; flex-direction: column; gap: 52px">
+
+        <section aria-labelledby="h-fav">
+          <div class="sect-head">
+            <h2 id="h-fav" class="h2">Favourites</h2>
+            <button class="pill small" onClick="{{toggleFavEdit}}" aria-pressed="{{favEdit}}">{{favEditLabel}}</button>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 22px; max-width: 820px">
+            <sc-for list="{{slots}}" as="f" hint-placeholder-count="4">
+              <div style="min-width: 0">
+                <sc-if value="{{f.filled}}" hint-placeholder-val="{{ true }}">
+                  <div style="position: relative">
+                    <a class="card" href="Detail.dc.html">
+                      <span class="cover art {{f.v}}" style="--h: {{f.h}}"><span class="rank">{{f.n}}</span><span class="cover-title">{{f.t}}</span></span>
+                      <span style="display: block; margin-top: 12px; font-size: 13.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{f.t}}</span>
+                      <span style="display: block; margin-top: 3px; font-size: 12px; color: #8f8c87">{{f.meta}}</span>
+                    </a>
+                    <sc-if value="{{favEdit}}" hint-placeholder-val="{{ false }}">
+                      <button class="unpin" onClick="{{f.unpin}}" aria-label="{{f.unpinLabel}}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+                    </sc-if>
+                  </div>
+                </sc-if>
+                <sc-if value="{{f.empty}}" hint-placeholder-val="{{ false }}">
+                  <button class="slot" onClick="{{f.open}}"><span style="font-size: 22px; font-weight: 300; line-height: 1">+</span>Pin a title<span class="rank" style="color: #a9a59d">{{f.n}}</span></button>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+          <sc-if value="{{noFavs}}" hint-placeholder-val="{{ false }}">
+            <p class="note" style="margin: 14px 0 0">Pin up to 4 titles you've watched to the top of your profile.</p>
+          </sc-if>
+          <sc-if value="{{favEdit}}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top: 26px; padding-top: 20px; border-top: 1px solid #ece9e414">
+              <div class="sect-head" style="margin-bottom: 12px"><span style="font-size: 13px; font-weight: 600">From what you've watched</span><span class="note">{{pinNote}}</span></div>
+              <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 16px 14px">
+                <sc-for list="{{pickables}}" as="p" hint-placeholder-count="8">
+                  <button class="pickable" onClick="{{p.toggle}}" aria-pressed="{{p.on}}" disabled="{{p.off}}">
+                    <span class="cover art {{p.v}}" style="--h: {{p.h}}"><span class="cover-title" style="font-size: 12px">{{p.t}}</span></span>
+                    <span style="display: block; margin-top: 7px; font-size: 11.5px; color: #bebab3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{p.t}}</span>
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+        </section>
+
+        <section aria-labelledby="h-ranked">
+          <div class="sect-head"><h2 id="h-ranked" class="h2">Ranked years</h2><span class="note">By release year</span></div>
+          <div style="display: flex; flex-wrap: wrap; gap: 16px">
+            <a href="#" style="flex: 1 1 420px; min-width: 0; padding: 18px 20px 20px; border-radius: 14px; border: 1px solid #ece9e41f; text-decoration: none; color: #ece9e4">
+              <span style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ece9e4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h8v5a4 4 0 0 1-8 0zM8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M8.5 20h7"></path></svg>
+                <span style="font-size: 15px; font-weight: 600; letter-spacing: -0.02em">{{ranked.year}} ranked</span>
+                <span class="note" style="margin-left: auto; font-family: 'Geist Mono', ui-monospace, monospace; font-size: 12px">{{ranked.count}}</span>
+              </span>
+              <span style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px">
+                <sc-for list="{{ranked.podium}}" as="r" hint-placeholder-count="6">
+                  <span style="display: flex; flex-direction: column; align-items: center; gap: 7px; min-width: 0">
+                    <span class="cover art {{r.v}}" style="--h: {{r.h}}; width: 100%"><span class="cover-title" style="font-size: 11px">{{r.t}}</span></span>
+                    <span style="font-size: 11px; font-weight: 600; color: #a9a59d; font-family: 'Geist Mono', ui-monospace, monospace">{{r.rank}}</span>
+                  </span>
+                </sc-for>
+              </span>
+            </a>
+            <a href="#" style="flex: 0 0 112px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; border-radius: 14px; border: 1px dashed #ece9e433; text-decoration: none; color: #ece9e4; min-height: 120px">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a9a59d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+              <span style="font-size: 12.5px; font-weight: 600">All years</span>
+              <span class="note" style="font-size: 11.5px">{{ranked.years}}</span>
+            </a>
+          </div>
+        </section>
+
+        <section aria-labelledby="h-recent">
+          <div class="sect-head"><h2 id="h-recent" class="h2">Recently logged</h2><span class="note">{{recentCount}}</span></div>
+          <div class="strip">
+            <sc-for list="{{recent}}" as="it" hint-placeholder-count="8">
+              <a class="card" href="Detail.dc.html" style="flex: 0 0 132px">
+                <span class="cover art {{it.v}}" style="--h: {{it.h}}"><span class="cover-title">{{it.t}}</span></span>
+                <span style="display: block; margin-top: 10px; font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{it.t}}</span>
+                <span style="display: block; margin-top: 3px; font-size: 12px; color: #8f8c87"><span style="font-family: 'Geist Mono', ui-monospace, monospace; color: #bebab3">{{it.score}}</span> · {{it.when}}</span>
+              </a>
+            </sc-for>
+          </div>
+        </section>
+      </div>
+
+      <aside style="flex: 1 1 340px; min-width: 0; display: flex; flex-direction: column; gap: 48px">
+
+        <section aria-labelledby="h-pick">
+          <h2 id="h-pick" class="h2">Don't know what to watch?</h2>
+          <p class="note" style="margin: 6px 0 16px">Let me pick something off your watchlist</p>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px">
+            <sc-for list="{{scopes}}" as="sc" hint-placeholder-count="3">
+              <button class="pill" onClick="{{sc.pick}}" disabled="{{sc.none}}">{{sc.label}} <small>{{sc.n}}</small></button>
+            </sc-for>
+          </div>
+          <sc-if value="{{hasPick}}" hint-placeholder-val="{{ false }}">
+            <div aria-live="polite" style="display: flex; align-items: center; gap: 16px; margin-top: 20px; padding-top: 18px; border-top: 1px solid #ece9e414">
+              <span class="art {{pick.v}}" aria-hidden="true" style="--h: {{pick.h}}; width: 64px; flex: none; aspect-ratio: 2 / 3; border-radius: 6px; box-shadow: 0 14px 30px #0007"></span>
+              <div style="flex: 1; min-width: 0">
+                <p style="margin: 0; font-size: 22px; font-weight: 600; letter-spacing: -0.035em; line-height: 1.05">{{pick.t}}</p>
+                <p style="margin: 5px 0 12px; font-size: 12.5px; color: #8f8c87">{{pick.meta}}</p>
+                <div style="display: flex; gap: 6px"><a class="pill small primary" href="Detail.dc.html">Details</a><button class="pill small" onClick="{{again}}">Another</button></div>
+              </div>
+            </div>
+          </sc-if>
+        </section>
+
+        <section aria-labelledby="h-ratings">
+          <div class="sect-head" style="margin-bottom: 18px"><h2 id="h-ratings" class="h2">Ratings</h2><span class="note">{{ratedNote}}</span></div>
+          <div role="img" aria-label="{{curveLabel}}" style="display: flex; align-items: flex-end; gap: 10px">
+            <span style="font-size: 12px; color: #a9a59d; font-family: 'Geist Mono', ui-monospace, monospace">★</span>
+            <svg viewBox="0 0 400 88" preserveAspectRatio="none" style="flex: 1; min-width: 0; height: 88px; display: block; border-bottom: 1px solid #ece9e424" aria-hidden="true">
+              <defs><linearGradient id="curveFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ece9e4" stop-opacity=".16"></stop><stop offset="1" stop-color="#ece9e4" stop-opacity="0"></stop></linearGradient></defs>
+              <path d="{{curveArea}}" fill="url(#curveFill)"></path>
+              <path d="{{curveLine}}" fill="none" stroke="#ece9e4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"></path>
+            </svg>
+            <span style="font-size: 12px; color: #a9a59d; font-family: 'Geist Mono', ui-monospace, monospace; letter-spacing: .08em">★★★★★</span>
+          </div>
+        </section>
+
+        <section aria-labelledby="h-prog">
+          <div class="sect-head" style="margin-bottom: 8px"><h2 id="h-prog" class="h2">In progress</h2><span class="note">{{progCount}}</span></div>
+          <div>
+            <sc-for list="{{progress}}" as="it" hint-placeholder-count="3">
+              <a class="row" href="Detail.dc.html">
+                <span class="art {{it.v}}" aria-hidden="true" style="--h: {{it.h}}; width: 40px; flex: none; aspect-ratio: 2 / 3; border-radius: 4px; box-shadow: 0 6px 14px #0007"></span>
+                <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+                  <span class="row-title" style="font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{it.t}}</span>
+                  <span style="font-size: 12px; color: #8f8c87">{{it.meta}}</span>
+                  <span style="height: 3px; border-radius: 3px; background: #ece9e41f; overflow: hidden; margin-top: 4px"><span style="display: block; height: 100%; background: #f3f1ec; width: {{it.pct}}%"></span></span>
+                </span>
+                <span style="font-size: 12px; color: #a9a59d; font-family: 'Geist Mono', ui-monospace, monospace">{{it.ep}}</span>
+              </a>
+            </sc-for>
+          </div>
+        </section>
+      </aside>
+    </div>
+  </main>
+  <button class="help glass" aria-label="About and sync status">?</button>
+  <div class="grain" aria-hidden="true"></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: '[Display name]', user: 'username', editOpen: false, draft: { name: '', user: '' },
+      shared: false, favEdit: false, favs: ['tc', 'lv', 'go', 'ag'], scope: null, pick: null
+    };
+  }
+  titles() {
+    return [
+      { id: 'tc', t: 'The Cartographers', k: 'show', y: 2021, s: 'watched', r: 5, at: '2026-10-21' },
+      { id: 'lv', t: 'Last Train to Varna', k: 'movie', y: 2021, s: 'watched', r: 4.5, at: '2026-10-25' },
+      { id: 'go', t: 'Glass Orchard', k: 'show', y: 2020, s: 'watched', r: 4, at: '2026-09-02' },
+      { id: 'ag', t: 'Afterglow', k: 'movie', y: 2022, s: 'watched', r: 4, at: '2026-10-12' },
+      { id: 'sw', t: 'Saltwater', k: 'movie', y: 2017, s: 'watched', r: 3.5, at: '2026-08-14' },
+      { id: 'ec', t: 'Echo Chamber', k: 'movie', y: 2018, s: 'watched', r: 3, at: '2026-07-30' },
+      { id: 'kp', t: 'Kessa Point', k: 'movie', y: 2026, s: 'watched', r: 4.5, at: '2026-10-27' },
+      { id: 'st', t: 'Station Twelve', k: 'movie', y: 2026, s: 'watched', r: 4, at: '2026-10-18' },
+      { id: 'gm', t: 'Grey Meridian', k: 'show', y: 2026, s: 'watched', r: 3.8, at: '2026-10-04' },
+      { id: 'wi', t: 'Wintering', k: 'movie', y: 2026, s: 'watched', r: 4.2, at: '2026-09-21' },
+      { id: 'ar', t: 'The Archivists', k: 'show', y: 2026, s: 'watched', r: 3.5, at: '2026-09-10' },
+      { id: 'rb', t: 'Riverbed', k: 'movie', y: 2026, s: 'watched', r: 3, at: '2026-08-29' },
+      { id: 'pn', t: 'Polar Night', k: 'movie', y: 2026, s: 'watched', r: 2.5, at: '2026-06-11' },
+      { id: 'nb', t: 'Northbound', k: 'show', y: 2025, s: 'watching', ep: [4, 10] },
+      { id: 'lt', t: 'Low Tide', k: 'show', y: 2024, s: 'watching', ep: [6, 8] },
+      { id: 'fl', t: 'Fieldline', k: 'show', y: 2022, s: 'watching', ep: [2, 7] },
+      { id: 'qh', t: 'The Quiet Harbour', k: 'movie', y: 2024, s: 'watchlist', g: 'Mystery', len: '1 h 52 m' },
+      { id: 'pl', t: 'Paper Lanterns', k: 'movie', y: 2019, s: 'watchlist', g: 'Animation', len: '1 h 38 m' },
+      { id: 'nbr', t: 'Nine Bridges', k: 'movie', y: 2023, s: 'watchlist', g: 'Romance', len: '2 h 11 m' },
+      { id: 'hm', t: 'Hollow Moon', k: 'movie', y: 2026, s: 'watchlist', g: 'Sci-Fi', len: '2 h 04 m' },
+      { id: 'tl', t: 'Tidelines', k: 'show', y: 2025, s: 'watchlist', g: 'Drama', len: '1 season' }
+    ];
+  }
+  // Older ratings that only feed the curve and the totals; the shelf above shows the newest ones.
+  archive() { return [4, 4, 3.5, 4.5, 3, 4, 5, 3.5, 4, 2, 4.5, 3.5, 4, 3, 4, 4.5, 3.5, 2.5, 4, 5, 3.5, 4]; }
+  hue(t) { let h = 0; for (let i = 0; i < t.length; i++) h = (h * 31 + t.charCodeAt(i)) % 360; return h; }
+  variant(t) { return ['', 'v1', 'v2', 'v3'][(t.length + t.charCodeAt(0)) % 4]; }
+  look(x) { return { t: x.t, h: this.hue(x.t), v: this.variant(x.t) }; }
+  curve(scores) {
+    const pts = [];
+    for (let i = 0; i <= 40; i++) {
+      const x = 1 + i / 10;
+      pts.push(scores.reduce((d, r) => d + Math.exp(-((x - r) * (x - r)) / (2 * 0.22 * 0.22)), 0));
+    }
+    const max = Math.max.apply(null, pts.concat([1]));
+    const xy = pts.map((d, i) => [i * 10, 87 - (d / max) * 82]);
+    let line = 'M' + xy[0][0] + ' ' + xy[0][1].toFixed(1);
+    for (let i = 0; i < xy.length - 1; i++) {
+      const p0 = xy[Math.max(0, i - 1)], p1 = xy[i], p2 = xy[i + 1], p3 = xy[Math.min(xy.length - 1, i + 2)];
+      const c1 = [p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6];
+      const c2 = [p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6];
+      line += ' C' + c1[0].toFixed(1) + ' ' + Math.min(87, c1[1]).toFixed(1) + ' ' + c2[0].toFixed(1) + ' ' + Math.min(87, c2[1]).toFixed(1) + ' ' + p2[0] + ' ' + p2[1].toFixed(1);
+    }
+    return { line, area: line + ' L400 88 L0 88 Z' };
+  }
+  renderVals() {
+    const S = this.state;
+    const all = this.titles();
+    const byId = (id) => all.find((x) => x.id === id);
+    const watched = all.filter((x) => x.s === 'watched');
+    const scores = watched.map((x) => x.r).concat(this.archive());
+    const avg = scores.reduce((a, b) => a + b, 0) / scores.length;
+    const recent = watched.slice().sort((a, b) => (a.at < b.at ? 1 : -1));
+    const ago = (d) => {
+      const days = Math.round((Date.parse('2026-10-28') - Date.parse(d)) / 864e5);
+      return days === 0 ? 'Today' : days === 1 ? 'Yesterday' : days < 7 ? days + ' days ago' : d.slice(8, 10).replace(/^0/, '') + ' ' + ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][+d.slice(5, 7) - 1];
+    };
+    const kind = (x) => (x.k === 'show' ? 'Series' : 'Film');
+    const full = S.favs.length >= 4;
+    const watchlist = all.filter((x) => x.s === 'watchlist');
+    const pool = (sc) => watchlist.filter((x) => sc === 'all' || x.k === sc);
+    const roll = (sc) => this.setState((s) => {
+      const list = pool(sc).filter((x) => x.id !== s.pick);
+      return { scope: sc, pick: (list.length ? list : pool(sc))[Math.floor(Math.random() * Math.max(1, list.length))].id };
+    });
+    const p = S.pick ? byId(S.pick) : null;
+    const ranked = watched.filter((x) => x.y === 2026).sort((a, b) => b.r - a.r);
+    const c = this.curve(scores);
+    return {
+      backdrop: this.look(recent[0]),
+      me: { name: S.name, user: S.user, initial: S.name.replace(/[^A-Za-z]/g, '')[0] || '?', h: 28 },
+      stats: [
+        { value: String(watched.length + 296), label: 'watched' },
+        { value: String(watched.filter((x) => x.at.slice(0, 4) === '2026').length + 41), label: 'this year' },
+        { value: avg.toFixed(1), label: 'average' }
+      ],
+      editOpen: S.editOpen,
+      toggleEdit: () => this.setState((s) => ({ editOpen: !s.editOpen, draft: { name: s.name, user: s.user } })),
+      draft: S.draft, draftInitial: (S.draft.name.replace(/[^A-Za-z]/g, '')[0] || '?'),
+      onName: (e) => this.setState((s) => ({ draft: Object.assign({}, s.draft, { name: e.target.value }) })),
+      onUser: (e) => this.setState((s) => ({ draft: Object.assign({}, s.draft, { user: e.target.value.replace(/[^a-z0-9_.]/gi, '').toLowerCase() }) })),
+      save: () => this.setState((s) => ({ name: s.draft.name.trim() || s.name, user: s.draft.user || s.user, editOpen: false })),
+      shareLabel: S.shared ? 'Link copied' : 'Share shelf',
+      share: () => { this.setState({ shared: true }); setTimeout(() => this.setState({ shared: false }), 1600); },
+      favEdit: S.favEdit, favEditLabel: S.favEdit ? 'Done' : 'Edit',
+      toggleFavEdit: () => this.setState((s) => ({ favEdit: !s.favEdit })),
+      noFavs: S.favs.length === 0,
+      slots: [0, 1, 2, 3].map((i) => {
+        const x = S.favs[i] ? byId(S.favs[i]) : null;
+        return Object.assign(x ? this.look(x) : { t: '', h: 0, v: '' }, {
+          n: i + 1, filled: !!x, empty: !x, unpinLabel: x ? 'Unpin ' + x.t : '', meta: x ? kind(x) + ' · ' + x.y + ' · ★ ' + x.r : '',
+          unpin: () => this.setState((s) => ({ favs: s.favs.filter((id) => id !== S.favs[i]) })),
+          open: () => this.setState({ favEdit: true })
+        });
+      }),
+      pinNote: S.favs.length + ' of 4 pinned',
+      pickables: recent.map((x) => {
+        const on = S.favs.indexOf(x.id) >= 0;
+        return Object.assign(this.look(x), {
+          on, off: !on && full,
+          toggle: () => this.setState((s) => ({ favs: on ? s.favs.filter((id) => id !== x.id) : s.favs.concat([x.id]) }))
+        });
+      }),
+      ranked: {
+        year: 2026, count: ranked.length + ' titles', years: '7 years',
+        podium: ranked.slice(0, 6).map((x, i) => Object.assign(this.look(x), { rank: i + 1 }))
+      },
+      recentCount: 'Latest ' + Math.min(8, recent.length),
+      recent: recent.slice(0, 8).map((x) => Object.assign(this.look(x), { score: '★ ' + x.r, when: ago(x.at) })),
+      scopes: [['all', 'Anything'], ['movie', 'A film'], ['show', 'A show']].map((sc) => ({
+        label: sc[1], n: pool(sc[0]).length, none: pool(sc[0]).length === 0, pick: () => roll(sc[0])
+      })),
+      hasPick: !!p, again: () => roll(S.scope || 'all'),
+      pick: p ? Object.assign(this.look(p), { meta: kind(p) + ' · ' + p.y + ' · ' + p.g + ' · ' + p.len }) : { t: '', h: 0, v: '', meta: '' },
+      ratedNote: scores.length + ' rated · ' + avg.toFixed(1) + ' avg',
+      curveLabel: 'Ratings spread across ' + scores.length + ' titles, averaging ' + avg.toFixed(1) + ' out of 5',
+      curveLine: c.line, curveArea: c.area,
+      progCount: all.filter((x) => x.s === 'watching').length + ' titles',
+      progress: all.filter((x) => x.s === 'watching').map((x) => Object.assign(this.look(x), {
+        meta: kind(x) + ' · ' + x.y, ep: 'E' + x.ep[0] + ' / ' + x.ep[1], pct: Math.round(x.ep[0] / x.ep[1] * 100)
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

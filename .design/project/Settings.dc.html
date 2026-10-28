@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Mnemo settings</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..800&amp;family=Geist+Mono:wght@400..600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0a0a0b}
+a{color:#ece9e4}a:hover{color:#ffffff}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;padding:0}
+button:disabled{opacity:.35;cursor:default}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #f3f1ec;outline-offset:3px}
+.grain{position:fixed;inset:0;pointer-events:none;z-index:95;opacity:.09;background-image:url(/_blob/618baeb7c0b2e2caf3f353de0710caa9)}
+.glass{background:#1a1a1c8c;border:1px solid #ffffff14;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 10px 30px #0006}
+.dock{display:flex;align-items:center;gap:2px;padding:4px;border-radius:999px}
+.dock-item{display:flex;align-items:center;gap:8px;height:40px;padding:0 16px;border-radius:999px;font-size:13.5px;font-weight:500;color:#b9b6b0;text-decoration:none;transition:background .15s,color .15s}
+.dock-item:hover{background:#ece9e414;color:#f4f1ec}
+.brand{display:flex;align-items:center;gap:12px;height:48px;text-decoration:none;color:#ece9e4}
+.pill{height:40px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:0 18px;font-size:13.5px;font-weight:500;border:1px solid #ece9e433;white-space:nowrap;color:#ece9e4;text-decoration:none;transition:background .15s,transform .15s}
+.pill:hover{background:#ece9e414;color:#ece9e4}
+.pill:active{transform:scale(.97)}
+.pill.warn{border-color:#e3a58b66;color:#e3a58b}
+.pill.warn:hover{background:#e3a58b1a;color:#e3a58b}
+.chip{height:34px;padding:0 14px;border-radius:999px;border:1px solid #ece9e429;font-size:13px;color:#bebab3;display:inline-flex;align-items:center}
+.chip:hover{background:#ece9e40d}
+.chip[aria-pressed=true]{background:#f3f1ec;color:#0a0a0b;border-color:#f3f1ec}
+.sect{display:flex;flex-wrap:wrap;gap:8px 48px;padding:26px 0 10px;border-top:1px solid #ece9e424;scroll-margin-top:96px}
+.sect-head{flex:1 1 220px;max-width:280px}
+.sect-head h2{margin:0;font-size:20px;font-weight:600;letter-spacing:-.035em}
+.sect-head p{margin:6px 0 0;font-size:13px;line-height:1.5;color:#8f8c87}
+.sect-body{flex:999 1 520px;min-width:0}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px 20px;padding:14px 0;border-top:1px solid #ece9e40f;flex-wrap:wrap}
+.row:first-child{border-top:0;padding-top:2px}
+.row>div:first-child{flex:1 1 240px;min-width:0}
+.label{margin:0;font-size:14px;font-weight:500}
+.hint{margin:3px 0 0;font-size:12px;line-height:1.5;color:#8f8c87}
+.switch{width:44px;height:26px;border-radius:999px;position:relative;flex:none;background:#ffffff2e;transition:background .2s}
+.switch span{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#ffffff;transition:transform .3s cubic-bezier(.2,.75,.15,1)}
+.switch[aria-checked=true]{background:#f3f1ec}
+.switch[aria-checked=true] span{transform:translateX(18px);background:#0a0a0b}
+.seg{display:inline-flex;gap:2px;padding:3px;border-radius:999px;border:1px solid #ece9e429}
+.seg button{height:34px;padding:0 14px;border-radius:999px;font-size:13px;color:#b9b6b0}
+.seg button[aria-pressed=true]{background:#f3f1ec;color:#0a0a0b;font-weight:600}
+.select{height:40px;padding:0 14px;border-radius:999px;border:1px solid #ece9e429;background:#1a1a1c;color:#ece9e4;font:inherit;font-size:13.5px;outline:none;color-scheme:dark}
+.input{height:44px;box-sizing:border-box;width:100%;padding:0 14px;border-radius:12px;border:1px solid #ece9e429;background:#ffffff06;color:#ece9e4;font:inherit;font-size:14px;outline:none}
+.input:focus{border-color:#ece9e473}
+.stepper{display:inline-flex;align-items:center;gap:4px;padding:3px;border-radius:999px;border:1px solid #ece9e429}
+.stepper button{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.stepper button:hover{background:#ece9e414}
+.stepper output{min-width:34px;text-align:center;font-size:14px;font-family:'Geist Mono',ui-monospace,monospace}
+.bar{height:4px;border-radius:4px;background:#ffffff1a;overflow:hidden}
+.bar span{display:block;height:100%;background:#f3f1ec;border-radius:4px;transition:width .3s}
+.art{background:radial-gradient(ellipse 80% 55% at 30% 22%,hsl(var(--h) 70% 72% / .45),#0000 70%),radial-gradient(ellipse 70% 45% at 85% 95%,hsl(calc(var(--h) + 40) 60% 18% / .7),#0000 70%),linear-gradient(170deg,hsl(var(--h) 42% 38%),hsl(calc(var(--h) + 25) 38% 13%))}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.help{position:fixed;right:24px;bottom:24px;z-index:87;width:44px;height:44px;border-radius:50%;color:#ece9e4;font-size:17px;font-weight:600}
+@media (max-width:1100px){.page{padding-left:28px!important;padding-right:28px!important}}
+@media (max-width:980px){.dock-label{display:none}.dock-item{padding:0 13px}}
+@media (max-width:640px){.page{padding:88px 16px 48px!important}.brand-name{display:none}.sect-head{max-width:none}}
+@media (prefers-reduced-motion:reduce){.switch,.switch span,.bar span{transition:none}}
+</style>
+</helmet>
+<div style="position: relative; min-height: 100vh; overflow-x: clip; background: #0a0a0b; color: #ece9e4; font-family: Geist, 'Segoe UI', system-ui, sans-serif; font-size: 14px">
+
+  <div style="position: fixed; top: 18px; left: 28px; right: 28px; z-index: 80; display: flex; align-items: center; justify-content: space-between; gap: 16px; pointer-events: none">
+    <nav class="dock glass" aria-label="Sections" style="pointer-events: auto">
+      <a class="dock-item" href="Main.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="7" height="16" rx="1.5"></rect><rect x="14" y="4" width="7" height="16" rx="1.5"></rect></svg><span class="dock-label">Library</span></a>
+      <a class="dock-item" href="Discover.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M15.5 8.5l-2 5-5 2 2-5z"></path></svg><span class="dock-label">Discover</span></a>
+      <a class="dock-item" href="Stats.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V11M12 20V5M19 20v-6"></path></svg><span class="dock-label">Stats</span></a>
+      <a class="dock-item" href="Friends.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8.5" r="3.5"></circle><path d="M2.5 20a6.5 6.5 0 0 1 13 0"></path><path d="M16 5.2a3.5 3.5 0 0 1 0 6.6M18 14.5a6.5 6.5 0 0 1 3.5 5.5"></path></svg><span class="dock-label">Friends</span></a>
+      <a class="dock-item" href="Profile.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="10" r="3"></circle><path d="M6.5 18.5a6.5 6.5 0 0 1 11 0"></path></svg><span class="dock-label">Profile</span></a>
+      <a class="dock-item" href="Discover.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="M20 20l-4-4"></path></svg><span class="dock-label">Search</span></a>
+    </nav>
+    <a class="brand" href="Main.dc.html" style="pointer-events: auto">
+      <span class="brand-name" style="font-weight: 600; font-size: 22px; letter-spacing: -0.035em">Mnemo</span>
+      <svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><rect x="9" y="6" width="20" height="28" rx="3" fill="none" stroke="#f3f1ec" stroke-width="2.6"></rect><rect x="14" y="10" width="20" height="28" rx="3" fill="#f3f1ec"></rect><path d="M19.5 24.5l3 3 6-7" fill="none" stroke="#0a0a0b" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    </a>
+  </div>
+
+  <main class="page" style="max-width: 1240px; margin: 0 auto; padding: 98px 56px 64px; box-sizing: border-box">
+    <div style="margin-bottom: 36px">
+      <h1 style="margin: 0; font-size: 44px; font-weight: 600; letter-spacing: -0.04em; line-height: 1">Settings</h1>
+      <p style="margin: 8px 0 0; font-size: 14px; color: #8f8c87">Changes save as you make them and sync to your other devices</p>
+    </div>
+
+    <section id="profile" class="sect" aria-labelledby="h-profile">
+      <div class="sect-head"><h2 id="h-profile">Profile</h2><p>How friends see you</p></div>
+      <div class="sect-body">
+        <div class="row">
+          <div style="display: flex; align-items: center; gap: 16px">
+            <span class="art" aria-hidden="true" style="--h: 210; width: 56px; height: 56px; border-radius: 50%; flex: none; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 600; color: #fff">{{initial}}</span>
+            <div><p class="label">{{name}}</p><p class="hint" style="font-family: 'Geist Mono', ui-monospace, monospace">@{{user}}</p></div>
+          </div>
+          <button class="pill">Change photo</button>
+        </div>
+        <div class="row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px">
+          <label style="display: flex; flex-direction: column; gap: 7px"><span style="font-size: 12px; color: #8f8c87">Display name</span><input class="input" type="text" value="{{name}}" onChange="{{onName}}"></label>
+          <label style="display: flex; flex-direction: column; gap: 7px"><span style="font-size: 12px; color: #8f8c87">Username</span><input class="input" type="text" value="{{user}}" onChange="{{onUser}}" style="font-family: 'Geist Mono', ui-monospace, monospace; font-size: 13px"></label>
+        </div>
+      </div>
+    </section>
+
+    <section id="library" class="sect" aria-labelledby="h-library">
+      <div class="sect-head"><h2 id="h-library">Library</h2><p>What sits above your titles and how they look</p></div>
+      <div class="sect-body">
+        <div class="row">
+          <div><p class="label">Recently added</p><p class="hint">Titles you added lately, above the grid</p></div>
+          <div style="display: flex; align-items: center; gap: 12px">
+            <label><span class="sr">Days to count as recent</span>
+              <select class="select" value="{{recentDays}}" onChange="{{onDays}}" disabled="{{recentOff}}">
+                <option value="7">Last 7 days</option><option value="14">Last 14 days</option><option value="30">Last 30 days</option>
+              </select>
+            </label>
+            <button class="switch" role="switch" aria-checked="{{recent}}" aria-label="Show Recently added" onClick="{{toggleRecent}}"><span></span></button>
+          </div>
+        </div>
+        <div class="row">
+          <div><p class="label">Coming soon</p><p class="hint">Watchlist titles releasing in the next 6 months</p></div>
+          <button class="switch" role="switch" aria-checked="{{soon}}" aria-label="Show Coming soon" onClick="{{toggleSoon}}"><span></span></button>
+        </div>
+        <div class="row">
+          <div><p class="label">Cards</p><p class="hint">Layout and size of the library grid</p></div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap">
+            <div class="seg" role="group" aria-label="Layout"><sc-for list="{{views}}" as="v" hint-placeholder-count="2"><button onClick="{{v.pick}}" aria-pressed="{{v.sel}}">{{v.label}}</button></sc-for></div>
+            <div class="seg" role="group" aria-label="Card size"><sc-for list="{{sizes}}" as="v" hint-placeholder-count="3"><button onClick="{{v.pick}}" aria-pressed="{{v.sel}}">{{v.label}}</button></sc-for></div>
+          </div>
+        </div>
+        <div class="row">
+          <div><p class="label">Streaming region</p><p class="hint">Which country's services show on title pages</p></div>
+          <label><span class="sr">Streaming region</span>
+            <select class="select" value="PL"><option value="PL">Poland</option><option value="DE">Germany</option><option value="GB">United Kingdom</option><option value="US">United States</option></select>
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <section id="privacy" class="sect" aria-labelledby="h-privacy">
+      <div class="sect-head"><h2 id="h-privacy">Privacy</h2><p>Notes are always private</p></div>
+      <div class="sect-body">
+        <div class="row">
+          <div><p class="label">Who can see your shelf</p><p class="hint">{{visNote}}</p></div>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px" role="group" aria-label="Who can see your shelf">
+            <sc-for list="{{vis}}" as="v" hint-placeholder-count="3"><button class="chip" onClick="{{v.pick}}" aria-pressed="{{v.sel}}">{{v.label}}</button></sc-for>
+          </div>
+        </div>
+        <div class="row">
+          <div><p class="label">Share activity with friends</p><p class="hint">What you finish and rate shows in their Activity</p></div>
+          <button class="switch" role="switch" aria-checked="{{activity}}" aria-label="Share activity with friends" onClick="{{toggleActivity}}"><span></span></button>
+        </div>
+      </div>
+    </section>
+
+    <section id="stats" class="sect" aria-labelledby="h-stats">
+      <div class="sect-head"><h2 id="h-stats">Stats goals</h2><p>A week counts toward your streak when you reach these</p></div>
+      <div class="sect-body">
+        <div class="row">
+          <div><p class="label">Films a week</p></div>
+          <div class="stepper"><button onClick="{{filmsDown}}" aria-label="Fewer films" disabled="{{filmsMin}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"></path></svg></button><output aria-live="polite">{{films}}</output><button onClick="{{filmsUp}}" aria-label="More films"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></button></div>
+        </div>
+        <div class="row">
+          <div><p class="label">Episodes a week</p></div>
+          <div class="stepper"><button onClick="{{epsDown}}" aria-label="Fewer episodes" disabled="{{epsMin}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"></path></svg></button><output aria-live="polite">{{eps}}</output><button onClick="{{epsUp}}" aria-label="More episodes"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></button></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="motion" class="sect" aria-labelledby="h-motion">
+      <div class="sect-head"><h2 id="h-motion">Motion</h2><p>Poster tilt, page slides and texture</p></div>
+      <div class="sect-body">
+        <div class="row">
+          <div><p class="label">Reduce motion</p><p class="hint">Follows your system setting unless you choose</p></div>
+          <div class="seg" role="group" aria-label="Reduce motion"><sc-for list="{{motion}}" as="v" hint-placeholder-count="3"><button onClick="{{v.pick}}" aria-pressed="{{v.sel}}">{{v.label}}</button></sc-for></div>
+        </div>
+        <div class="row">
+          <div><p class="label">Film grain</p><p class="hint">The faint texture over everything</p></div>
+          <button class="switch" role="switch" aria-checked="{{grain}}" aria-label="Film grain" onClick="{{toggleGrain}}"><span></span></button>
+        </div>
+      </div>
+    </section>
+
+    <section id="data" class="sect" aria-labelledby="h-data">
+      <div class="sect-head"><h2 id="h-data">Data</h2><p>Metadata comes from TMDB; your data is yours</p></div>
+      <div class="sect-body">
+        <div class="row">
+          <div>
+            <p class="label">Refresh metadata</p>
+            <p class="hint">{{refreshNote}}</p>
+            <sc-if value="{{refreshing}}" hint-placeholder-val="{{ false }}">
+              <div class="bar" style="margin-top: 10px; max-width: 360px"><span style="width: {{refreshPct}}%"></span></div>
+            </sc-if>
+          </div>
+          <button class="pill" onClick="{{refresh}}" disabled="{{refreshing}}">{{refreshLabel}}</button>
+        </div>
+        <div class="row">
+          <div><p class="label">Import and export</p><p class="hint">Library, episodes, ratings and notes as one JSON file</p></div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap"><button class="pill">Import JSON</button><button class="pill">Export JSON</button></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="account" class="sect" aria-labelledby="h-account">
+      <div class="sect-head"><h2 id="h-account">Account</h2><p>Signed in with Google</p></div>
+      <div class="sect-body">
+        <div class="row">
+          <div><p class="label" style="font-family: 'Geist Mono', ui-monospace, monospace; font-size: 13px">[email address]</p></div>
+          <button class="pill">Sign out</button>
+        </div>
+        <div class="row">
+          <div><p class="label">Delete account</p><p class="hint">Removes your library, ratings and friends from Mnemo for good</p></div>
+          <button class="pill warn">Delete account</button>
+        </div>
+      </div>
+    </section>
+
+    <footer style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding-top: 22px; border-top: 1px solid #ece9e424; font-size: 12px; color: #8f8c87">
+      <span style="display: flex; align-items: center; gap: 8px"><span style="width: 7px; height: 7px; border-radius: 50%; background: #9fd6b0"></span><span style="font-family: 'Geist Mono', ui-monospace, monospace">Mnemo [version]</span> · Up to date</span>
+      <span style="display: flex; align-items: center; gap: 10px; max-width: 560px"><img src="/_blob/204eeb403127d38b78de66b400f945d3" alt="TMDB" style="height: 10px; width: auto; flex: none">This product uses the TMDB API but is not endorsed or certified by TMDB.</span>
+    </footer>
+  </main>
+  <button class="help glass" aria-label="About and sync status">?</button>
+  <div class="grain" aria-hidden="true" style="display: {{grainDisplay}}"></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2000}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: '[Display name]', user: 'username', recent: true, recentDays: '14', soon: true, view: 'grid', size: 'normal',
+      vis: 'friends', activity: true, films: 2, eps: 5, motion: 'system', grain: true, refreshing: false, done: 0
+    };
+    this.timer = null;
+  }
+  componentWillUnmount() { if (this.timer) clearInterval(this.timer); }
+  renderVals() {
+    const S = this.state;
+    const total = 180;
+    const seg = (key, defs) => defs.map((d) => ({ label: d[1], sel: S[key] === d[0], pick: () => this.setState({ [key]: d[0] }) }));
+    const visNotes = { public: 'Anyone with the link sees your library and stats', friends: 'Friends see your library and stats', private: 'Nobody else sees your shelf' };
+    return {
+      name: S.name, user: S.user, initial: (S.name.replace(/[^A-Za-z]/g, '')[0] || 'M').toUpperCase(),
+      onName: (e) => this.setState({ name: e.target.value }), onUser: (e) => this.setState({ user: e.target.value }),
+      recent: S.recent, recentOff: !S.recent, recentDays: S.recentDays,
+      toggleRecent: () => this.setState((s) => ({ recent: !s.recent })), onDays: (e) => this.setState({ recentDays: e.target.value }),
+      soon: S.soon, toggleSoon: () => this.setState((s) => ({ soon: !s.soon })),
+      views: seg('view', [['grid', 'Grid'], ['list', 'List']]),
+      sizes: seg('size', [['compact', 'Compact'], ['normal', 'Normal'], ['large', 'Large']]),
+      vis: seg('vis', [['public', 'Anyone with the link'], ['friends', 'Friends'], ['private', 'Only me']]),
+      visNote: visNotes[S.vis],
+      activity: S.activity, toggleActivity: () => this.setState((s) => ({ activity: !s.activity })),
+      films: S.films, filmsMin: S.films <= 1,
+      filmsDown: () => this.setState((s) => ({ films: Math.max(1, s.films - 1) })), filmsUp: () => this.setState((s) => ({ films: s.films + 1 })),
+      eps: S.eps, epsMin: S.eps <= 1,
+      epsDown: () => this.setState((s) => ({ eps: Math.max(1, s.eps - 1) })), epsUp: () => this.setState((s) => ({ eps: s.eps + 1 })),
+      motion: seg('motion', [['system', 'System'], ['on', 'On'], ['off', 'Off']]),
+      grain: S.grain, grainDisplay: S.grain ? 'block' : 'none', toggleGrain: () => this.setState((s) => ({ grain: !s.grain })),
+      refreshing: S.refreshing, refreshPct: Math.round(S.done / total * 100),
+      refreshNote: S.refreshing ? 'Updating ' + S.done + ' of ' + total + ' titles from TMDB. You can keep using Mnemo.' : (S.done === total ? 'All ' + total + ' titles updated just now' : 'Posters, cast and episode lists for all ' + total + ' titles'),
+      refreshLabel: S.refreshing ? 'Refreshing…' : 'Refresh all',
+      refresh: () => {
+        this.setState({ refreshing: true, done: 0 });
+        this.timer = setInterval(() => {
+          this.setState((s) => {
+            const d = Math.min(total, s.done + 9);
+            if (d >= total) { clearInterval(this.timer); this.timer = null; return { done: d, refreshing: false }; }
+            return { done: d };
+          });
+        }, 120);
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

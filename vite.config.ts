@@ -1,0 +1,11 @@
+import react from '@vitejs/plugin-react';
+import path from 'node:path';
+import { defineConfig } from 'vitest/config';
+
+export default defineConfig({
+  plugins: [react()],
+  resolve: { alias: { '@': path.resolve(__dirname, 'src') } },
+  // Electron loads the build from its own scheme; absolute /assets paths work for both.
+  build: { outDir: 'dist', sourcemap: false },
+  test: { globals: true, environment: 'node', include: ['src/**/*.test.ts'] },
+});

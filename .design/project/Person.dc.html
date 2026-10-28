@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Mnemo person</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..800&amp;family=Geist+Mono:wght@400..600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0a0a0b}
+a{color:#ece9e4}a:hover{color:#ffffff}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;padding:0}
+button:focus-visible,a:focus-visible{outline:2px solid #f3f1ec;outline-offset:3px}
+.grain{position:fixed;inset:0;pointer-events:none;z-index:95;opacity:.09;background-image:url(/_blob/618baeb7c0b2e2caf3f353de0710caa9)}
+.glass{background:#1a1a1c8c;border:1px solid #ffffff14;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 10px 30px #0006}
+.dock{display:flex;align-items:center;gap:2px;padding:4px;border-radius:999px}
+.dock-item{display:flex;align-items:center;gap:8px;height:40px;padding:0 16px;border-radius:999px;font-size:13.5px;font-weight:500;color:#b9b6b0;text-decoration:none;transition:background .15s,color .15s}
+.dock-item:hover{background:#ece9e414;color:#f4f1ec}
+.back{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#b9b6b0;text-decoration:none;flex:none}
+.back:hover{color:#f4f1ec;background:#2a2a2dcc}
+.brand{display:flex;align-items:center;gap:12px;height:48px;text-decoration:none;color:#ece9e4}
+.src{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px;border-radius:999px;border:1px solid #ece9e429;font-size:12px;color:#bebab3;text-decoration:none;transition:background .15s,color .15s}
+.src:hover{background:#ece9e40d;color:#ece9e4}
+.chip{height:34px;padding:0 14px;border-radius:999px;border:1px solid #ece9e429;font-size:13px;color:#bebab3;display:inline-flex;align-items:center;gap:8px}
+.chip:hover{background:#ece9e40d}
+.chip[aria-pressed=true]{background:#f3f1ec;color:#0a0a0b;border-color:#f3f1ec}
+.chip small{font-size:11px;opacity:.7;font-family:'Geist Mono',ui-monospace,monospace}
+.text-button{color:#a9a59d;font-size:13px;padding:6px 8px;border-radius:8px;display:inline-flex;align-items:center;gap:8px;text-decoration:none}
+.text-button:hover{color:#ece9e4;background:#ffffff0a}
+.art{background:radial-gradient(ellipse 80% 55% at 30% 22%,hsl(var(--h) 70% 72% / .45),#0000 70%),radial-gradient(ellipse 70% 45% at 85% 95%,hsl(calc(var(--h) + 40) 60% 18% / .7),#0000 70%),linear-gradient(170deg,hsl(var(--h) 42% 38%),hsl(calc(var(--h) + 25) 38% 13%))}
+.art.v1{background:radial-gradient(circle at 50% 38%,hsl(var(--h) 80% 78% / .9) 0 9%,#0000 10%),linear-gradient(180deg,hsl(var(--h) 55% 58%),hsl(calc(var(--h) - 20) 55% 22%) 62%,hsl(calc(var(--h) - 30) 45% 8%))}
+.art.v2{background:linear-gradient(180deg,hsl(var(--h) 38% 46%) 0 33.3%,hsl(calc(var(--h) + 50) 32% 30%) 33.3% 66.6%,hsl(calc(var(--h) + 100) 36% 16%) 66.6%)}
+.art.v3{background:linear-gradient(116deg,#0000 0 36%,hsl(var(--h) 80% 80% / .25) 44%,#0000 56%),repeating-linear-gradient(90deg,#0000 0 46px,#0003 46px 48px),linear-gradient(180deg,hsl(var(--h) 22% 30%),hsl(var(--h) 20% 8%))}
+.cover-title{position:absolute;left:12px;right:12px;bottom:16px;font-size:20px;line-height:1.08;font-weight:700;letter-spacing:-.04em;color:#fff;overflow-wrap:anywhere;text-shadow:0 2px 14px #0005}
+.v1 .cover-title,.v2 .cover-title{text-align:center;text-transform:uppercase;font-weight:500;letter-spacing:.26em;font-size:12px;line-height:1.5}
+.v2 .cover-title{bottom:auto;top:calc(50% - 10px)}
+.v3 .cover-title{text-transform:uppercase;letter-spacing:.02em;font-size:22px;font-weight:600}
+.portrait{position:relative;width:300px;aspect-ratio:2/3;border-radius:6px;overflow:hidden;flex:none;transform:rotate(-2deg);box-shadow:0 50px 90px #0009,0 0 0 1px #ffffff0f}
+.portrait:after{content:'';position:absolute;inset:0;background:linear-gradient(115deg,#ffffff24,#0000 32%),linear-gradient(180deg,#0000 60%,#0007)}
+.portrait svg{position:absolute;left:50%;bottom:0;width:80%;height:auto;transform:translateX(-50%);opacity:.3}
+.glow{position:absolute;left:150px;top:50%;width:1100px;height:1200px;transform:translate(-50%,-50%);pointer-events:none;filter:blur(56px);opacity:.36;z-index:0}
+.card{position:relative;display:block;min-width:0}
+.card>a{display:block;text-decoration:none;color:#ece9e4}
+.cover{position:relative;display:block;aspect-ratio:2/3;border-radius:6px;overflow:hidden;box-shadow:0 14px 30px #0007,0 0 0 1px #ffffff0d;transition:transform .45s cubic-bezier(.2,.75,.15,1),box-shadow .45s}
+.cover:after{content:'';position:absolute;inset:0;background:linear-gradient(115deg,#ffffff1c,#0000 34%);pointer-events:none}
+.card:hover .cover,.card>a:focus-visible .cover{transform:translateY(-6px) rotate(-1deg) scale(1.03);box-shadow:0 30px 50px #0009,0 0 0 1px #ece9e459}
+.badge{position:absolute;top:8px;right:8px;width:22px;height:22px;border-radius:50%;background:#0a0a0b99;display:flex;align-items:center;justify-content:center;z-index:1}
+.add{position:absolute;top:8px;right:8px;z-index:3;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#0a0a0bb3;border:1px solid #ffffff2e;color:#ece9e4;backdrop-filter:blur(8px);transition:transform .45s cubic-bezier(.2,.75,.15,1)}
+.card:hover .add{transform:translateY(-6px)}
+.add[aria-pressed=true]{background:#f3f1ec;color:#0a0a0b;border-color:#f3f1ec}
+.row{display:flex;gap:22px;overflow-x:auto;padding:8px 2px 14px;scrollbar-width:none}
+.row::-webkit-scrollbar{display:none}
+.row .card{flex:none;width:188px}
+.help{position:fixed;right:24px;bottom:24px;z-index:87;width:44px;height:44px;border-radius:50%;color:#ece9e4;font-size:17px;font-weight:600}
+@media (max-width:1100px){.page{padding-left:28px!important;padding-right:28px!important}}
+@media (max-width:980px){.dock-label{display:none}.dock-item{padding:0 13px}}
+@media (max-width:640px){.page{padding:88px 16px 48px!important}.brand-name{display:none}.portrait{width:200px}.name{font-size:48px!important}.row .card{width:140px}}
+@media (prefers-reduced-motion:reduce){.cover,.add{transition:none}}
+</style>
+</helmet>
+<div style="position: relative; min-height: 100vh; overflow-x: clip; background: #0a0a0b; color: #ece9e4; font-family: Geist, 'Segoe UI', system-ui, sans-serif; font-size: 14px">
+
+  <div style="position: fixed; top: 18px; left: 28px; right: 28px; z-index: 80; display: flex; align-items: center; justify-content: space-between; gap: 16px; pointer-events: none">
+    <div style="display: flex; align-items: center; gap: 10px; pointer-events: auto">
+      <a class="back glass" href="Detail.dc.html" aria-label="Back to Northbound"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg></a>
+      <nav class="dock glass" aria-label="Sections">
+        <a class="dock-item" href="Main.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="7" height="16" rx="1.5"></rect><rect x="14" y="4" width="7" height="16" rx="1.5"></rect></svg><span class="dock-label">Library</span></a>
+        <a class="dock-item" href="Discover.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M15.5 8.5l-2 5-5 2 2-5z"></path></svg><span class="dock-label">Discover</span></a>
+        <a class="dock-item" href="Stats.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V11M12 20V5M19 20v-6"></path></svg><span class="dock-label">Stats</span></a>
+        <a class="dock-item" href="Friends.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8.5" r="3.5"></circle><path d="M2.5 20a6.5 6.5 0 0 1 13 0"></path><path d="M16 5.2a3.5 3.5 0 0 1 0 6.6M18 14.5a6.5 6.5 0 0 1 3.5 5.5"></path></svg><span class="dock-label">Friends</span></a>
+      <a class="dock-item" href="Profile.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="10" r="3"></circle><path d="M6.5 18.5a6.5 6.5 0 0 1 11 0"></path></svg><span class="dock-label">Profile</span></a>
+        <a class="dock-item" href="Discover.dc.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="M20 20l-4-4"></path></svg><span class="dock-label">Search</span></a>
+      </nav>
+    </div>
+    <a class="brand" href="Main.dc.html" style="pointer-events: auto">
+      <span class="brand-name" style="font-weight: 600; font-size: 22px; letter-spacing: -0.035em">Mnemo</span>
+      <svg width="34" height="34" viewBox="0 0 40 40" aria-hidden="true"><rect x="9" y="6" width="20" height="28" rx="3" fill="none" stroke="#f3f1ec" stroke-width="2.6"></rect><rect x="14" y="10" width="20" height="28" rx="3" fill="#f3f1ec"></rect><path d="M19.5 24.5l3 3 6-7" fill="none" stroke="#0a0a0b" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+    </a>
+  </div>
+
+  <main class="page" style="max-width: 1720px; margin: 0 auto; padding: 120px 56px 64px; box-sizing: border-box">
+
+    <section aria-label="{{p.name}}" style="position: relative; display: flex; flex-wrap: wrap; align-items: flex-end; gap: 40px 64px; margin-bottom: 64px">
+      <div aria-hidden="true" class="glow" style="background: {{glow}}"></div>
+      <div class="portrait art" style="--h: {{p.h}}; z-index: 1">
+        <svg viewBox="0 0 100 110" fill="#ffffff" aria-hidden="true"><circle cx="50" cy="34" r="22"></circle><path d="M6 110c2-30 20-46 44-46s42 16 44 46z"></path></svg>
+      </div>
+      <div style="position: relative; z-index: 1; flex: 1 1 420px; min-width: 0; max-width: 720px">
+        <p style="margin: 0 0 12px; font-size: 13px; font-weight: 500; color: #8f8c87">{{p.kicker}}</p>
+        <h1 class="name" style="margin: 0; font-size: 72px; font-weight: 600; line-height: .98; letter-spacing: -0.045em; color: #f2efea">{{p.name}}</h1>
+        <p style="margin: 16px 0 0; display: flex; flex-wrap: wrap; align-items: center; gap: 6px">
+          <a class="src" href="https://www.themoviedb.org/" target="_blank" rel="noopener"><img src="/_blob/204eeb403127d38b78de66b400f945d3" alt="TMDB" style="display: block; height: 9px; width: auto"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 16L16 8M9 8h7v7"></path></svg></a>
+          <a class="src" href="https://www.imdb.com/" target="_blank" rel="noopener"><strong style="font-weight: 700; color: #ece9e4">IMDb</strong><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 16L16 8M9 8h7v7"></path></svg></a>
+        </p>
+        <p style="margin: 18px 0 0; font-size: 14px; color: #8f8c87; display: flex; flex-wrap: wrap; gap: 6px 10px"><span>Born {{p.born}}</span><span>·</span><span>{{p.place}}</span></p>
+        <p style="margin: 18px 0 0; max-width: 600px; font-size: 15px; line-height: 1.6; color: #bebab3; display: -webkit-box; -webkit-line-clamp: {{bioLines}}; -webkit-box-orient: vertical; overflow: hidden">{{p.bio}}</p>
+        <button class="text-button" onClick="{{toggleBio}}" aria-expanded="{{bioOpen}}" style="margin: 6px 0 0 -8px">{{bioLabel}}</button>
+
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 28px; border-top: 1px solid #ece9e424; padding-top: 18px; max-width: 560px">
+          <sc-for list="{{stats}}" as="s" hint-placeholder-count="3">
+            <div style="padding: 0 20px; border-left: {{s.border}}">
+              <p style="margin: 0 0 8px; font-size: 13px; color: #8f8c87">{{s.label}}</p>
+              <strong style="font-size: 26px; font-weight: 600; letter-spacing: -0.03em">{{s.value}}</strong><small style="font-size: 13px; color: #8f8c87">{{s.suffix}}</small>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="h-known" style="margin-bottom: 52px">
+      <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 10px">
+        <h2 id="h-known" style="margin: 0; font-size: 20px; font-weight: 600; letter-spacing: -0.035em">Known for</h2>
+        <span style="font-size: 13px; color: #8f8c87">Most popular on TMDB</span>
+      </div>
+      <div class="row">
+        <sc-for list="{{known}}" as="it" hint-placeholder-count="6">
+          <div class="card">
+            <a href="Detail.dc.html" aria-label="{{it.t}}">
+              <span class="cover art {{it.v}}" style="--h: {{it.h}}"><span class="cover-title">{{it.t}}</span></span>
+              <span style="display: block; margin-top: 12px; font-size: 13.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{it.t}}</span>
+              <span style="display: block; margin-top: 3px; font-size: 12px; color: #bebab3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{it.role}}</span>
+            </a>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section aria-labelledby="h-credits">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 26px; padding-top: 18px; border-top: 1px solid #ece9e424">
+        <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px">
+          <h2 id="h-credits" style="margin: 0; font-size: 20px; font-weight: 600; letter-spacing: -0.035em">Filmography</h2>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px" role="group" aria-label="Department">
+            <sc-for list="{{depts}}" as="d" hint-placeholder-count="2">
+              <button class="chip" onClick="{{d.pick}}" aria-pressed="{{d.sel}}">{{d.label}} <small>{{d.n}}</small></button>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 6px">
+          <div style="display: flex; gap: 6px" role="group" aria-label="Show">
+            <sc-for list="{{filters}}" as="f" hint-placeholder-count="3">
+              <button class="chip" onClick="{{f.pick}}" aria-pressed="{{f.sel}}">{{f.label}}</button>
+            </sc-for>
+          </div>
+          <div style="display: flex; gap: 6px; margin-left: 10px" role="group" aria-label="Sort">
+            <sc-for list="{{sorts}}" as="f" hint-placeholder-count="3">
+              <button class="chip" onClick="{{f.pick}}" aria-pressed="{{f.sel}}">{{f.label}}</button>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(158px, 1fr)); gap: 30px 22px">
+        <sc-for list="{{credits}}" as="it" hint-placeholder-count="8">
+          <div class="card">
+            <a href="Detail.dc.html" aria-label="{{it.t}}">
+              <span class="cover art {{it.v}}" style="--h: {{it.h}}">
+                <span style="position: absolute; top: 10px; left: 10px; z-index: 1; font-size: 9px; font-weight: 600; letter-spacing: .09em; padding: 4px 7px; border-radius: 5px; background: #0006; color: #fff">{{it.kindTag}}</span>
+                <sc-if value="{{it.watched}}" hint-placeholder-val="{{ false }}">
+                  <span class="badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9fd6b0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-label="Watched" role="img"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>
+                </sc-if>
+                <sc-if value="{{it.watching}}" hint-placeholder-val="{{ false }}">
+                  <span class="badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ece9e4" stroke-width="2.6" stroke-linecap="round" aria-label="Watching" role="img"><path d="M8 5v14l11-7z"></path></svg></span>
+                </sc-if>
+                <sc-if value="{{it.onList}}" hint-placeholder-val="{{ false }}">
+                  <span class="badge"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ece9e4" stroke-width="2.6" stroke-linejoin="round" aria-label="On watchlist" role="img"><path d="M7 4h10v16l-5-3.5L7 20z"></path></svg></span>
+                </sc-if>
+                <span class="cover-title">{{it.t}}</span>
+              </span>
+              <span style="display: block; margin-top: 12px; font-size: 13.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{it.t}}</span>
+              <span style="display: block; margin-top: 3px; font-size: 12px; color: #bebab3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{it.role}}</span>
+              <span style="display: block; margin-top: 2px; font-size: 12px; color: #8f8c87">{{it.meta}}</span>
+            </a>
+            <sc-if value="{{it.canAdd}}" hint-placeholder-val="{{ false }}">
+              <button class="add" onClick="{{it.toggle}}" aria-pressed="{{it.listed}}" aria-label="{{it.addLabel}}">
+                <sc-if value="{{it.listed}}" hint-placeholder-val="{{ false }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></sc-if>
+                <sc-if value="{{it.notListed}}" hint-placeholder-val="{{ true }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></sc-if>
+              </button>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+      <sc-if value="{{empty}}" hint-placeholder-val="{{ false }}">
+        <p style="margin: 0; padding: 48px 0; text-align: center; font-size: 13px; color: #a9a59d">{{emptyText}}</p>
+      </sc-if>
+    </section>
+  </main>
+  <button class="help glass" aria-label="About and sync status">?</button>
+  <div class="grain" aria-hidden="true"></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"person":{"editor":"enum","options":["director","actor"],"default":"director"},"$preview":{"width":1440,"height":2200}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { dept: null, filter: 'all', sort: 'new', bioOpen: false, listed: {} };
+  }
+  componentDidUpdate(prev) {
+    if (prev.person !== this.props.person) this.setState({ dept: null, filter: 'all' });
+  }
+  hue(t) { let h = 0; for (let i = 0; i < t.length; i++) h = (h * 31 + t.charCodeAt(i)) % 360; return h; }
+  variant(t) { return ['', 'v1', 'v2', 'v3'][(t.length + t.charCodeAt(0)) % 4]; }
+  // What is already in the user's library: status and rating.
+  library() {
+    return {
+      'Northbound': { s: 'watching' }, 'Kessa Point': { s: 'watched', r: 5 }, 'Grey Meridian': { s: 'watched', r: 5 }, 'Nine Bridges': { s: 'watchlist' },
+      'The Archivists': { s: 'watched', r: 5 }, 'Wintering': { s: 'watched', r: 5 }, 'Echo Chamber': { s: 'watched', r: 3 }, 'Paper Lanterns': { s: 'watchlist' }
+    };
+  }
+  people() {
+    return {
+      director: {
+        name: 'Ines Varga', kicker: 'Director · Writer · Creator', born: '3 March 1979', place: 'Bergen, Norway', h: 30,
+        bio: 'Ines Varga started in documentary, filming weather stations and fishing crews along the Norwegian coast before moving into fiction with The Long Field. Her work keeps returning to small groups in isolated places and to the things they stop saying to each other. She writes most of what she directs and runs her series herself, from the writers’ room to the final mix. Northbound is her second series as creator.',
+        known: ['Northbound', 'Kessa Point', 'Grey Meridian', 'Polar Night', 'Nine Bridges', 'The Long Field'],
+        credits: {
+          Directing: [['Northbound', 2025, 'show', 'Creator · 6 episodes'], ['Kessa Point', 2024, 'show', 'Creator · 8 episodes'], ['Grey Meridian', 2022, 'movie', 'Director'], ['Polar Night', 2019, 'movie', 'Director'], ['Station Twelve', 2016, 'movie', 'Director · short'], ['The Long Field', 2013, 'movie', 'Director']],
+          Writing: [['Northbound', 2025, 'show', 'Writer · 18 episodes'], ['Kessa Point', 2024, 'show', 'Writer · 8 episodes'], ['Polar Night', 2019, 'movie', 'Screenplay'], ['Nine Bridges', 2023, 'movie', 'Co-writer'], ['The Long Field', 2013, 'movie', 'Screenplay']]
+        }
+      },
+      actor: {
+        name: 'Anna Kowal', kicker: 'Actor', born: '18 July 1990', place: 'Gdańsk, Poland', h: 280,
+        bio: 'Anna Kowal trained at the theatre academy in Kraków and spent six years on stage before her first screen lead in After the Rain. She works across Polish, Scandinavian and British productions, often in roles that carry most of a story without much dialogue. Her turn as Mira Holt in Northbound is her first lead in an English-language series.',
+        known: ['Northbound', 'The Archivists', 'Wintering', 'Field of Ash', 'After the Rain', 'Echo Chamber'],
+        credits: {
+          Acting: [['Harbour Lights', 2026, 'movie', 'as Lena'], ['Northbound', 2025, 'show', 'as Mira Holt · 18 episodes'], ['Small Hours', 2025, 'movie', 'as Kasia'], ['Blue Hour', 2025, 'show', 'as June · 6 episodes'],
+            ['Field of Ash', 2024, 'movie', 'as Nurse Maria'], ['Wintering', 2023, 'movie', 'as Ola'], ['The Archivists', 2021, 'show', 'as Edda · 8 episodes'], ['After the Rain', 2020, 'movie', 'as Hanna'],
+            ['Echo Chamber', 2018, 'movie', 'as Det. Ruth Sall'], ['Lumen', 2026, 'movie', 'as Ship computer (voice)']],
+          Producing: [['Wintering', 2023, 'movie', 'Associate producer']]
+        }
+      }
+    };
+  }
+  renderVals() {
+    const S = this.state, L = this.library();
+    const p = this.people()[this.props.person === 'actor' ? 'actor' : 'director'];
+    const deptNames = Object.keys(p.credits);
+    const dept = S.dept && p.credits[S.dept] ? S.dept : deptNames[0];
+    const roleFor = (t) => { for (const d of deptNames) { const c = p.credits[d].find((x) => x[0] === t); if (c) return c; } return null; };
+    let list = p.credits[dept].slice();
+    if (S.filter === 'in') list = list.filter((c) => L[c[0]]);
+    if (S.filter === 'out') list = list.filter((c) => !L[c[0]]);
+    if (S.sort === 'new') list.sort((a, b) => b[1] - a[1]);
+    if (S.sort === 'old') list.sort((a, b) => a[1] - b[1]);
+    if (S.sort === 'rating') list.sort((a, b) => ((L[b[0]] || {}).r || 0) - ((L[a[0]] || {}).r || 0));
+    const all = deptNames.reduce((acc, d) => acc.concat(p.credits[d].map((c) => c[0])), []).filter((t, i, a) => a.indexOf(t) === i);
+    const inLib = all.filter((t) => L[t]);
+    const rated = inLib.filter((t) => L[t].r);
+    const average = rated.length ? (rated.reduce((a, t) => a + L[t].r, 0) / rated.length).toFixed(1) : '—';
+    const spots = ['39% 35%', '50% 33%', '61% 35%', '38% 50%', '62% 50%', '39% 65%', '50% 67%', '61% 65%'];
+    return {
+      p, bioOpen: S.bioOpen, bioLines: S.bioOpen ? 40 : 3, bioLabel: S.bioOpen ? 'Show less' : 'Read more',
+      toggleBio: () => this.setState((s) => ({ bioOpen: !s.bioOpen })),
+      glow: spots.map((s, i) => 'radial-gradient(circle 300px at ' + s + ', hsl(' + ((p.h + i * 12) % 360) + ' 55% ' + (i < 3 ? 52 : 38) + '%), transparent)').join(', '),
+      stats: [
+        { label: 'In your library', value: String(inLib.length), suffix: ' of ' + all.length },
+        { label: 'Watched', value: String(inLib.filter((t) => L[t].s === 'watched').length), suffix: '' },
+        { label: 'Your average', value: average, suffix: rated.length ? ' /5' : '' }
+      ].map((s, i) => Object.assign(s, { border: i ? '1px solid #ece9e424' : '0' })),
+      known: p.known.map((t) => { const c = roleFor(t); return { t, h: this.hue(t), v: this.variant(t), role: c ? c[3] : '' }; }),
+      depts: deptNames.map((d) => ({ label: d, n: p.credits[d].length, sel: d === dept, pick: () => this.setState({ dept: d }) })),
+      filters: [['all', 'All'], ['in', 'In my library'], ['out', 'Not in library']].map((f) => ({ label: f[1], sel: S.filter === f[0], pick: () => this.setState({ filter: f[0] }) })),
+      sorts: [['new', 'Newest'], ['old', 'Oldest'], ['rating', 'Your rating']].map((f) => ({ label: f[1], sel: S.sort === f[0], pick: () => this.setState({ sort: f[0] }) })),
+      credits: list.map((c) => {
+        const lib = L[c[0]], listed = !!S.listed[c[0]];
+        return {
+          t: c[0], h: this.hue(c[0]), v: this.variant(c[0]), kindTag: c[2] === 'show' ? 'SERIES' : 'FILM', role: c[3],
+          meta: c[1] + (lib ? ' · ' + (lib.s === 'watched' ? 'Watched' : (lib.s === 'watching' ? 'Watching' : 'On watchlist')) + (lib.r ? ' · ★ ' + lib.r : '') : ''),
+          watched: !!lib && lib.s === 'watched', watching: !!lib && lib.s === 'watching', onList: !!lib && lib.s === 'watchlist',
+          canAdd: !lib, listed, notListed: !listed, addLabel: (listed ? 'Remove from watchlist: ' : 'Add to watchlist: ') + c[0],
+          toggle: () => this.setState((s) => { const l = Object.assign({}, s.listed); if (l[c[0]]) delete l[c[0]]; else l[c[0]] = true; return { listed: l }; })
+        };
+      }),
+      empty: list.length === 0,
+      emptyText: S.filter === 'in' ? 'None of these are in your library yet.' : 'You already have all of these.'
+    };
+  }
+}
+</script>
+</body>
+</html>

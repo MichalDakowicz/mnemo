@@ -1,0 +1,74 @@
+/* Stats page: lifted from .design/project/Stats.dc.html. Shared tokens/classes live in styles/global.css. */
+.stats-page .stats-sub { margin: 8px 0 0; font-size: 14px; color: var(--dim); }
+.stats-page .stats-periods { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.stats-page .block { border-top: 1px solid #ece9e424; padding-top: 18px; min-width: 0; }
+.stats-page .block-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+.stats-page .block-head h2 { margin: 0; font-size: 20px; font-weight: 600; letter-spacing: -.035em; }
+.stats-page .block-head > span { font-size: 13px; color: var(--dim); }
+
+.stats-page .quick { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); border-top: 1px solid #ece9e424; margin-bottom: 56px; }
+.stats-page .quick > div { padding: 20px 20px 4px 0; }
+.stats-page .quick-label { margin: 0 0 10px; font-size: 13px; color: var(--dim); }
+.stats-page .quick-value { margin: 0; font-size: 56px; font-weight: 300; letter-spacing: -.045em; line-height: 1; }
+.stats-page .quick-note { margin: 8px 0 0; font-size: 12px; color: var(--dim); }
+.stats-page .quick-note.good { color: var(--good); }
+
+.stats-page .streaks { margin-bottom: 56px; }
+.stats-page .streak-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 560px), 1fr)); gap: 40px 56px; }
+.stats-page .cal { display: grid; grid-auto-flow: column; grid-template-columns: repeat(53, minmax(0, 1fr)); grid-template-rows: repeat(7, auto); gap: 2px; }
+.stats-page .cal span { aspect-ratio: 1; border-radius: 2px; background: #ffffff0f; }
+.stats-page .cal .l1 { background: #ece9e44d; }
+.stats-page .cal .l2 { background: #ece9e499; }
+.stats-page .cal .l3 { background: #ece9e4; }
+.stats-page .cal .met { background: var(--good); }
+.stats-page .cal .future { background: transparent; }
+.stats-page .cal-foot { display: flex; justify-content: space-between; gap: 12px; margin-top: 10px; font-size: 12px; color: var(--dim); }
+.stats-page .legend { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin: 16px 0 0; font-size: 12px; color: var(--dim); }
+.stats-page .legend i { width: 11px; height: 11px; border-radius: 2px; display: inline-block; }
+.stats-page .legend .text-button { font-size: 12px; padding: 2px 4px; }
+
+.stats-page .stats-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: 56px; margin-bottom: 56px; }
+.stats-page .status-bar { display: flex; height: 10px; border-radius: 10px; overflow: hidden; gap: 2px; margin-bottom: 18px; }
+.stats-page .status-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 24px; margin: 0; padding: 0; list-style: none; }
+.stats-page .status-list li { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--soft); }
+.stats-page .status-list li > span:nth-child(2) { flex: 1; }
+.stats-page .status-list li > span:last-child { color: var(--text); font-family: var(--mono); }
+.stats-page .swatch { width: 10px; height: 10px; border-radius: 3px; flex: none; }
+.stats-page .st-watched { background: #ece9e4; }
+.stats-page .st-watching { background: #a9a59d; }
+.stats-page .st-watchlist { background: #5e5b57; }
+.stats-page .stats-mix { margin: 22px 0 0; font-size: 13px; color: var(--dim); }
+
+.stats-page .bars { display: flex; flex-direction: column; gap: 14px; margin: 0; padding: 0; list-style: none; }
+.stats-page .bars li { display: grid; grid-template-columns: 96px minmax(0, 1fr) 34px; align-items: center; gap: 14px; font-size: 13px; color: var(--soft); }
+.stats-page .bars li > span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.stats-page .bars li > span:last-child { text-align: right; font-size: 12px; color: var(--text); font-family: var(--mono); }
+.stats-page .track { height: 6px; border-radius: 6px; background: #ffffff14; overflow: hidden; }
+.stats-page .track span { display: block; height: 100%; border-radius: 6px; background: var(--text); }
+
+.stats-page .decades { display: flex; align-items: flex-end; gap: 12px; height: 180px; margin: 0; padding: 0; list-style: none; }
+.stats-page .decades li { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 8px; height: 100%; font-size: 12px; color: var(--soft); }
+.stats-page .decades .n { font-size: 11px; color: var(--dim); font-family: var(--mono); }
+.stats-page .decades .bar { width: 100%; max-width: 44px; border-radius: 6px 6px 2px 2px; background: #ece9e459; }
+.stats-page .decades .bar.now { background: var(--text); }
+
+.stats-page .people { list-style: none; margin: 0; padding: 0; }
+.stats-page .people li { display: flex; align-items: center; gap: 14px; padding: 9px 0; }
+.stats-page .people .rank-n { width: 18px; font-size: 12px; color: var(--dim); font-family: var(--mono); }
+.stats-page .people a, .stats-page .people .nm { flex: 1; font-size: 13.5px; font-weight: 600; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.stats-page .people a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.stats-page .people .meta { font-size: 12px; color: var(--dim); }
+
+.stats-page .fame { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 26px 20px; }
+
+.stats-page .activity { list-style: none; margin: 0; padding: 0; }
+.stats-page .activity li { display: flex; gap: 14px; align-items: baseline; padding: 10px 0; border-top: 1px solid #ece9e414; font-size: 13px; color: var(--soft); }
+.stats-page .activity li:first-child { border-top: 0; }
+.stats-page .activity .what { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.stats-page .activity .what b { color: var(--text); font-weight: 600; }
+.stats-page .activity time { font-size: 12px; color: var(--dim); font-family: var(--mono); white-space: nowrap; }
+
+.stats-page .stats-section { margin-bottom: 56px; }
+
+@media (max-width: 640px) { .stats-page .quick-value { font-size: 40px; } .stats-page .cal { gap: 1px; } }
