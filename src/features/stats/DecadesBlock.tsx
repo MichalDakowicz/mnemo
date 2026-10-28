@@ -4,7 +4,7 @@ import type { DecadeSlice } from '@/lib/stats';
 export function DecadesBlock({ decades }: { decades: DecadeSlice[] }) {
   const max = Math.max(0, ...decades.map((d) => d.count));
   return (
-    <section className="block" aria-label="Release eras">
+    <section className="block stretch" aria-label="Release eras">
       <div className="block-head">
         <h2>Release eras</h2>
         <span>By decade</span>

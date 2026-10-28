@@ -16,7 +16,7 @@ function payload(episodes: unknown[]) {
 }
 
 describe('toSeasonEntry', () => {
-  it('keeps only the fields the tracker renders', () => {
+  it('keeps only the fields the tracker renders, with the still as a full URL', () => {
     const entry = toSeasonEntry(
       payload([
         {
@@ -35,13 +35,13 @@ describe('toSeasonEntry', () => {
 
     expect(entry).toEqual({
       fetchedAt: NOW,
-      episodes: [{ id: 9, episode_number: 1, name: 'Pilot', air_date: '2020-01-05', overview: 'It begins' }],
+      episodes: [{ id: 9, episode_number: 1, name: 'Pilot', air_date: '2020-01-05', overview: 'It begins', still: 'https://image.tmdb.org/t/p/w300/big.jpg' }],
     });
   });
 
   it('normalises a blank air date to null and fills missing text', () => {
     const entry = toSeasonEntry(payload([{ id: 3, episode_number: 2, air_date: '' }]), NOW);
-    expect(entry?.episodes[0]).toEqual({ id: 3, episode_number: 2, name: '', air_date: null, overview: '' });
+    expect(entry?.episodes[0]).toEqual({ id: 3, episode_number: 2, name: '', air_date: null, overview: '', still: null });
   });
 
   it('rejects a failed fetch, a non-season payload and an empty season', () => {
@@ -53,6 +53,11 @@ describe('toSeasonEntry', () => {
 });
 
 describe('parseSeasonEntry', () => {
+  it('reads an entry saved before stills were kept as a miss, so it refetches', () => {
+    const old = { fetchedAt: NOW, episodes: [{ id: 1, episode_number: 1, name: 'A', air_date: '2020-01-05', overview: '' }] };
+    expect(parseSeasonEntry(JSON.stringify(old))).toBeNull();
+  });
+
   it('round-trips what was written', () => {
     const entry = toSeasonEntry(payload([{ id: 1, episode_number: 1, name: 'A', air_date: '2020-01-05' }]), NOW);
     expect(parseSeasonEntry(JSON.stringify(entry))).toEqual(entry);
@@ -70,8 +75,8 @@ describe('seasonTtl', () => {
   const settled: SeasonEntry = {
     fetchedAt: NOW,
     episodes: [
-      { id: 1, episode_number: 1, name: 'A', air_date: '2020-01-05', overview: '' },
-      { id: 2, episode_number: 2, name: 'B', air_date: '2020-01-12', overview: '' },
+      { id: 1, episode_number: 1, name: 'A', air_date: '2020-01-05', overview: '', still: null },
+      { id: 2, episode_number: 2, name: 'B', air_date: '2020-01-12', overview: '', still: null },
     ],
   };
 
@@ -82,7 +87,7 @@ describe('seasonTtl', () => {
   it('revalidates a season still airing within hours', () => {
     const airing: SeasonEntry = {
       fetchedAt: NOW,
-      episodes: [{ id: 1, episode_number: 1, name: 'A', air_date: '2026-09-08', overview: '' }],
+      episodes: [{ id: 1, episode_number: 1, name: 'A', air_date: '2026-09-08', overview: '', still: null }],
     };
     expect(seasonTtl(airing, NOW)).toBe(AIRING_TTL_MS);
   });
@@ -91,8 +96,8 @@ describe('seasonTtl', () => {
     const unknown: SeasonEntry = {
       fetchedAt: NOW,
       episodes: [
-        { id: 1, episode_number: 1, name: 'A', air_date: '2020-01-05', overview: '' },
-        { id: 2, episode_number: 2, name: 'B', air_date: null, overview: '' },
+        { id: 1, episode_number: 1, name: 'A', air_date: '2020-01-05', overview: '', still: null },
+        { id: 2, episode_number: 2, name: 'B', air_date: null, overview: '', still: null },
       ],
     };
     expect(seasonTtl(unknown, NOW)).toBe(AIRING_TTL_MS);

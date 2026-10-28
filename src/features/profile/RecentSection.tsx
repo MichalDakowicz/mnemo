@@ -23,7 +23,7 @@ export function RecentSection({ recent }: { recent: Movie[] }) {
               to={m.tmdbId != null ? `/title/${m.type}/${m.tmdbId}` : null}
               meta={
                 <>
-                  <span className="mono">{formatScore(personalScore(m.ratings))}</span> · {whenLabel(m.completedAt || m.updatedAt)}
+                  <span className="mono">★ {formatScore(personalScore(m.ratings))}</span> · {whenLabel(m.completedAt || m.updatedAt)}
                 </>
               }
             />

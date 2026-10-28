@@ -5,7 +5,7 @@ export function GenresBlock({ genres }: { genres: GenreSlice[] }) {
   const top = genres.slice(0, 6);
   const max = top[0]?.count ?? 0;
   return (
-    <section className="block" aria-label="Favourite genres">
+    <section className="block tall" aria-label="Favourite genres">
       <div className="block-head">
         <h2>Favourite genres</h2>
         <span>By titles watched</span>

@@ -4,7 +4,7 @@ import type { CSSProperties } from 'react';
 
 import { Art } from '@/components/media/Art';
 import { titleHref } from '@/components/media/MovieCard';
-import { nextEpisode } from '@/lib/cardInfo';
+import { useNextEpisode } from '@/hooks/useNextEpisode';
 import { watchedEpisodeCount } from '@/lib/episodes';
 import { hueFromTitle } from '@/lib/hue';
 import { watchProgressPercent } from '@/lib/movieStatus';
@@ -12,7 +12,7 @@ import type { Movie } from '@/types/movie';
 
 function CwCard({ movie }: { movie: Movie }) {
   const href = titleHref(movie);
-  const next = movie.type === 'tv' ? nextEpisode(movie) : null;
+  const next = useNextEpisode(movie);
   const pct = watchProgressPercent(movie);
   const done = watchedEpisodeCount(movie);
   const meta = movie.type === 'tv' && movie.numberOfEpisodes ? `${done} / ${movie.numberOfEpisodes}` : '';

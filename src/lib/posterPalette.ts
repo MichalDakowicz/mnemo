@@ -39,30 +39,31 @@ function averageCells(data: Uint8ClampedArray): string[] {
   });
 }
 
+/** When a poster cannot be read, a quiet warm grey beats a hue that has nothing to do with the artwork. */
+const NEUTRAL = glowBackground(GLOW_SPOTS.map((_, i) => `hsl(40 6% ${i < 3 ? 44 : 32}%)`));
+
 const cache = new Map<string, Promise<string>>();
 
-/** The glow wash for a poster; falls back to a hue from the title when the image cannot be read. */
+async function readPalette(url: string): Promise<string> {
+  // `cache: 'reload'` skips a copy the page already holds from a plain <img>: that copy has no CORS headers
+  // and would make the read fail. The blob is same-origin, so the canvas is never tainted.
+  const res = await fetch(url, { mode: 'cors', cache: 'reload' });
+  if (!res.ok) throw new Error(String(res.status));
+  const bitmap = await createImageBitmap(await res.blob());
+  const ctx = Object.assign(document.createElement('canvas'), { width: W, height: H }).getContext('2d', { willReadFrequently: true });
+  if (!ctx) throw new Error('no canvas');
+  ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(bitmap, 0, 0, W, H);
+  bitmap.close();
+  return glowBackground(averageCells(ctx.getImageData(0, 0, W, H).data));
+}
+
+/** The glow wash for a poster. No poster means a generated cover, whose hue the title decides; an unreadable one gets a neutral wash. */
 export function posterGlow(url: string | null, title: string): Promise<string> {
   if (!url) return Promise.resolve(reelGlow(title));
   let hit = cache.get(url);
   if (!hit) {
-    hit = new Promise<string>((resolve) => {
-      const img = new Image();
-      img.crossOrigin = 'anonymous';
-      img.onload = () => {
-        try {
-          const ctx = Object.assign(document.createElement('canvas'), { width: W, height: H }).getContext('2d', { willReadFrequently: true });
-          if (!ctx) throw new Error('no canvas');
-          ctx.imageSmoothingQuality = 'high';
-          ctx.drawImage(img, 0, 0, W, H);
-          resolve(glowBackground(averageCells(ctx.getImageData(0, 0, W, H).data)));
-        } catch {
-          resolve(reelGlow(title));
-        }
-      };
-      img.onerror = () => resolve(reelGlow(title));
-      img.src = url;
-    });
+    hit = readPalette(url).catch(() => NEUTRAL);
     cache.set(url, hit);
   }
   return hit;

@@ -51,6 +51,7 @@ export function useTitle(type: MediaType, tmdbId: number) {
     libraryLoading,
     display,
     extras: extras.data ?? null,
+    extrasLoading: extras.isLoading,
     similar: similar.data ?? [],
     // Only a title with nothing stored has to wait on the network.
     loading: !owned && (libraryLoading || metadata.isLoading),

@@ -5,6 +5,7 @@ import { DecadesBlock } from '@/features/stats/DecadesBlock';
 import { DirectorsBlock } from '@/features/stats/DirectorsBlock';
 import { GenresBlock } from '@/features/stats/GenresBlock';
 import { HallOfFame } from '@/features/stats/HallOfFame';
+import { RatingsBlock } from '@/features/stats/RatingsBlock';
 import { QuickStats } from '@/features/stats/QuickStats';
 import { StatsHeader } from '@/features/stats/StatsHeader';
 import { StatusBlock } from '@/features/stats/StatusBlock';
@@ -37,7 +38,7 @@ export function StatsPage() {
     );
   } else if (!s.model) body = <p className="empty">Nothing finished in this period yet.</p>;
   else {
-    const { stats, quick, streaks, mix, averages, fame } = s.model;
+    const { stats, quick, streaks, mix, averages, fame, ratings } = s.model;
     body = (
       <>
         <QuickStats items={quick} />
@@ -45,6 +46,7 @@ export function StatsPage() {
         <div className="stats-cols">
           <StatusBlock rows={stats.sortedStatus} total={stats.totalMovies} mix={mix} />
           <GenresBlock genres={stats.topGenres} />
+          <RatingsBlock curve={ratings.curve} rated={ratings.rated} average={ratings.average} />
           <DecadesBlock decades={stats.sortedDecades} />
           <DirectorsBlock directors={stats.topDirectors} averages={averages} />
         </div>

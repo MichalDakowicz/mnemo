@@ -1,7 +1,7 @@
 import { ArrowUpRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-import { yearOf } from '@/lib/titleFacts';
+import { formatDate, formatRuntime, yearOf } from '@/lib/titleFacts';
 import type { MediaType } from '@/types/movie';
 
 import { NameLinks, personTo } from './Facts';
@@ -19,11 +19,24 @@ function Src({ href, children }: { href: string; children: React.ReactNode }) {
 }
 
 /** Title, source links, byline and meta line. The actions and ratings follow it as children. */
-export function TitleHead({ type, tmdbId, d, children }: { type: MediaType; tmdbId: number; d: Display; children: React.ReactNode }) {
+export function TitleHead({ type, tmdbId, d, date, children }: { type: MediaType; tmdbId: number; d: Display; date: string | null; children: React.ReactNode }) {
   const isTv = type === 'tv';
   const meta: React.ReactNode[] = [];
-  const year = yearOf(d.releaseDate);
-  if (year) meta.push(year);
+  const year = yearOf(date ?? d.releaseDate);
+  const full = formatDate(date ?? d.releaseDate);
+  // The year opens into the full date on hover or focus: "2022" becomes "13 Sep 2022".
+  if (year) {
+    const lead = full && full.endsWith(year) ? full.slice(0, -year.length) : '';
+    meta.push(
+      <span key="date" className="ti-date" tabIndex={0}>
+        <span className="lead" aria-hidden="true">{lead}</span>
+        {year}
+        {lead ? <span className="sr">{full}</span> : null}
+      </span>,
+    );
+  }
+  const runtime = type === 'movie' ? formatRuntime(d.runtime) : '';
+  if (runtime) meta.push(runtime);
   if (d.genres.length > 0) {
     meta.push(
       <span key="g">

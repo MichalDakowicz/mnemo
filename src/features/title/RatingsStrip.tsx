@@ -38,7 +38,7 @@ export function RatingsStrip({ voteAverage, voteCount, mine, open, onToggle, fri
         <button type="button" className="ti-rate-toggle" onClick={onToggle} aria-expanded={open} aria-controls={controls} disabled={mine === null}>
           <span className="ti-k">Your rating</span>
           <span className="row1">
-            <strong className="ti-big">{mineText ?? (mine === null ? '—' : 'Rate')}</strong>
+            <strong className="ti-big">{mineText ?? '—'}</strong>
             <small>{mineText ? '/5' : ''}</small>
             {mine !== null ? <ChevronDown size={14} className={`ti-chev${open ? ' open' : ''}`} aria-hidden="true" /> : null}
           </span>

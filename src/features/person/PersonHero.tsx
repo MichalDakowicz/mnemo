@@ -1,7 +1,8 @@
 import { ArrowUpRight } from 'lucide-react';
-import { useState, type CSSProperties } from 'react';
+import { useEffect, useState, type CSSProperties } from 'react';
 
 import { hueFromTitle } from '@/lib/hue';
+import { posterGlow } from '@/lib/posterPalette';
 import type { libraryStats } from '@/lib/personCredits';
 import { formatDate } from '@/lib/titleFacts';
 import type { PersonProfile } from '@/lib/tmdbExtra';
@@ -11,8 +12,6 @@ type Props = {
   kicker: string;
   stats: ReturnType<typeof libraryStats>;
 };
-
-const SPOTS = ['39% 35%', '50% 33%', '61% 35%', '38% 50%', '62% 50%', '39% 65%', '50% 67%', '61% 65%'];
 
 function Src({ href, children }: { href: string; children: React.ReactNode }) {
   return (
@@ -26,7 +25,17 @@ function Src({ href, children }: { href: string; children: React.ReactNode }) {
 export function PersonHero({ profile: p, kicker, stats }: Props) {
   const [open, setOpen] = useState(false);
   const hue = hueFromTitle(p.name);
-  const glow = SPOTS.map((s, i) => `radial-gradient(circle 300px at ${s}, hsl(${(hue + i * 12) % 360} 55% ${i < 3 ? 52 : 38}%), transparent)`).join(', ');
+  // The wash behind the portrait takes its colours from the photo, as on Discover and Random; with no photo it falls back to the name's hue.
+  const [glow, setGlow] = useState<string | null>(null);
+  useEffect(() => {
+    let current = true;
+    void posterGlow(p.profileUrl, p.name).then((g) => {
+      if (current) setGlow(g);
+    });
+    return () => {
+      current = false;
+    };
+  }, [p.profileUrl, p.name]);
   const born = formatDate(p.birthday);
   const longBio = p.biography.length > 280;
   const cells = [
@@ -37,7 +46,7 @@ export function PersonHero({ profile: p, kicker, stats }: Props) {
 
   return (
     <section className="pe-hero" aria-label={p.name}>
-      <div className="pe-glow" aria-hidden="true" style={{ background: glow }} />
+      <div className="pe-glow" aria-hidden="true" style={glow ? { background: glow } : { opacity: 0 }} />
       <div className={p.profileUrl ? 'pe-portrait' : 'pe-portrait art'} style={{ '--h': hue } as CSSProperties}>
         {p.profileUrl ? (
           <img src={p.profileUrl} alt={p.name} />

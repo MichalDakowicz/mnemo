@@ -11,6 +11,8 @@ import { useUserSettings } from '@/hooks/useUserSettings';
 import { EMPTY_THRESHOLD_HISTORY } from '@/lib/streakThresholds';
 import { computeStats, DEFAULT_STREAK_THRESHOLD, DEFAULT_TV_STREAK_THRESHOLD } from '@/lib/stats';
 import { scopeMoviesToPeriod } from '@/lib/statsPeriod';
+import { ratingCurve } from '@/lib/ratingCurve';
+import { ratingDistribution } from '@/lib/ratingDistribution';
 import { rewatchCount, selectHallOfFame, sumDaily } from '@/lib/statsSummary';
 import { buildStreakGrid } from '@/lib/streakGrid';
 import {
@@ -90,7 +92,8 @@ export function useStatsPage() {
         note: shows > 0 ? `Across ${plural(shows, 'show')}` : null,
       },
       { label: 'Average rating', value: rated ? stats.avgRating : '-', note: rated ? 'Out of 5' : 'Nothing rated yet' },
-      { label: 'Current streak', value: plural(days, 'day'), note: `Best: ${plural(overall.longestStreak, 'day')}` },
+      { label: 'Film streak', value: plural(days, 'day'), note: `Best: ${plural(overall.longestStreak, 'day')}` },
+      { label: 'Show streak', value: plural(overall.currentTVStreak, 'day'), note: `Best: ${plural(overall.longestTVStreak, 'day')}` },
     ];
 
     const streaks = [
@@ -114,9 +117,12 @@ export function useStatsPage() {
       },
     ];
 
+    const dist = ratingDistribution(scoped);
+
     return {
       stats,
       quick,
+      ratings: { curve: ratingCurve(dist.points), rated: dist.rated, average: dist.average },
       streaks,
       mix: `${plural(stats.typeCounts.movie, 'film')} · ${plural(stats.typeCounts.tv, 'show')} · ${plural(rewatchCount(scoped), 'rewatch', 'rewatches')}`,
       averages: directorAverages(scoped),

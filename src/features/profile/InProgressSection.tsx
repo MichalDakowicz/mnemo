@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 
 import { Poster } from '@/components/media/Poster';
-import { nextEpisode } from '@/lib/cardInfo';
+import { useNextEpisode } from '@/hooks/useNextEpisode';
 import { watchedEpisodeCount } from '@/lib/episodes';
 import { watchProgressPercent } from '@/lib/movieStatus';
 import { episodeLabel } from '@/lib/profileFormat';
@@ -9,7 +9,7 @@ import { titleMeta } from '@/lib/statsSummary';
 import type { Movie } from '@/types/movie';
 
 function Row({ m }: { m: Movie }) {
-  const next = m.type === 'tv' ? episodeLabel(nextEpisode(m)) : null;
+  const next = episodeLabel(useNextEpisode(m));
   const total = m.numberOfEpisodes ?? 0;
   const body = (
     <>

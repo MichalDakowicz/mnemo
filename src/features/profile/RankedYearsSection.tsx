@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronRight, Trophy } from 'lucide-react';
+import { ChevronRight, Maximize2, Minimize2, Trophy } from 'lucide-react';
 
 import { Poster } from '@/components/media/Poster';
 
@@ -9,6 +9,7 @@ const PODIUM = 6;
 
 export function RankedYearsSection({ ranked }: { ranked: ReturnType<typeof useRankedYears> }) {
   const [listOpen, setListOpen] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const { selected, years } = ranked;
   return (
     <section aria-labelledby="h-ranked">
@@ -26,9 +27,15 @@ export function RankedYearsSection({ ranked }: { ranked: ReturnType<typeof useRa
                 <Trophy size={16} strokeWidth={1.8} aria-hidden="true" />
                 <b>{selected.year} ranked</b>
                 <span className="note">{selected.entries.length}</span>
+                {selected.entries.length > PODIUM ? (
+                  <button type="button" className="text-button" aria-expanded={expanded} onClick={() => setExpanded((v) => !v)}>
+                    {expanded ? <Minimize2 size={13} aria-hidden="true" /> : <Maximize2 size={13} aria-hidden="true" />}
+                    {expanded ? 'Compact' : 'Expand'}
+                  </button>
+                ) : null}
               </div>
-              <ol className="podium">
-                {selected.entries.slice(0, PODIUM).map((e) => (
+              <ol className={expanded ? 'podium open' : 'podium'}>
+                {(expanded ? selected.entries : selected.entries.slice(0, PODIUM)).map((e) => (
                   <li key={e.movie.id}>
                     <Poster
                       title={e.movie.title}

@@ -1,15 +1,17 @@
 import { useState } from 'react';
 
 import { CastPanel } from './CastPanel';
+import { Collapse } from './Collapse';
 import { ConfirmDialog } from './ConfirmDialog';
-import { DetailsPanels } from './DetailsPanel';
 import { EpisodesPanel } from './EpisodesPanel';
 import { FriendsPanel } from './FriendsPanel';
 import { HeroActions } from './HeroActions';
 import { NotesPanel } from './NotesPanel';
+import { ProductionPanel } from './ProductionPanel';
 import { RatingsStrip } from './RatingsStrip';
 import { ReviewPanel } from './ReviewPanel';
 import { SimilarRow } from './SimilarRow';
+import { StreamingRail } from './StreamingRail';
 import { TitleBackdrop } from './TitleBackdrop';
 import { TitleHead } from './TitleHead';
 import { useAddToLibrary } from './useAddToLibrary';
@@ -17,7 +19,7 @@ import { useEpisodeTracker } from './useEpisodeTracker';
 import { useTitle } from './useTitle';
 import { useTitleForm } from './useTitleForm';
 import { useTitleFriends } from './useTitleFriends';
-import { WatchesPanel } from './WatchesPanel';
+import { WatchesStrip } from './WatchesStrip';
 import type { MediaType } from '@/types/movie';
 
 type Props = { type: MediaType; tmdbId: number };
@@ -50,9 +52,12 @@ export function TitleView({ type, tmdbId }: Props) {
 
   return (
     <div className="ti-body">
-      <TitleBackdrop title={d.title} url={t.extras?.backdropUrl ?? d.coverUrl} />
-      <TitleHead type={type} tmdbId={tmdbId} d={d}>
+      {/* The backdrop comes with the extras; showing the poster first and swapping it made the art jump. */}
+      <TitleBackdrop title={d.title} url={t.extras?.backdropUrl ?? d.coverUrl} pending={t.extrasLoading} />
+      <StreamingRail availability={d.availability} />
+      <TitleHead type={type} tmdbId={tmdbId} d={d} date={type === 'tv' ? (t.extras?.firstAirDate ?? d.releaseDate) : d.releaseDate}>
         <HeroActions tmdbId={tmdbId} type={type} owned={owned} tf={tf} tracker={tracker} adder={adder} onRemove={() => setConfirmRemove(true)} />
+        {owned && form ? <WatchesStrip form={form} tf={tf} /> : null}
         <RatingsStrip
           voteAverage={d.voteAverage}
           voteCount={d.voteCount}
@@ -62,14 +67,17 @@ export function TitleView({ type, tmdbId }: Props) {
           friends={takes}
           controls="review"
         />
-        {owned && form && reviewOpen ? <ReviewPanel id="review" form={form} title={d.title} tf={tf} /> : null}
+        {owned && form ? (
+          <Collapse open={reviewOpen}>
+            <ReviewPanel id="review" form={form} title={d.title} tf={tf} />
+          </Collapse>
+        ) : null}
       </TitleHead>
 
       <div className="ti-grid">
         {type === 'tv' ? <EpisodesPanel tracker={tracker} seasonCount={seasonCount} seasons={t.extras?.seasons ?? []} tf={owned ? tf : null} /> : null}
-        <DetailsPanels type={type} display={d} extras={t.extras} owned={t.owned} form={form} />
-        {owned && form ? <WatchesPanel form={form} tf={tf} /> : null}
         <CastPanel cast={d.cast} />
+        <ProductionPanel type={type} display={d} extras={t.extras} />
         {owned && form ? (
           <div className={`ti-last${takes.length === 0 ? ' single' : ''}`}>
             <NotesPanel value={form.notes} onChange={(notes) => tf.update({ notes })} />

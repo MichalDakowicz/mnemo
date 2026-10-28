@@ -33,8 +33,9 @@
 .lib-toolbar { display: flex; align-items: center; gap: 6px 16px; flex-wrap: wrap; width: 100%; }
 .lib-tb-group { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; min-width: 0; }
 .lib-tb-right { margin-left: auto; justify-content: flex-end; }
-.lib-toolbar .search-small, .lib-filters .search-small { flex: 0 1 280px; }
-.lib-toolbar .lib-tb-group:first-child { flex-wrap: nowrap; flex: 0 1 auto; }
+.lib-toolbar .search-small { flex: 1 1 280px; max-width: 400px; }
+.lib-filters .search-small { flex: 0 1 280px; }
+.lib-toolbar .lib-tb-group:first-child { flex-wrap: nowrap; flex: 1 1 auto; }
 .lib-toolbar .search-small { min-width: 140px; }
 .lib-toolbar .pill { height: 40px; padding: 0 16px; }
 .lib-toolbar .pill.ghost { border-color: transparent; padding: 0 10px; }

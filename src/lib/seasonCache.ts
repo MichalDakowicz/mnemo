@@ -7,13 +7,15 @@
 // two: a settled season is trusted for weeks, a season still airing is
 // revalidated on the next open because it gains an episode a week.
 
-/** The fields the episode tracker renders. Stills, crew and guest stars are dropped. */
+/** The fields the episode tracker renders. Crew and guest stars are dropped. */
 export type CachedEpisode = {
   id: number;
   episode_number: number;
   name: string;
   air_date: string | null;
   overview: string;
+  /** The episode's TMDB still as a full image URL, null when TMDB has none. */
+  still: string | null;
 };
 
 export type SeasonEntry = {
@@ -29,6 +31,8 @@ export const AIRING_TTL_MS = 6 * 60 * 60 * 1000;
 /** How long after its last air date a season counts as finished. */
 export const SETTLE_GRACE_MS = 14 * 24 * 60 * 60 * 1000;
 
+const STILL_BASE = 'https://image.tmdb.org/t/p/w300';
+
 function toEpisode(raw: unknown): CachedEpisode | null {
   if (!raw || typeof raw !== 'object') return null;
   const value = raw as Record<string, unknown>;
@@ -41,6 +45,8 @@ function toEpisode(raw: unknown): CachedEpisode | null {
     name: typeof value.name === 'string' ? value.name : '',
     air_date: airDate,
     overview: typeof value.overview === 'string' ? value.overview : '',
+    // A TMDB payload carries `still_path`; a stored entry already carries the URL.
+    still: typeof value.still === 'string' ? value.still : typeof value.still_path === 'string' ? STILL_BASE + value.still_path : null,
   };
 }
 
@@ -66,8 +72,10 @@ export function parseSeasonEntry(raw: string | null | undefined): SeasonEntry | 
     if (!parsed || typeof parsed !== 'object') return null;
     const fetchedAt = Number((parsed as { fetchedAt?: unknown }).fetchedAt);
     if (!Number.isFinite(fetchedAt) || fetchedAt <= 0) return null;
-    const entry = toSeasonEntry(parsed, fetchedAt);
-    return entry;
+    const stored = (parsed as { episodes?: unknown }).episodes;
+    // Entries saved before stills were kept have no `still` key: read them as a miss so they refetch once.
+    if (Array.isArray(stored) && stored.some((e) => !e || typeof e !== 'object' || !('still' in e))) return null;
+    return toSeasonEntry(parsed, fetchedAt);
   } catch {
     return null;
   }
