@@ -23,7 +23,6 @@
 .ti-head { margin-left: 56%; max-width: 600px; min-height: 620px; }
 .ti-head h1 { margin: 0; font-size: 64px; line-height: .98; font-weight: 700; letter-spacing: -.045em; color: #efe7dc; overflow-wrap: anywhere; }
 .ti-tagline { margin: 12px 0 0; font-size: 15px; font-style: italic; color: var(--dim); }
-.ti-srcs { margin: 16px 0 0; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
 .ti-src { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px; border-radius: 999px; border: 1px solid #ece9e429; font-size: 12px; color: var(--soft); transition: background .15s, color .15s; }
 .ti-src:hover { background: #ece9e40d; color: var(--text); }
 .ti-src strong { font-weight: 700; color: var(--text); letter-spacing: -.01em; }
@@ -235,3 +234,13 @@
   .ti-ep-thumb { width: 104px; height: 60px; }
 }
 @media (prefers-reduced-motion: reduce) { .ti-photo, .ti-chev, .ti-ep-thumb, .ti-date .lead, .ti-rail li { transition: none; } }
+
+/* The title's TMDB and IMDb links sit quietly beside the brand, as masks so they take one muted colour. */
+.title-links { display: flex; align-items: center; gap: 14px; }
+.title-links:empty { display: none; }
+.tl { display: flex; padding: 6px 3px; color: #ece9e45c; transition: color .35s var(--ease); }
+.tl:hover, .tl:focus-visible { color: var(--text); }
+.tl span { display: block; background: currentColor; mask: center / contain no-repeat; -webkit-mask: center / contain no-repeat; }
+.tl-tmdb span { width: 68px; height: 9px; mask-image: url('../../assets/tmdb.svg'); -webkit-mask-image: url('../../assets/tmdb.svg'); }
+.tl-imdb span { width: 40px; height: 16px; mask-image: url('../../assets/imdb.svg'); -webkit-mask-image: url('../../assets/imdb.svg'); }
+@media (max-width: 640px) { .title-links { gap: 8px; } .tl-tmdb span { width: 52px; } .tl-imdb span { width: 32px; } }

@@ -1,24 +1,15 @@
-import { ArrowUpRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 import { formatDate, formatRuntime, yearOf } from '@/lib/titleFacts';
 import type { MediaType } from '@/types/movie';
 
 import { NameLinks, personTo } from './Facts';
+import { TitleLinks } from './TitleLinks';
 import type { useTitle } from './useTitle';
 
 type Display = ReturnType<typeof useTitle>['display'];
 
-function Src({ href, children }: { href: string; children: React.ReactNode }) {
-  return (
-    <a className="ti-src" href={href} target="_blank" rel="noopener noreferrer">
-      {children}
-      <ArrowUpRight size={11} aria-hidden="true" />
-    </a>
-  );
-}
-
-/** Title, source links, byline and meta line. The actions and ratings follow it as children. */
+/** Title, byline and meta line. The actions and ratings follow it as children. */
 export function TitleHead({ type, tmdbId, d, date, children }: { type: MediaType; tmdbId: number; d: Display; date: string | null; children: React.ReactNode }) {
   const isTv = type === 'tv';
   const meta: React.ReactNode[] = [];
@@ -58,10 +49,8 @@ export function TitleHead({ type, tmdbId, d, date, children }: { type: MediaType
     <div className="ti-head">
       <h1>{d.title}</h1>
       {d.tagline ? <p className="ti-tagline">{d.tagline}</p> : null}
-      <p className="ti-srcs">
-        <Src href={`https://www.themoviedb.org/${type}/${tmdbId}`}>Matched on <strong>TMDB</strong></Src>
-        {d.imdbId ? <Src href={`https://www.imdb.com/title/${d.imdbId}`}>On <strong>IMDb</strong></Src> : null}
-      </p>
+      <TitleLinks type={type} tmdbId={tmdbId} imdbId={d.imdbId} />
+
       {d.director.length > 0 ? (
         <p className="ti-by">{isTv ? 'Created by' : 'Directed by'} <NameLinks items={d.director} to={personTo} /></p>
       ) : null}
