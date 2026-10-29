@@ -43,3 +43,5 @@ credentials/
 
 # Supabase CLI scratch state — which project this checkout is linked to is per-machine.
 supabase/.temp/
+
+.claude/

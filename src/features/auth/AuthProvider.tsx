@@ -30,7 +30,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(false);
     });
 
-    return () => subscription.subscription.unsubscribe();
+    // Desktop: Google sign-in finishes in the system browser and returns as mnemo://auth?code=...
+    const offCallback = window.mnemo?.onAuthCallback((url) => {
+      const code = new URL(url).searchParams.get('code');
+      if (!code) return console.error('auth callback without code', url);
+      void supabase.auth.exchangeCodeForSession(code).then(({ error }) => error && console.error('exchangeCodeForSession', error.message));
+    });
+
+    return () => {
+      subscription.subscription.unsubscribe();
+      offCallback?.();
+    };
   }, []);
 
   return (

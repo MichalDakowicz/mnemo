@@ -1,16 +1,24 @@
 import { useLayoutEffect } from 'react';
 import { useLocation, useNavigationType } from 'react-router-dom';
 
+import { scrollRoot, scrollToTop } from '@/lib/scrollRoot';
+
+const positions = new Map<string, number>();
+
 /**
- * A new page opens at its top. The window keeps its scroll position across route changes, so a
- * title opened from far down a list used to open scrolled. Going back (POP) is left alone, so the
- * browser can hand the old position back.
+ * A new page opens at its top. The scroller keeps its position across route changes, so a
+ * title opened from far down a list used to open scrolled. Going back (POP) gets the old
+ * position handed back.
  */
 export function ScrollToTop() {
-  const { pathname } = useLocation();
+  const { pathname, key } = useLocation();
   const type = useNavigationType();
   useLayoutEffect(() => {
-    if (type !== 'POP') window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-  }, [pathname, type]);
+    if (type === 'POP') scrollRoot()?.scrollTo({ top: positions.get(key) ?? 0, behavior: 'instant' });
+    else scrollToTop();
+    return () => {
+      positions.set(key, scrollRoot()?.scrollTop ?? 0);
+    };
+  }, [pathname, key, type]);
   return null;
 }
