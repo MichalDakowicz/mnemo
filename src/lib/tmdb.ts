@@ -1,10 +1,12 @@
 // Ported from the current app's src/services/tmdb.js (doc 09), typed.
 import type { CastMember, MediaType, NamedRef, ProductionCompany } from '@/types/movie';
+import { normalizeServiceName } from '@/lib/services';
 
 const ACCESS_TOKEN = import.meta.env.VITE_TMDB_ACCESS_TOKEN;
 
 const BASE_URL = 'https://api.themoviedb.org/3';
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
+const PROVIDER_LOGO_URL = 'https://image.tmdb.org/t/p/w92';
 const IMAGE_ORIGINAL_URL = 'https://image.tmdb.org/t/p/original';
 
 const headers = {
@@ -290,6 +292,8 @@ export type MediaMetadata = {
   runtime: number;
   cast: CastMember[];
   availability: string[];
+  /** Provider logo per normalized service name, from the same watch/providers call. */
+  availabilityLogos: Record<string, string>;
   number_of_seasons: number | null;
   number_of_episodes: number | null;
   tmdbStatus: string | null;
@@ -321,11 +325,20 @@ export async function fetchMediaMetadata(
     let directors: NamedRef[] = [];
     let cast: CastMember[] = [];
     let availability: string[] = [];
+    const availabilityLogos: Record<string, string> = {};
 
     const results = data['watch/providers']?.results || {};
     const countryProviders = results[countryCode] || results.US;
     if (countryProviders?.flatrate) {
       availability = countryProviders.flatrate.map((p: any) => p.provider_name);
+      // Direct subscriptions before store "Channel" add-ons, so the service's own logo wins.
+      const byDirect = [...countryProviders.flatrate].sort(
+        (a: any, b: any) => Number(/channel/i.test(a.provider_name)) - Number(/channel/i.test(b.provider_name)),
+      );
+      for (const p of byDirect) {
+        const name = normalizeServiceName(p.provider_name);
+        if (name && p.logo_path && !availabilityLogos[name]) availabilityLogos[name] = `${PROVIDER_LOGO_URL}${p.logo_path}`;
+      }
     }
 
     if (type === 'movie') {
@@ -361,6 +374,7 @@ export async function fetchMediaMetadata(
       runtime,
       cast,
       availability,
+      availabilityLogos,
       number_of_seasons: data.number_of_seasons || null,
       number_of_episodes: data.number_of_episodes || null,
       tmdbStatus: data.status || null,

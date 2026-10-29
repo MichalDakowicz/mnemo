@@ -148,6 +148,7 @@ describe('metadataPatch', () => {
     runtime: 100,
     cast: [{ id: 3, name: 'A' }],
     availability: ['Netflix'],
+    availabilityLogos: {},
     number_of_seasons: null,
     number_of_episodes: null,
     tmdbStatus: 'Released',

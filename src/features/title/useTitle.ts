@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { useMovies } from '@/hooks/useMovies';
+import { useUserSettings } from '@/hooks/useUserSettings';
 import { useMediaMetadata, useSimilarMedia } from '@/hooks/useTmdb';
 import { fetchTitleExtras, type TitleExtras } from '@/lib/tmdbExtra';
 import type { MediaType, Movie } from '@/types/movie';
@@ -12,7 +13,8 @@ export function useTitle(type: MediaType, tmdbId: number) {
 
   const ownedIds = new Set(movies.filter((m) => m.type === type && m.tmdbId).map((m) => m.tmdbId as number));
 
-  const metadata = useMediaMetadata(tmdbId || null, type);
+  const { settings } = useUserSettings();
+  const metadata = useMediaMetadata(tmdbId || null, type, settings.watchProviderCountry);
   const extras = useQuery<TitleExtras | null>({
     queryKey: ['tmdb', 'extras', type, tmdbId],
     queryFn: () => fetchTitleExtras(tmdbId, type),
@@ -34,6 +36,7 @@ export function useTitle(type: MediaType, tmdbId: number) {
     genres: meta?.genres?.length ? meta.genres : (owned?.genres ?? []),
     cast: meta?.cast?.length ? meta.cast : (owned?.cast ?? []),
     availability: meta?.availability?.length ? meta.availability : (owned?.availability ?? []),
+    availabilityLogos: meta?.availabilityLogos ?? {},
     productionCompanies: meta?.productionCompanies?.length ? meta.productionCompanies : (owned?.productionCompanies ?? []),
     voteAverage: meta?.voteAverage || owned?.voteAverage || 0,
     voteCount: meta?.voteCount || owned?.voteCount || 0,
