@@ -53,6 +53,9 @@ export function normalizeServiceName(name: string | null | undefined): string | 
   if (!name) return null;
   const n = name.toLowerCase();
 
+  // Channel add-ons ("Paramount+ Amazon Channel", "Paramount Plus Apple TV Channel") are
+  // the parent service sold through another store, so the parent name must win first.
+  if (n.includes('paramount')) return 'Paramount+';
   if (n.includes('netflix')) return 'Netflix';
   if (n.includes('prime') || n.includes('amazon')) return 'Prime Video';
   if (n.includes('disney')) return 'Disney+';
@@ -60,7 +63,6 @@ export function normalizeServiceName(name: string | null | undefined): string | 
   if (n.includes('max') || n.includes('hbo')) return 'Max';
   if (n.includes('apple') || n.includes('itunes')) return 'Apple TV+';
   if (n.includes('peacock')) return 'Peacock';
-  if (n.includes('paramount')) return 'Paramount+';
   if (n.includes('fubo')) return 'Fubo';
   if (n.includes('criterion')) return 'Criterion Channel';
   if (n.includes('skyshowtime')) return 'SkyShowtime';

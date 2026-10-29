@@ -54,7 +54,7 @@ export function TitleView({ type, tmdbId }: Props) {
     <div className="ti-body">
       {/* The backdrop comes with the extras; showing the poster first and swapping it made the art jump. */}
       <TitleBackdrop title={d.title} url={t.extras?.backdropUrl ?? d.coverUrl} pending={t.extrasLoading} />
-      <StreamingRail availability={d.availability} />
+      <StreamingRail availability={d.availability} logos={d.availabilityLogos} />
       <TitleHead type={type} tmdbId={tmdbId} d={d} date={type === 'tv' ? (t.extras?.firstAirDate ?? d.releaseDate) : d.releaseDate}>
         <HeroActions tmdbId={tmdbId} type={type} owned={owned} tf={tf} tracker={tracker} adder={adder} onRemove={() => setConfirmRemove(true)} />
         {owned && form ? <WatchesStrip form={form} tf={tf} /> : null}
