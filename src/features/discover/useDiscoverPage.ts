@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import { useUserSettings } from '@/hooks/useUserSettings';
 import { useToday } from '@/hooks/useToday';
+import { scrollToTop } from '@/lib/scrollRoot';
 import type { MediaType } from '@/types/movie';
 
 import { useBrowseSearch } from './useBrowseSearch';
@@ -39,7 +40,7 @@ export function useDiscoverPage() {
     openGenre: (g: { id: number; name: string }) => {
       setGenre(g);
       search.clear();
-      window.scrollTo({ top: 0 });
+      scrollToTop();
     },
     closeGenre: () => setGenre(null),
     actions,
