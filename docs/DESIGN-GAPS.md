@@ -53,5 +53,4 @@ These stay unbuilt because you said no database changes. Each needs a column, RP
 
 ## 5. Platform
 
-- Web and desktop only. Mobile is a separate React Native app later; the Expo scaffold is at git tag `expo-scaffold`.
-- Google sign-in does not complete inside the Electron window (the Google page opens in the system browser). Use email there until a desktop auth flow is designed.
+- Web only. Mobile is a separate React Native app later; the Expo scaffold is at git tag `expo-scaffold`.

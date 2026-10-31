@@ -1,9 +1,9 @@
 # Mnemo — working agreement
 
-Web and desktop app: Radar's films & TV tracker rebuilt in Matro's look. Vite + React 19 + TypeScript,
+Web app: Radar's films & TV tracker rebuilt in Matro's look. Vite + React 19 + TypeScript,
 react-router, TanStack Query, Zustand, Supabase, plain CSS (tokens in `src/styles/global.css`).
-Desktop is the same build inside Electron (`desktop/`). **Mobile is not here**: it comes later as a
-separate React Native app. The old Expo scaffold is kept at git tag `expo-scaffold`. Source in
+**Mobile is not here**: it comes later as a
+separate React Native app. The Electron desktop app and its GitHub release were removed. The old Expo scaffold is kept at git tag `expo-scaffold`. Source in
 `src/`, screens in `src/pages/`, hosting is Firebase project `log-mnemo`.
 
 It reads and writes **Radar's live Supabase project unchanged** (no schema changes, ever, from here)
@@ -85,12 +85,10 @@ the same commit).
 - Test the pure function, not the render.
 - Also clean before committing: `npm run lint` and `npx tsc --noEmit`.
 
-## 7. Web and desktop
+## 7. Web
 
 - `npm run dev` for the dev server, `npm run build:web` for `dist/`.
 - `npm run deploy:web` builds and runs `firebase deploy --only hosting` (project `log-mnemo`, `.firebaserc`).
-- `npm run desktop` builds, then opens the Electron window (`desktop/main.js` serves `dist/` from an `app://` scheme).
-- `cd desktop && npm run dist` makes the Windows installer.
 - Secrets live in `.env` (gitignored): `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, `VITE_TMDB_ACCESS_TOKEN`.
 
 ## Commands

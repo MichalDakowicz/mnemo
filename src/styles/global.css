@@ -58,18 +58,7 @@ input, select, textarea { font: inherit; color: inherit; }
 .brand { display: flex; align-items: center; gap: 12px; height: 48px; padding: 0 0 0 10px; border-radius: 14px; color: var(--text); }
 .brand-mark { display: block; transition: transform .35s var(--ease); }
 .brand:hover .brand-mark { transform: rotate(-6deg) scale(1.04); }
-/* desktop window chrome: transparent drag strip, buttons hidden until the top-right corner is hovered */
-.titlebar { position: fixed; top: 0; left: 0; right: 0; height: 36px; z-index: 70; -webkit-app-region: drag; user-select: none; }
-.chrome a, .chrome button, .dock, .window-zone { -webkit-app-region: no-drag; }
 .window-zone { display: flex; align-items: center; padding: 0 0 0 24px; }
-.window-actions { max-width: 0; opacity: 0; overflow: hidden; transition: max-width .45s var(--ease), opacity .25s; }
-.window-buttons { display: flex; gap: 2px; margin-left: 12px; padding: 4px; border-radius: 999px; background: var(--glass); border: 1px solid var(--hairline); backdrop-filter: blur(18px); transform: translateX(40px); transition: transform .45s var(--ease); }
-.window-zone:hover .window-actions, .window-actions:has(:focus-visible) { max-width: 180px; opacity: 1; }
-.window-zone:hover .window-buttons, .window-actions:has(:focus-visible) .window-buttons { transform: none; }
-.window-buttons button { width: 40px; height: 40px; border-radius: 999px; display: flex; align-items: center; justify-content: center; color: #b9b6b0; transition: background .15s, color .15s; }
-.window-buttons svg { width: 18px; height: 18px; }
-.window-buttons button:hover { background: #ffffff14; color: var(--text-bright); }
-.window-buttons button:last-child:hover { background: #9f3939; color: #fff; }
 .brand-name { font-weight: 600; font-size: 22px; letter-spacing: -.035em; }
 
 .page { max-width: 1720px; margin: 0 auto; padding: 98px 56px 64px; }

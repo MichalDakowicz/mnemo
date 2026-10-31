@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.2.0",
   "type": "module",
-  "description": "Mnemo — your memory of what you watched. Web and desktop (Electron).",
+  "description": "Mnemo — your memory of what you watched. Web app.",
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
@@ -12,8 +12,7 @@
     "test": "vitest run",
     "lint": "eslint src",
     "typecheck": "tsc --noEmit",
-    "deploy:web": "npm run build:web && firebase deploy --only hosting",
-    "desktop": "npm run build:web && npm --prefix desktop start"
+    "deploy:web": "npm run build:web && firebase deploy --only hosting"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.118.0",
