@@ -1,21 +1,10 @@
 import { supabase } from '@/lib/supabase';
 
 /**
- * Google OAuth against Radar's Supabase project, so the same account (and the same
- * library) signs in. The page redirects out and back; supabase-js reads the code from the URL.
- * In the desktop app the Google page opens in the system browser and comes back through the
- * mnemo:// scheme (add `mnemo://auth` to the Supabase redirect allow-list).
+ * Google OAuth against Mnemo's Supabase project. The page redirects out and back;
+ * supabase-js reads the code from the URL.
  */
 export async function signInWithGoogle() {
-  if (window.mnemo) {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: window.mnemo.authRedirect, skipBrowserRedirect: true },
-    });
-    if (error) throw error;
-    await window.mnemo.openExternal(data.url);
-    return;
-  }
   const { error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: { redirectTo: window.location.origin + '/' },
