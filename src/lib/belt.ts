@@ -75,6 +75,21 @@ export function beltSlotCount(items: number, viewport: number, inset: number, pi
   return items * Math.max(1, Math.ceil(needed / items));
 }
 
+/** Cards that lie flat side by side across a section `width` px wide, with `inset` px of margin taken off each side. */
+export function beltFlatCount(width: number, inset: number, pitch: number, gap: number): number {
+  return Math.max(1, Math.floor((width - 2 * inset + gap) / pitch));
+}
+
+/** Furthest position of a belt that does not loop: the last card comes to rest at the end of the flat run. */
+export function beltMaxPos(items: number, flat: number): number {
+  return Math.max(0, items - flat);
+}
+
+/** Keep a belt's position between its first card and `max`. */
+export function beltClamp(pos: number, max: number): number {
+  return Math.min(max, Math.max(0, pos));
+}
+
 /** Signed offset, in cards, of `slot` from the belt's first position; cards further left than `lead` wrap to the far right. */
 export function beltOffset(slot: number, pos: number, slots: number, lead: number): number {
   return ((((slot - pos + lead) % slots) + slots) % slots) - lead;

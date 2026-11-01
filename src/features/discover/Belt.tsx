@@ -12,15 +12,18 @@ type Props<T> = {
   label: string;
   /** Lets the owner put arrow buttons elsewhere (the row heading). */
   belt: ReturnType<typeof useBelt>;
+  /** Px tall; the default suits Discover's cards, which carry buttons under the poster. */
+  height?: number;
 };
 
-/** The belt itself: one card per slot, repeated until the loop is longer than the screen. Positions come from useBelt. */
-export function Belt<T>({ items, keyOf, render, cardWidth, label, belt }: Props<T>) {
+/** The belt itself: one card per slot, repeated until the loop is longer than the screen (a belt with ends has one slot per card). Positions come from useBelt. */
+export function Belt<T>({ items, keyOf, render, cardWidth, label, belt, height }: Props<T>) {
   const n = items.length;
   return (
     <div
       ref={belt.bind}
       className={belt.dragging ? 'belt dragging' : 'belt'}
+      style={height ? { height } : undefined}
       tabIndex={-1}
       role="region"
       aria-roledescription="carousel"

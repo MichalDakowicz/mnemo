@@ -1,3 +1,4 @@
+import { beltClamp } from './belt';
 import { IDLE, MAX_SPEED, releaseSpeed, stepMotion, type Motion, type Sample } from './reelPhysics';
 
 /** Friction of a Random spin: gentler than a hand throw, so the whirl lasts a couple of seconds. */
@@ -83,6 +84,13 @@ export class ReelEngine {
     this.m = { ...this.m, vel: distance * SPIN_FRICTION, mode: 'free', friction: SPIN_FRICTION };
     this.run();
     this.onChange();
+  }
+
+  /** Keep the reel between poster 0 and `max`: a throw or drag past either end is cut short, a spring aimed past it is brought back. Quiet: no notification. */
+  clamp(max: number) {
+    const pos = beltClamp(this.m.pos, max);
+    const target = beltClamp(this.m.target, max);
+    if (pos !== this.m.pos || target !== this.m.target) this.m = { ...this.m, pos, target, vel: pos !== this.m.pos ? 0 : this.m.vel };
   }
 
   /** A finger or cursor takes hold; true when it caught a moving reel. */

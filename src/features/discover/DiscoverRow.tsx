@@ -5,7 +5,8 @@ import { Belt } from './Belt';
 import { DiscoverCard } from './DiscoverCard';
 import type { DiscoverRow as Row } from './useDiscoveryFeed';
 import type { CardActions } from './useCardActions';
-import { useBelt, useCardWidth } from './useBelt';
+import { useBelt } from './useBelt';
+import { useCardWidth } from './useCardWidth';
 
 type Props = { row: Row; actions: CardActions; onOpenGenre: (genre: { id: number; name: string }) => void };
 
