@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { BELT_DROP, beltEdge, beltFrame, beltOffset, beltSlot, beltSlotCount } from './belt';
+import { BELT_DROP, beltClamp, beltEdge, beltFlatCount, beltFrame, beltMaxPos, beltOffset, beltSlot, beltSlotCount } from './belt';
 
 // A 1180px section with 200px of fall beside it, cards 188px wide.
 const F = beltFrame(1580, 200, 188);
@@ -76,6 +76,24 @@ describe('beltSlotCount', () => {
   });
   it('has nothing to place for an empty list', () => {
     expect(beltSlotCount(0, 1400, 56, 190)).toBe(0);
+  });
+});
+
+describe('end-stopped belt', () => {
+  it('fits as many whole cards as the section holds', () => {
+    expect(beltFlatCount(1000, 0, 210, 22)).toBe(4);
+    expect(beltFlatCount(1000 + 112, 56, 210, 22)).toBe(4);
+    expect(beltFlatCount(50, 0, 210, 22)).toBe(1);
+  });
+  it('stops with the last card at the end of the flat run', () => {
+    expect(beltMaxPos(10, 4)).toBe(6);
+    expect(beltMaxPos(3, 4)).toBe(0);
+  });
+  it('clamps a position between the first card and the end', () => {
+    expect(beltClamp(-2, 6)).toBe(0);
+    expect(beltClamp(3.5, 6)).toBe(3.5);
+    expect(beltClamp(9, 6)).toBe(6);
+    expect(beltClamp(1, 0)).toBe(0);
   });
 });
 

@@ -1,34 +1,26 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent, type MouseEvent, type PointerEvent } from 'react';
 
-import { beltFrame, beltOffset, beltSlot, beltSlotCount } from '@/lib/belt';
+import { beltFlatCount, beltFrame, beltMaxPos, beltOffset, beltSlot, beltSlotCount } from '@/lib/belt';
 import { ReelEngine } from '@/lib/reelEngine';
-
-/** Card width: a little narrower on small screens. */
-export function useCardWidth() {
-  const [w, setW] = useState(() => (window.innerWidth <= 820 ? 148 : 188));
-  useEffect(() => {
-    const onResize = () => setW(window.innerWidth <= 820 ? 148 : 188);
-    window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
-  }, []);
-  return w;
-}
 
 const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /**
- * A conveyor belt of `count` cards `cardWidth` wide. It carries on without end: wheel / trackpad /
- * drag / arrow keys move it with the same momentum and soft spring as the Discover reel, and cards
- * near either end sink to the back (lib/belt). Positions are written straight to the cards on every
- * frame, so a belt moving costs no React renders.
+ * A conveyor belt of `count` cards `cardWidth` wide. By default it carries on without end; with
+ * `loop: false` it has a first and a last card and stops there. Wheel / trackpad / drag / arrow keys
+ * move it with the same momentum and soft spring as the Discover reel, and cards near either end
+ * sink to the back (lib/belt). Positions are written straight to the cards on every frame, so a
+ * belt moving costs no React renders.
  */
-export function useBelt(count: number, cardWidth: number, gap = 22) {
+export function useBelt(count: number, cardWidth: number, gap = 22, { loop = true } = {}) {
   const pitch = cardWidth + gap;
   const [engine] = useState(() => new ReelEngine(reduced));
   const [view, setView] = useState({ width: window.innerWidth, inset: 0 });
-  const slots = beltSlotCount(count, view.width, view.inset, pitch);
+  const slots = loop ? beltSlotCount(count, view.width, view.inset, pitch) : count;
+  const max = loop ? Infinity : beltMaxPos(count, beltFlatCount(view.width, view.inset, pitch, gap));
+  const [ends, setEnds] = useState({ start: !loop, end: false });
   const stage = useRef<HTMLDivElement | null>(null);
-  const live = useRef({ view, slots, pitch, cardWidth, count });
+  const live = useRef({ view, slots, pitch, cardWidth, count, max });
   const drag = useRef<{ x: number; pos: number; moved: boolean; caught: boolean } | null>(null);
   const justDragged = useRef(false);
   const wheelTimer = useRef(0);
@@ -38,13 +30,19 @@ export function useBelt(count: number, cardWidth: number, gap = 22) {
   /** Put every card where the belt's position says; called each frame and whenever the geometry changes. */
   const place = useCallback(() => {
     const el = stage.current;
-    const { view: v, slots: total, pitch: step, cardWidth: w } = live.current;
+    const { view: v, slots: total, pitch: step, cardWidth: w, max: last } = live.current;
     if (!el || !total) return;
     const lead = v.inset / step + 1;
+    if (!loop) {
+      engine.clamp(last);
+      const start = engine.m.pos <= 0.001;
+      const end = engine.m.pos >= last - 0.001;
+      setEnds((e) => (e.start === start && e.end === end ? e : { start, end }));
+    }
     const pos = engine.m.pos;
     for (const child of Array.from(el.children) as HTMLElement[]) {
       const slot = Number(child.dataset.slot);
-      const even = v.inset + beltOffset(slot, pos, total, lead) * step;
+      const even = v.inset + (loop ? beltOffset(slot, pos, total, lead) : slot - pos) * step;
       const p = beltSlot(even + w / 2, beltFrame(v.width, v.inset, w));
       const x = even + p.dx;
       const hidden = p.opacity < 0.01;
@@ -55,10 +53,10 @@ export function useBelt(count: number, cardWidth: number, gap = 22) {
       child.style.visibility = hidden ? 'hidden' : 'visible';
       child.style.pointerEvents = p.opacity < 0.5 ? 'none' : 'auto';
     }
-  }, [engine]);
+  }, [engine, loop]);
 
   useLayoutEffect(() => {
-    live.current = { view, slots, pitch, cardWidth, count };
+    live.current = { view, slots, pitch, cardWidth, count, max };
     place();
   });
 
@@ -142,6 +140,11 @@ export function useBelt(count: number, cardWidth: number, gap = 22) {
   return {
     slots,
     dragging,
+    /** Whether the arrow buttons have anywhere to go: always on a loop, else only away from the end they point at. */
+    canPrev: loop || !ends.start,
+    canNext: loop || !ends.end,
+    /** A belt with ends whose cards all fit across the section has nothing to scroll. */
+    still: !loop && max === 0,
     bind,
     prev: () => engine.springTo(engine.base - step),
     next: () => engine.springTo(engine.base + step),
