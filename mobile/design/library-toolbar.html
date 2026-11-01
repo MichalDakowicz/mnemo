@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mnemo · Library toolbar sandbox</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Matro tokens, same values as mobile/src/theme/colors.ts */
+:root{
+  --ground:#0a0a0b; --panel:#161618; --text:#ece9e4; --bright:#f4f1ec; --muted:#a9a59d; --dim:#8f8c87; --soft:#bebab3;
+  --nav:#b9b6b0; --hairline:#ffffff14; --line:#ece9e41f; --line-strong:#ece9e433; --wash:#ece9e409; --primary:#f3f1ec; --on-primary:#0a0a0b;
+  --glass:#1a1a1c8c; --good:#9fd6b0; --warn:#e3a58b; --hover:#ece9e414; --active:#ece9e41f; --chip-border:#ece9e429; --input:#1a1a1cb3;
+  --ease:cubic-bezier(.2,.75,.15,1);
+  --font:'Geist','Segoe UI',system-ui,sans-serif; --mono:'Geist Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box} html,body{margin:0;background:#050506;color:var(--text);font-family:var(--font);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:pointer}
+svg{display:block;flex:none}
+
+/* ---- sandbox shell ---- */
+.lab{display:grid;grid-template-columns:minmax(300px,380px) 1fr;gap:40px;max-width:1100px;margin:0 auto;padding:32px 24px 64px}
+@media(max-width:860px){.lab{grid-template-columns:1fr}}
+.side h1{margin:0 0 6px;font-size:26px;font-weight:600;letter-spacing:-.04em}
+.side p{margin:0 0 18px;color:var(--dim);font-size:13px;line-height:1.55}
+.group{margin:0 0 20px}.group h2{margin:0 0 8px;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+.variants{display:flex;flex-direction:column;gap:6px}
+.variant{display:block;width:100%;text-align:left;padding:12px 14px;border-radius:14px;border:1px solid #ece9e414;background:var(--wash)}
+.variant[aria-pressed=true]{background:var(--active);border-color:var(--line-strong)}
+.variant b{display:block;font-size:14px;font-weight:600;letter-spacing:-.02em}.variant span{display:block;margin-top:3px;font-size:12px;color:var(--dim);line-height:1.45}
+.switches{display:flex;flex-direction:column;gap:8px}
+.sw{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:13px;color:var(--soft)}
+.tog{width:38px;height:22px;border-radius:99px;background:#ffffff1f;position:relative;transition:background .2s}
+.tog::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--text);transition:transform .3s var(--ease)}
+.tog[aria-checked=true]{background:var(--primary)}.tog[aria-checked=true]::after{transform:translateX(16px);background:var(--on-primary)}
+.metrics{border-radius:14px;border:1px solid #ece9e414;background:var(--wash);padding:14px 16px;font-size:13px}
+.metrics .row{display:flex;justify-content:space-between;padding:4px 0;color:var(--soft)}
+.metrics .row b{font-family:var(--mono);font-weight:500;color:var(--bright)}
+.delta-good{color:var(--good)!important}.delta-warn{color:var(--warn)!important}
+.bar{height:6px;border-radius:6px;background:#ffffff14;margin-top:6px;overflow:hidden}.bar i{display:block;height:100%;background:var(--primary);transition:width .4s var(--ease)}
+
+/* ---- phone ---- */
+.stage{display:flex;justify-content:center}
+.phone{position:relative;width:390px;height:800px;border-radius:44px;background:var(--ground);border:1px solid #ffffff1f;box-shadow:0 40px 90px #000a,0 0 0 8px #101012;overflow:hidden}
+.status{position:absolute;top:0;left:0;right:0;height:38px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:13px;font-weight:600;z-index:30;pointer-events:none;background:linear-gradient(180deg,var(--ground) 55%,#0a0a0b00)}
+.scroll{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;padding:48px 16px 120px;scrollbar-width:none}
+.scroll::-webkit-scrollbar{display:none}
+.dock{position:absolute;left:0;right:0;bottom:14px;display:flex;justify-content:center;z-index:20}
+.glass{background:var(--glass);border:1px solid var(--hairline);backdrop-filter:blur(18px);box-shadow:0 10px 30px #0006}
+.dock .pill-dock{display:flex;gap:2px;padding:4px;border-radius:99px}
+.dock .di{width:46px;height:40px;border-radius:99px;display:flex;align-items:center;justify-content:center;color:var(--nav)}
+.dock .di.on{background:var(--active);color:var(--bright)}
+
+/* placeholders for the sections above the toolbar */
+.cw{aspect-ratio:16/9;border-radius:10px;margin:0 0 24px;position:relative;overflow:hidden;background:linear-gradient(135deg,#3a3550,#14131c);box-shadow:0 12px 28px #0008,0 0 0 1px #ffffff0d}
+.cw::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,#0000 30%,#000000d9)}
+.cw .t{position:absolute;left:14px;bottom:30px;z-index:2;width:46%;height:14px;border-radius:4px;background:#ffffffd9}
+.cw .n{position:absolute;left:14px;bottom:18px;z-index:2;width:30%;height:8px;border-radius:4px;background:#ffffff66}
+.cw .p{position:absolute;left:14px;right:14px;bottom:10px;z-index:2;height:3px;border-radius:3px;background:#ffffff38}.cw .p i{display:block;width:30%;height:100%;background:var(--primary)}
+.sec{display:flex;justify-content:space-between;align-items:baseline;margin:0 0 10px}.sec b{font-size:18px;font-weight:600;letter-spacing:-.035em}.sec span{font-size:12px;color:var(--dim)}
+
+/* ---- shared controls ---- */
+.ibtn{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;color:var(--text);flex:none}
+.ibtn:active{background:var(--hover)}.ibtn.p{background:var(--primary);color:var(--on-primary)}.ibtn.s{width:36px;height:36px}
+.ibtn.frame{border:1px solid var(--chip-border);background:var(--input)}
+.badge{position:absolute;top:2px;right:2px;min-width:16px;height:16px;padding:0 4px;border-radius:8px;background:var(--primary);color:var(--on-primary);font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center}
+.search{flex:1;min-width:0;height:40px;display:flex;align-items:center;gap:10px;padding:0 14px;border-radius:99px;background:var(--input);border:1px solid var(--chip-border);color:var(--dim);font-size:14px}
+.search input{flex:1;min-width:0;background:none;border:0;outline:0;color:var(--text);font:inherit;padding:0}
+.search input::placeholder{color:var(--dim)}
+.chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:0 16px}.chips::-webkit-scrollbar{display:none}
+.chip{height:34px;padding:0 14px;border-radius:99px;border:1px solid var(--chip-border);font-size:13px;color:var(--soft);display:inline-flex;align-items:center;gap:6px;white-space:nowrap;flex:none}
+.chip small{font-size:11px;opacity:.7}.chip[aria-pressed=true]{background:var(--primary);border-color:var(--primary);color:var(--on-primary)}
+.chip.mini{height:30px;font-size:12.5px;padding:0 12px}
+.tabs{display:flex;gap:18px;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0}.tabs::-webkit-scrollbar{display:none}
+.tab{position:relative;height:40px;display:inline-flex;align-items:center;gap:5px;font-size:14px;color:var(--dim);white-space:nowrap;flex:none}
+.tab small{font-family:var(--mono);font-size:10.5px;opacity:.7}
+.tab[aria-pressed=true]{color:var(--bright);font-weight:500}.tab[aria-pressed=true]::after{content:'';position:absolute;left:0;right:0;bottom:2px;height:2px;border-radius:2px;background:var(--primary)}
+.pill{height:36px;border-radius:99px;display:inline-flex;align-items:center;gap:8px;padding:0 14px;font-size:13px;font-weight:500;border:1px solid var(--line-strong);flex:none}
+.pill.p{background:var(--primary);color:var(--on-primary);border-color:var(--primary);font-weight:600}.pill.ghost{border-color:transparent}
+.activeline{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:10px -16px 0;padding:0 16px}.activeline::-webkit-scrollbar{display:none}
+.x{height:28px;padding:0 8px 0 11px;border-radius:99px;background:var(--active);font-size:12px;display:inline-flex;align-items:center;gap:5px;white-space:nowrap;flex:none}
+.x.clear{background:none;color:var(--dim);padding:0 6px}
+
+/* sticky glass bar (variant D) */
+.sticky{position:sticky;top:38px;z-index:10;margin:0 -16px;padding:6px 16px 10px;background:linear-gradient(180deg,#0a0a0bf2 80%,#0a0a0b00)}
+
+/* grid mock: abstract posters, no titles */
+.grid{display:grid;gap:18px 8px;margin-top:6px}
+.tile .c{aspect-ratio:2/3;border-radius:6px;position:relative;overflow:hidden;box-shadow:0 8px 20px #0006}
+.tile .c::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,#ffffff1a,#fff0 40%)}
+.tile .l1{height:8px;border-radius:4px;background:#ffffff59;margin-top:8px;width:80%}.tile .l2{height:6px;border-radius:4px;background:#ffffff24;margin-top:5px;width:50%}
+.list .r{display:flex;align-items:center;gap:14px;padding:7px 10px}.list .r .c{width:40px;aspect-ratio:2/3;border-radius:5px}.list .r .ls{flex:1}
+
+/* sheets */
+.scrim{position:absolute;inset:0;background:#0008;z-index:40;opacity:0;pointer-events:none;transition:opacity .3s}
+.scrim.on{opacity:1;pointer-events:auto}
+.sheet{position:absolute;left:0;right:0;bottom:0;z-index:41;max-height:82%;overflow:auto;background:#161618;border-top:1px solid var(--hairline);border-radius:22px 22px 0 0;padding:8px 16px 26px;transform:translateY(105%);transition:transform .45s var(--ease)}
+.sheet.on{transform:none}.sheet::-webkit-scrollbar{display:none}
+.handle{width:36px;height:4px;border-radius:2px;background:var(--line-strong);margin:0 auto 12px}
+.sheet h3{margin:0 0 12px;font-size:15px;font-weight:600;letter-spacing:-.02em}
+.legend{margin:16px 0 8px;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+.wrap{display:flex;flex-wrap:wrap;gap:6px}
+.seg{display:flex;padding:3px;border-radius:99px;background:#ffffff0d;border:1px solid var(--hairline)}
+.seg button{flex:1;height:34px;border-radius:99px;font-size:13px;color:var(--soft)}.seg button[aria-pressed=true]{background:var(--primary);color:var(--on-primary);font-weight:600}
+.row-opt{display:flex;align-items:center;justify-content:space-between;height:44px;padding:0 12px;border-radius:12px;font-size:14px;color:var(--soft)}
+.row-opt[aria-pressed=true]{background:var(--active);color:var(--bright)}
+.foot{position:sticky;bottom:-26px;display:flex;justify-content:space-between;align-items:center;gap:10px;margin:18px -16px -26px;padding:12px 16px 26px;background:linear-gradient(180deg,#16161800,#161618 28%)}
+.foot .pill{height:44px;padding:0 22px;font-size:14px}
+.hint{font-size:12px;color:var(--dim)}
+</style>
+</head>
+<body>
+<div class="lab">
+  <aside class="side">
+    <h1>Library toolbar</h1>
+    <p>Sandbox for decluttering the filter, search and sort area. Today it is four stacked rows before the first poster. Pick a layout, open the sheets, toggle active filters, and watch the space it costs.</p>
+
+    <div class="group"><h2>Layouts</h2><div class="variants" id="variants"></div></div>
+
+    <div class="group"><h2>Try</h2><div class="switches">
+      <div class="sw">Filters are active <button class="tog" id="t-active" role="switch" aria-checked="false"></button></div>
+      <div class="sw">List view <button class="tog" id="t-list" role="switch" aria-checked="false"></button></div>
+      <div class="sw">Show Continue watching above <button class="tog" id="t-cw" role="switch" aria-checked="true"></button></div>
+    </div></div>
+
+    <div class="group"><h2>Space cost</h2><div class="metrics" id="metrics"></div></div>
+  </aside>
+
+  <main class="stage"><div class="phone" id="phone">
+    <div class="status"><span>9:41</span><span>5G ▮▮▮</span></div>
+    <div class="scroll" id="scroll"></div>
+    <div class="dock"><div class="glass pill-dock" id="dock"></div></div>
+    <div class="scrim" id="scrim"></div>
+    <div class="sheet" id="sheet"></div>
+  </div></main>
+</div>
+
+<script>
+/* ---------- icons ---------- */
+const P = {
+  search:'<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>',
+  sliders:'<path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/>',
+  grid:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
+  list:'<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',
+  dice:'<rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r=".8"/><circle cx="15.5" cy="15.5" r=".8"/><circle cx="12" cy="12" r=".8"/><circle cx="15.5" cy="8.5" r=".8"/><circle cx="8.5" cy="15.5" r=".8"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>', x:'<path d="M18 6 6 18M6 6l12 12"/>', check:'<path d="M20 6 9 17l-5-5"/>',
+  more:'<circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/>',
+  updown:'<path d="m3 8 4-4 4 4M7 4v16M21 16l-4 4-4-4M17 20V4"/>',
+  lib:'<path d="m16 6 4 14M12 6v14M8 8v12M4 4v16"/>', compass:'<circle cx="12" cy="12" r="10"/><path d="m16.2 7.8-2.1 6.3-6.3 2.1 2.1-6.3z"/>',
+  chart:'<path d="M3 3v16a2 2 0 0 0 2 2h16M18 17V9M13 17V5M8 17v-3"/>', users:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/>',
+  user:'<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>'
+};
+const ic=(n,s=18,w=1.8)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${P[n]}</svg>`;
+
+/* ---------- state ---------- */
+const STATUS=[['all','All',577],['watchlist','Watchlist',380],['watching','Watching',1],['completed','Watched',216],['rewatch','Rewatch',4]];
+const SORTS=['Recently added','Title','Release date','Rating','Director','Runtime'];
+const FILT={Streaming:['My services','Netflix','Disney+','Max','Prime Video'],Genre:['Drama','Comedy','Thriller','Sci-Fi','Animation','Crime','Horror','Documentary'],Year:['2025','2024','2023','2020s','2010s','2000s']};
+const S={variant:'B',status:'all',type:'all',sort:'Recently added',desc:true,layout:'grid',size:'normal',query:'',active:false,cw:true,sheet:null,searchOpen:false,sel:{Streaming:[],Genre:[],Year:[]}};
+const VARIANTS=[
+ ['A','Today','Four stacked rows: add + search, a scrolling tool row, status chips, type chips.'],
+ ['B','One bar + status','Search, filter and view are one row. Type moves into the filter sheet. Sort, layout, size and Random live in a single View sheet.'],
+ ['C','Tabs, search on demand','No search row until you ask. Status becomes text tabs, three icons sit on the same line. Search expands in place.'],
+ ['D','Sticky bar','Same as B, but the search/filter/view bar sticks to the top while you scroll so it is always one tap away.']
+];
+let baseline=null;
+
+/* ---------- pieces ---------- */
+const activeCount=()=>(S.type!=='all'?1:0)+Object.values(S.sel).reduce((n,a)=>n+a.length,0);
+const badge=()=>{const n=activeCount();return n?`<span class="badge">${n}</span>`:''};
+const statusChips=()=>`<div class="chips">${STATUS.map(([k,l,n])=>`<button class="chip" data-a="status" data-v="${k}" aria-pressed="${S.status===k}">${l}<small>${n}</small></button>`).join('')}</div>`;
+const typeChips=()=>`<div class="chips">${[['all','All'],['movie','Films'],['tv','Shows']].map(([k,l])=>`<button class="chip" data-a="type" data-v="${k}" aria-pressed="${S.type===k}">${l}</button>`).join('')}</div>`;
+const statusTabs=()=>`<div class="tabs">${STATUS.filter(s=>s[0]!=='rewatch').map(([k,l,n])=>`<button class="tab" data-a="status" data-v="${k}" aria-pressed="${S.status===k}">${l}<small>${n}</small></button>`).join('')}</div>`;
+const searchBox=(ph='Search your library')=>`<label class="search">${ic('search',16)}<input data-a="query" value="${S.query}" placeholder="${ph}"></label>`;
+const activeLine=()=>{
+  if(!S.active&&!activeCount())return '';
+  const items=[];
+  if(S.type!=='all')items.push(['type',S.type==='movie'?'Films':'Shows']);
+  for(const [g,a] of Object.entries(S.sel))a.forEach(v=>items.push([g+':'+v,v]));
+  if(!items.length)return '';
+  return `<div class="activeline">${items.map(([k,l])=>`<span class="x">${l}<button data-a="rm" data-v="${k}" aria-label="Remove ${l}">${ic('x',13,2)}</button></span>`).join('')}<button class="x clear" data-a="clear">Clear all</button></div>`;
+};
+const tiles=()=>{
+  const cols=S.layout==='list'?1:{compact:5,normal:4,large:3}[S.size], n=S.layout==='list'?9:cols*4;
+  const cell=i=>{const h=(i*47+20)%360;return `<div class="tile"><div class="c" style="background:linear-gradient(170deg,hsl(${h} 42% 38%),hsl(${(h+25)%360} 38% 13%))"></div>${S.layout==='list'?'':'<div class="l1"></div><div class="l2"></div>'}</div>`};
+  if(S.layout==='list')return `<div class="list">${Array.from({length:n},(_,i)=>{const h=(i*47+20)%360;return `<div class="r"><div class="c" style="background:linear-gradient(170deg,hsl(${h} 42% 38%),hsl(${(h+25)%360} 38% 13%))"></div><div class="ls"><div class="tile"><div class="l1" style="margin:0"></div><div class="l2"></div></div></div></div>`}).join('')}</div>`;
+  return `<div class="grid" style="grid-template-columns:repeat(${cols},1fr)">${Array.from({length:n},(_,i)=>cell(i)).join('')}</div>`;
+};
+const dockHtml=()=>[['lib',1],['compass'],['chart'],['users'],['user']].map(([n,on])=>`<div class="di ${on?'on':''}">${ic(n,20)}</div>`).join('');
+
+/* ---------- layouts (only the chrome between the sections and the grid) ---------- */
+const CHROME={
+ A:()=>`<div id="chrome" style="display:flex;flex-direction:column;gap:10px">
+    <div style="display:flex;gap:8px;align-items:center"><button class="ibtn p" data-a="noop" aria-label="Add">${ic('plus')}</button>${searchBox('Title, director, genre, year')}</div>
+    <div style="display:flex;gap:4px;align-items:center;overflow-x:auto;scrollbar-width:none">
+      <button class="pill ghost" data-a="sheet" data-v="filters">${ic('sliders',16)}Filters${badge()}</button>
+      <button class="pill ghost" data-a="sheet" data-v="view">${S.sort}</button>
+      <button class="ibtn s" data-a="desc" aria-label="Direction">${ic('updown')}</button>
+      <button class="ibtn s" data-a="layout" aria-label="Layout">${ic(S.layout==='grid'?'grid':'list')}</button>
+      ${S.layout==='grid'?`<button class="ibtn s" data-a="sheet" data-v="view" aria-label="Poster size">${ic('grid')}</button>`:''}
+      <button class="pill p" data-a="random">${ic('dice',16)}Random</button></div>
+    <div style="margin-top:4px;display:flex;flex-direction:column;gap:8px;margin-bottom:18px">${statusChips()}${typeChips()}</div></div>`,
+ B:()=>`<div id="chrome" style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px">
+    <div style="display:flex;gap:8px;align-items:center">${searchBox()}
+      <button class="ibtn frame" data-a="sheet" data-v="filters" aria-label="Filters">${ic('sliders')}${badge()}</button>
+      <button class="ibtn frame" data-a="sheet" data-v="view" aria-label="View options">${ic(S.layout==='grid'?'grid':'list')}</button></div>
+    ${statusChips()}${activeLine()}</div>`,
+ C:()=>S.searchOpen
+   ?`<div id="chrome" style="margin-bottom:14px"><div style="display:flex;gap:8px;align-items:center">${searchBox()}<button class="pill ghost" data-a="closeSearch">Cancel</button></div>${activeLine()}</div>`
+   :`<div id="chrome" style="margin-bottom:10px"><div style="display:flex;align-items:center;gap:2px;margin:0 -6px 0 0">${statusTabs()}
+      <button class="ibtn s" data-a="openSearch" aria-label="Search">${ic('search')}</button>
+      <button class="ibtn s" data-a="sheet" data-v="filters" aria-label="Filters">${ic('sliders')}${badge()}</button>
+      <button class="ibtn s" data-a="sheet" data-v="view" aria-label="View options">${ic('more')}</button></div>${activeLine()}</div>`,
+ D:()=>`<div id="chrome" style="margin-bottom:6px"><div class="sticky"><div style="display:flex;gap:8px;align-items:center">${searchBox()}
+      <button class="ibtn frame" data-a="sheet" data-v="filters" aria-label="Filters">${ic('sliders')}${badge()}</button>
+      <button class="ibtn frame" data-a="sheet" data-v="view" aria-label="View options">${ic(S.layout==='grid'?'grid':'list')}</button></div>${activeLine()}</div>
+    <div style="margin-top:4px">${statusChips()}</div></div>`
+};
+
+/* ---------- sheets ---------- */
+const FILTER_SHEET=()=>`<div class="handle"></div><h3>Filters</h3>
+  <div class="legend" style="margin-top:4px">Type</div>
+  <div class="seg">${[['all','All'],['movie','Films'],['tv','Shows']].map(([k,l])=>`<button data-a="type" data-v="${k}" aria-pressed="${S.type===k}">${l}</button>`).join('')}</div>
+  ${Object.entries(FILT).map(([g,list])=>`<div class="legend">${g}</div><div class="wrap">${list.map(v=>`<button class="chip mini" data-a="facet" data-g="${g}" data-v="${v}" aria-pressed="${S.sel[g].includes(v)}">${v}</button>`).join('')}</div>`).join('')}
+  <div class="foot"><button class="pill ghost" data-a="clear">Reset</button><span class="hint">${activeCount()?activeCount()+' selected':'Nothing selected'}</span><button class="pill p" data-a="close">Show ${Math.max(12,577-activeCount()*97)} titles</button></div>`;
+const VIEW_SHEET=()=>`<div class="handle"></div><h3>View</h3>
+  <div class="legend" style="margin-top:4px">Layout</div>
+  <div class="seg">${[['grid','Grid'],['list','List']].map(([k,l])=>`<button data-a="layoutSet" data-v="${k}" aria-pressed="${S.layout===k}">${l}</button>`).join('')}</div>
+  ${S.layout==='grid'?`<div class="legend">Poster size</div><div class="seg">${[['compact','Small'],['normal','Medium'],['large','Large']].map(([k,l])=>`<button data-a="size" data-v="${k}" aria-pressed="${S.size===k}">${l}</button>`).join('')}</div>`:''}
+  <div class="legend">Sort by</div>
+  ${SORTS.map(s=>`<button class="row-opt" style="width:100%" data-a="sort" data-v="${s}" aria-pressed="${S.sort===s}">${s}${S.sort===s?ic('check',16):''}</button>`).join('')}
+  <div class="seg" style="margin-top:8px">${[['desc','Newest first'],['asc','Oldest first']].map(([k,l])=>`<button data-a="dir" data-v="${k}" aria-pressed="${(k==='desc')===S.desc}">${l}</button>`).join('')}</div>
+  <div class="foot"><button class="pill" data-a="random" style="gap:8px">${ic('dice',16)}Pick random</button><button class="pill p" data-a="close">Done</button></div>`;
+
+/* ---------- render ---------- */
+const $=s=>document.querySelector(s);
+function render(){
+  const keepScroll=$('#scroll').scrollTop;
+  const cw=S.cw?`<div class="sec"><b>Continue watching</b><span>1 in progress</span></div><div class="cw"><div class="t"></div><div class="n"></div><div class="p"><i></i></div></div>`:'';
+  $('#scroll').innerHTML=`${cw}${CHROME[S.variant]()}${tiles()}`;
+  $('#scroll').scrollTop=keepScroll;
+  $('#dock').innerHTML=dockHtml();
+  const sh=$('#sheet');
+  if(S.sheet){sh.innerHTML=S.sheet==='filters'?FILTER_SHEET():VIEW_SHEET();}
+  sh.classList.toggle('on',!!S.sheet);$('#scrim').classList.toggle('on',!!S.sheet);
+  $('#variants').innerHTML=VARIANTS.map(([k,t,d])=>`<button class="variant" data-a="variant" data-v="${k}" aria-pressed="${S.variant===k}"><b>${k} · ${t}</b><span>${d}</span></button>`).join('');
+  $('#t-active').setAttribute('aria-checked',S.active);$('#t-list').setAttribute('aria-checked',S.layout==='list');$('#t-cw').setAttribute('aria-checked',S.cw);
+  requestAnimationFrame(metrics);
+}
+function controlsCount(){return document.querySelectorAll('#chrome button, #chrome input').length}
+/* Layout A rendered offscreen at the same state, as the yardstick. */
+function measureA(){
+  const box=document.createElement('div');
+  box.style.cssText='position:absolute;left:-9999px;top:0;width:358px;visibility:hidden';
+  box.innerHTML=CHROME.A();document.body.appendChild(box);
+  const r={h:Math.round(box.firstElementChild.offsetHeight),c:box.querySelectorAll('button, input').length};
+  box.remove();return r;
+}
+function metrics(){
+  const el=$('#chrome');if(!el)return;
+  const h=Math.round(el.offsetHeight), c=controlsCount(), b=measureA();
+  const dh=h-b.h, dc=c-b.c, pct=Math.max(0,Math.min(100,Math.round(h/b.h*100)));
+  const tag=(d)=>d===0?'':` <span class="${d<0?'delta-good':'delta-warn'}">${d>0?'+':''}${d}</span>`;
+  $('#metrics').innerHTML=`<div class="row"><span>Chrome above the grid</span><b>${h}px${tag(dh)}</b></div>
+    <div class="bar"><i style="width:${pct}%"></i></div>
+    <div class="row" style="margin-top:8px"><span>Always-visible controls</span><b>${c}${tag(dc)}</b></div>
+    <div class="row"><span>Tap to reach filters</span><b>${S.variant==='A'?'1':'1'}</b></div>
+    <div class="row"><span>Tap to reach sort / size</span><b>${S.variant==='A'?'1-2':'2'}</b></div>
+    <div class="row"><span>Random</span><b>${S.variant==='A'?'1 tap':'2 taps'}</b></div>
+    <div class="hint" style="margin-top:8px">Compared with layout A at the same state. Sticky bar (D) keeps search reachable while scrolling.</div>`;
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-a]');if(!t){if(e.target.id==='scrim'){S.sheet=null;render()}return}
+  const a=t.dataset.a,v=t.dataset.v;
+  if(a==='variant')S.variant=v;
+  else if(a==='status')S.status=v;
+  else if(a==='type')S.type=v;
+  else if(a==='sheet')S.sheet=v;
+  else if(a==='close')S.sheet=null;
+  else if(a==='layout')S.layout=S.layout==='grid'?'list':'grid';
+  else if(a==='layoutSet')S.layout=v;
+  else if(a==='size')S.size=v;
+  else if(a==='sort')S.sort=v;
+  else if(a==='desc')S.desc=!S.desc;
+  else if(a==='dir')S.desc=v==='desc';
+  else if(a==='facet'){const l=S.sel[t.dataset.g];const i=l.indexOf(v);i<0?l.push(v):l.splice(i,1);S.active=activeCount()>0}
+  else if(a==='rm'){if(v==='type')S.type='all';else{const [g,val]=v.split(':');S.sel[g]=S.sel[g].filter(x=>x!==val)}S.active=activeCount()>0}
+  else if(a==='clear'){S.type='all';for(const g in S.sel)S.sel[g]=[];S.active=false}
+  else if(a==='openSearch'){S.searchOpen=true;render();$('.search input')?.focus();return}
+  else if(a==='closeSearch'){S.searchOpen=false;S.query=''}
+  else if(a==='random'){S.sheet=null;toast('Random pick opens the spin here')}
+  else if(a==='noop'){toast('Add opens Discover with search focused')}
+  render();
+});
+document.addEventListener('input',e=>{if(e.target.dataset.a==='query')S.query=e.target.value});
+$('#t-active').onclick=()=>{S.active=!S.active;if(S.active&&!activeCount()){S.type='tv';S.sel.Streaming=['Netflix'];S.sel.Genre=['Drama']}if(!S.active){S.type='all';for(const g in S.sel)S.sel[g]=[]}render()};
+$('#t-list').onclick=()=>{S.layout=S.layout==='list'?'grid':'list';render()};
+$('#t-cw').onclick=()=>{S.cw=!S.cw;render()};
+function toast(m){const d=document.createElement('div');d.textContent=m;d.style.cssText='position:absolute;left:50%;bottom:78px;transform:translateX(-50%);z-index:60;padding:10px 16px;border-radius:99px;font-size:13px;white-space:nowrap';d.className='glass';$('#phone').appendChild(d);setTimeout(()=>d.remove(),1800)}
+render();
+</script>
+</body>
+</html>

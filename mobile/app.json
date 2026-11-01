@@ -1,0 +1,49 @@
+{
+  "expo": {
+    "name": "Mnemo",
+    "slug": "mnemo",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "mnemo",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#0a0a0b",
+    "android": {
+      "package": "com.michaldakowicz.mnemo",
+      "versionCode": 1,
+      "predictiveBackGestureEnabled": false,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0a0a0b"
+      }
+    },
+    "web": {
+      "output": "single"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      "expo-image",
+      "expo-web-browser",
+      "expo-secure-store",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Mnemo uses your photos to set your profile picture."
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#0a0a0b",
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 200
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": false,
+      "reactCompiler": true
+    },
+    "icon": "./assets/icon.png"
+  }
+}
